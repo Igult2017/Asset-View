@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { insertTradeSchema, type InsertTrade, type Trade } from "@shared/schema";
 import { motion, AnimatePresence } from "framer-motion";
 import { format } from "date-fns";
-import { Activity, Plus, BarChart2, History, TrendingUp, Filter, Palette, ChevronDown } from "lucide-react";
+import { Activity, Plus, BarChart2, History, TrendingUp, Filter, Palette, ChevronDown, ArrowRight, ArrowLeft } from "lucide-react";
 import { StatsCard } from "@/components/stats-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,7 +14,6 @@ import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   Table,
   TableBody,
@@ -50,6 +49,7 @@ function getUniqueStrategies(trades: Trade[]) {
 
 function LogEntryModal() {
   const [open, setOpen] = useState(false);
+  const [currentStep, setCurrentStep] = useState(0);
   const createTrade = useCreateTrade();
   
   const form = useForm<any>({
@@ -68,6 +68,35 @@ function LogEntryModal() {
     }
   });
 
+  const totalSteps = 12;
+  
+  const steps = [
+    { title: "🎯 Core Trade Data", fields: ["asset", "strategy", "session", "condition", "bias", "outcome", "rAchieved", "plAmt"] },
+    { title: "🌍 Market Regime & Environment", fields: ["marketRegime", "volatilityState", "liquidityConditions", "newsEnvironment"] },
+    { title: "⏰ Time-of-Day & Session Precision", fields: ["entryTimeUtc", "sessionPhase", "entryTimingContext", "preExpansionCondition"] },
+    { title: "⭐ Setup Quality Scoring", fields: ["marketAlignmentScore", "setupClarityScore", "entryPrecisionScore", "confluenceScore", "timingQualityScore"] },
+    { title: "🧩 Structure / Signal Validation", fields: ["primarySignalConfirmed", "secondaryConfirmationPresent", "keyLevelRespected", "momentumSignalValid", "invalidationLevelDefined", "targetLogicClear"] },
+    { title: "🎯 Execution Precision", fields: ["plannedEntry", "actualEntry", "plannedStopLoss", "actualStopLoss", "plannedTakeProfit", "actualExit"] },
+    { title: "⚖️ Risk & Capital Efficiency", fields: ["riskPercentPerTrade", "plannedRiskReward", "achievedRiskReward", "openRiskAtEntry", "drawdownAtEntry", "riskHeat"] },
+    { title: "🧩 Trade Management Logic", fields: ["entryMethod", "exitStrategy", "breakEvenApplied", "earlyExit", "managementType"] },
+    { title: "🧠 Psychological State", fields: ["confidenceLevel", "emotionalState", "focusLevel", "stressLevel"] },
+    { title: "📏 Rule Adherence & Discipline", fields: ["rulesFollowedPercent", "forcedTrade", "missedValidSetup", "overtrading", "documentationSaved"] },
+    { title: "🔁 Post-Trade Learning & Optimization", fields: ["whatWorked", "whatFailed", "oneRuleToReinforce", "oneRuleToAdjust", "setupWorthRepeating"] },
+    { title: "🧪 Edge Filters & Strategy Constraints", fields: ["minimumSetupScore", "approvedSessions", "approvedMarketRegimes", "disallowedVolatility", "blacklistedConditions"] }
+  ];
+
+  const handleNext = () => {
+    if (currentStep < totalSteps - 1) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const handlePrev = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
   const onSubmit = (data: any) => {
     const submitData: InsertTrade = {
       asset: data.asset,
@@ -85,8 +114,274 @@ function LogEntryModal() {
       onSuccess: () => {
         setOpen(false);
         form.reset();
+        setCurrentStep(0);
       }
     });
+  };
+
+  const renderStepContent = () => {
+    const step = steps[currentStep];
+    
+    return (
+      <div className="space-y-4">
+        {currentStep === 0 && (
+          <div className="grid grid-cols-2 gap-4">
+            <FormField control={form.control} name="asset" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Asset</FormLabel>
+              <FormControl><Input placeholder="EURUSD" {...field} className="bg-background border-border" /></FormControl><FormMessage /></FormItem>
+            )} />
+            <FormField control={form.control} name="strategy" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Strategy</FormLabel>
+              <FormControl><Input placeholder="SMC Breaker" {...field} className="bg-background border-border" /></FormControl><FormMessage /></FormItem>
+            )} />
+            <FormField control={form.control} name="session" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Session</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <FormControl><SelectTrigger className="bg-background border-border"><SelectValue placeholder="Select" /></SelectTrigger></FormControl>
+              <SelectContent><SelectItem value="London">London</SelectItem><SelectItem value="New York">New York</SelectItem><SelectItem value="Asian">Asian</SelectItem></SelectContent></Select></FormItem>
+            )} />
+            <FormField control={form.control} name="condition" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Condition</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <FormControl><SelectTrigger className="bg-background border-border"><SelectValue placeholder="Select" /></SelectTrigger></FormControl>
+              <SelectContent><SelectItem value="Trending">Trending</SelectItem><SelectItem value="Ranging">Ranging</SelectItem></SelectContent></Select></FormItem>
+            )} />
+            <FormField control={form.control} name="bias" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Bias</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <FormControl><SelectTrigger className="bg-background border-border"><SelectValue placeholder="Select" /></SelectTrigger></FormControl>
+              <SelectContent><SelectItem value="Bullish">Bullish</SelectItem><SelectItem value="Bearish">Bearish</SelectItem></SelectContent></Select></FormItem>
+            )} />
+            <FormField control={form.control} name="outcome" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Outcome</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <FormControl><SelectTrigger className="bg-background border-border"><SelectValue placeholder="Select" /></SelectTrigger></FormControl>
+              <SelectContent><SelectItem value="Win">Win</SelectItem><SelectItem value="Loss">Loss</SelectItem><SelectItem value="BE">BE</SelectItem></SelectContent></Select></FormItem>
+            )} />
+            <FormField control={form.control} name="rAchieved" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">R-Value</FormLabel>
+              <FormControl><Input type="number" step="any" {...field} className="bg-background border-border" /></FormControl></FormItem>
+            )} />
+            <FormField control={form.control} name="plAmt" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">P/L ($)</FormLabel>
+              <FormControl><Input type="number" step="any" {...field} className="bg-background border-border" /></FormControl></FormItem>
+            )} />
+          </div>
+        )}
+        {currentStep === 1 && (
+          <div className="grid grid-cols-2 gap-4">
+            <FormField control={form.control} name="marketRegime" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Market Regime</FormLabel>
+              <Select onValueChange={field.onChange} value={field.value || ""}><FormControl><SelectTrigger className="bg-background border-border"><SelectValue placeholder="Select" /></SelectTrigger></FormControl>
+              <SelectContent><SelectItem value="Trending">Trending</SelectItem><SelectItem value="Ranging">Ranging</SelectItem><SelectItem value="Transition">Transition</SelectItem></SelectContent></Select></FormItem>
+            )} />
+            <FormField control={form.control} name="volatilityState" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Volatility State</FormLabel>
+              <Select onValueChange={field.onChange} value={field.value || ""}><FormControl><SelectTrigger className="bg-background border-border"><SelectValue placeholder="Select" /></SelectTrigger></FormControl>
+              <SelectContent><SelectItem value="Expanding">Expanding</SelectItem><SelectItem value="Contracting">Contracting</SelectItem></SelectContent></Select></FormItem>
+            )} />
+            <FormField control={form.control} name="liquidityConditions" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Liquidity</FormLabel>
+              <Select onValueChange={field.onChange} value={field.value || ""}><FormControl><SelectTrigger className="bg-background border-border"><SelectValue placeholder="Select" /></SelectTrigger></FormControl>
+              <SelectContent><SelectItem value="High">High</SelectItem><SelectItem value="Normal">Normal</SelectItem><SelectItem value="Thin">Thin</SelectItem></SelectContent></Select></FormItem>
+            )} />
+            <FormField control={form.control} name="newsEnvironment" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">News Environment</FormLabel>
+              <Select onValueChange={field.onChange} value={field.value || ""}><FormControl><SelectTrigger className="bg-background border-border"><SelectValue placeholder="Select" /></SelectTrigger></FormControl>
+              <SelectContent><SelectItem value="None">None</SelectItem><SelectItem value="Medium Impact">Medium Impact</SelectItem><SelectItem value="High Impact">High Impact</SelectItem></SelectContent></Select></FormItem>
+            )} />
+          </div>
+        )}
+        {currentStep === 2 && (
+          <div className="grid grid-cols-2 gap-4">
+            <FormField control={form.control} name="entryTimeUtc" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Entry Time (UTC)</FormLabel>
+              <FormControl><Input type="time" {...field} className="bg-background border-border" /></FormControl></FormItem>
+            )} />
+            <FormField control={form.control} name="sessionPhase" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Session Phase</FormLabel>
+              <Select onValueChange={field.onChange} value={field.value || ""}><FormControl><SelectTrigger className="bg-background border-border"><SelectValue placeholder="Select" /></SelectTrigger></FormControl>
+              <SelectContent><SelectItem value="Session Open">Session Open</SelectItem><SelectItem value="Mid-Session">Mid-Session</SelectItem><SelectItem value="Session Close">Session Close</SelectItem></SelectContent></Select></FormItem>
+            )} />
+            <FormField control={form.control} name="entryTimingContext" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Timing Context</FormLabel>
+              <Select onValueChange={field.onChange} value={field.value || ""}><FormControl><SelectTrigger className="bg-background border-border"><SelectValue placeholder="Select" /></SelectTrigger></FormControl>
+              <SelectContent><SelectItem value="Initial Impulse">Initial Impulse</SelectItem><SelectItem value="Pullback / Continuation">Pullback / Cont</SelectItem><SelectItem value="Reversal Window">Reversal</SelectItem><SelectItem value="Pre-Move Condition">Pre-Move</SelectItem></SelectContent></Select></FormItem>
+            )} />
+            <FormField control={form.control} name="preExpansionCondition" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Expansion Timing</FormLabel>
+              <Select onValueChange={field.onChange} value={field.value || ""}><FormControl><SelectTrigger className="bg-background border-border"><SelectValue placeholder="Select" /></SelectTrigger></FormControl>
+              <SelectContent><SelectItem value="Before Expansion">Before</SelectItem><SelectItem value="After Expansion">After</SelectItem></SelectContent></Select></FormItem>
+            )} />
+          </div>
+        )}
+        {currentStep === 3 && (
+          <div className="grid grid-cols-2 gap-4">
+            {["marketAlignmentScore", "setupClarityScore", "entryPrecisionScore", "confluenceScore", "timingQualityScore"].map(name => (
+              <FormField key={name} control={form.control} name={name as any} render={({ field }) => (
+                <FormItem><FormLabel className="text-[10px] font-bold uppercase">{name.replace("Score", "").replace(/([A-Z])/g, " $1")}</FormLabel>
+                <FormControl><Input type="number" min="1" max="5" {...field} className="bg-background border-border" /></FormControl></FormItem>
+              )} />
+            ))}
+          </div>
+        )}
+        {currentStep === 4 && (
+          <div className="space-y-3">
+            {["primarySignalConfirmed", "secondaryConfirmationPresent", "keyLevelRespected", "momentumSignalValid", "invalidationLevelDefined", "targetLogicClear"].map(name => (
+              <FormField key={name} control={form.control} name={name as any} render={({ field }) => (
+                <FormItem className="flex items-center gap-3">
+                  <FormControl><Checkbox checked={field.value as boolean} onCheckedChange={field.onChange} /></FormControl>
+                  <FormLabel className="text-[10px] font-bold uppercase cursor-pointer">{name.replace(/([A-Z])/g, " $1")}</FormLabel>
+                </FormItem>
+              )} />
+            ))}
+          </div>
+        )}
+        {currentStep === 5 && (
+          <div className="grid grid-cols-2 gap-4">
+            {["plannedEntry", "actualEntry", "plannedStopLoss", "actualStopLoss", "plannedTakeProfit", "actualExit"].map(name => (
+              <FormField key={name} control={form.control} name={name as any} render={({ field }) => (
+                <FormItem><FormLabel className="text-[10px] font-bold uppercase">{name.replace(/([A-Z])/g, " $1")}</FormLabel>
+                <FormControl><Input type="number" step="any" {...field} className="bg-background border-border" placeholder="Price" /></FormControl></FormItem>
+              )} />
+            ))}
+          </div>
+        )}
+        {currentStep === 6 && (
+          <div className="grid grid-cols-2 gap-4">
+            <FormField control={form.control} name="riskPercentPerTrade" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Risk % per Trade</FormLabel>
+              <FormControl><Input type="number" step="0.01" {...field} className="bg-background border-border" /></FormControl></FormItem>
+            )} />
+            <FormField control={form.control} name="plannedRiskReward" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Planned RR</FormLabel>
+              <FormControl><Input type="text" {...field} className="bg-background border-border" placeholder="1:2" /></FormControl></FormItem>
+            )} />
+            <FormField control={form.control} name="achievedRiskReward" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Achieved RR</FormLabel>
+              <FormControl><Input type="text" {...field} className="bg-background border-border" placeholder="1:2" /></FormControl></FormItem>
+            )} />
+            <FormField control={form.control} name="openRiskAtEntry" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Open Risk %</FormLabel>
+              <FormControl><Input type="number" step="0.01" {...field} className="bg-background border-border" /></FormControl></FormItem>
+            )} />
+            <FormField control={form.control} name="drawdownAtEntry" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Drawdown %</FormLabel>
+              <FormControl><Input type="number" step="0.01" {...field} className="bg-background border-border" /></FormControl></FormItem>
+            )} />
+            <FormField control={form.control} name="riskHeat" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Risk Heat</FormLabel>
+              <Select onValueChange={field.onChange} value={field.value || ""}><FormControl><SelectTrigger className="bg-background border-border"><SelectValue placeholder="Select" /></SelectTrigger></FormControl>
+              <SelectContent><SelectItem value="Low">Low</SelectItem><SelectItem value="Medium">Medium</SelectItem><SelectItem value="High">High</SelectItem></SelectContent></Select></FormItem>
+            )} />
+          </div>
+        )}
+        {currentStep === 7 && (
+          <div className="grid grid-cols-2 gap-4">
+            <FormField control={form.control} name="entryMethod" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Entry Method</FormLabel>
+              <Select onValueChange={field.onChange} value={field.value || ""}><FormControl><SelectTrigger className="bg-background border-border"><SelectValue placeholder="Select" /></SelectTrigger></FormControl>
+              <SelectContent><SelectItem value="Market">Market</SelectItem><SelectItem value="Limit">Limit</SelectItem><SelectItem value="Confirmation">Confirmation</SelectItem></SelectContent></Select></FormItem>
+            )} />
+            <FormField control={form.control} name="exitStrategy" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Exit Strategy</FormLabel>
+              <Select onValueChange={field.onChange} value={field.value || ""}><FormControl><SelectTrigger className="bg-background border-border"><SelectValue placeholder="Select" /></SelectTrigger></FormControl>
+              <SelectContent><SelectItem value="Fixed Target">Fixed Target</SelectItem><SelectItem value="Partial + Runner">Partial + Runner</SelectItem><SelectItem value="Trailing Exit">Trailing Exit</SelectItem></SelectContent></Select></FormItem>
+            )} />
+            <FormField control={form.control} name="breakEvenApplied" render={({ field }) => (
+              <FormItem className="flex items-center gap-3"><FormControl><Checkbox checked={field.value as boolean} onCheckedChange={field.onChange} /></FormControl>
+              <FormLabel className="text-[10px] font-bold uppercase cursor-pointer">Break-Even Applied</FormLabel></FormItem>
+            )} />
+            <FormField control={form.control} name="earlyExit" render={({ field }) => (
+              <FormItem className="flex items-center gap-3"><FormControl><Checkbox checked={field.value as boolean} onCheckedChange={field.onChange} /></FormControl>
+              <FormLabel className="text-[10px] font-bold uppercase cursor-pointer">Early Exit</FormLabel></FormItem>
+            )} />
+            <FormField control={form.control} name="managementType" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Management Type</FormLabel>
+              <Select onValueChange={field.onChange} value={field.value || ""}><FormControl><SelectTrigger className="bg-background border-border"><SelectValue placeholder="Select" /></SelectTrigger></FormControl>
+              <SelectContent><SelectItem value="Rule-Based">Rule-Based</SelectItem><SelectItem value="Discretionary">Discretionary</SelectItem></SelectContent></Select></FormItem>
+            )} />
+          </div>
+        )}
+        {currentStep === 8 && (
+          <div className="grid grid-cols-2 gap-4">
+            <FormField control={form.control} name="confidenceLevel" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Confidence (1-5)</FormLabel>
+              <FormControl><Input type="number" min="1" max="5" {...field} className="bg-background border-border" /></FormControl></FormItem>
+            )} />
+            <FormField control={form.control} name="emotionalState" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Emotional State</FormLabel>
+              <Select onValueChange={field.onChange} value={field.value || ""}><FormControl><SelectTrigger className="bg-background border-border"><SelectValue placeholder="Select" /></SelectTrigger></FormControl>
+              <SelectContent><SelectItem value="Calm">Calm</SelectItem><SelectItem value="FOMO">FOMO</SelectItem><SelectItem value="Hesitant">Hesitant</SelectItem><SelectItem value="Overconfident">Overconfident</SelectItem></SelectContent></Select></FormItem>
+            )} />
+            <FormField control={form.control} name="focusLevel" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Focus Level (1-5)</FormLabel>
+              <FormControl><Input type="number" min="1" max="5" {...field} className="bg-background border-border" /></FormControl></FormItem>
+            )} />
+            <FormField control={form.control} name="stressLevel" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Stress Level (1-5)</FormLabel>
+              <FormControl><Input type="number" min="1" max="5" {...field} className="bg-background border-border" /></FormControl></FormItem>
+            )} />
+          </div>
+        )}
+        {currentStep === 9 && (
+          <div className="space-y-4">
+            <FormField control={form.control} name="rulesFollowedPercent" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Rules Followed %</FormLabel>
+              <FormControl><Input type="number" min="0" max="100" {...field} className="bg-background border-border" /></FormControl></FormItem>
+            )} />
+            {["forcedTrade", "missedValidSetup", "overtrading", "documentationSaved"].map(name => (
+              <FormField key={name} control={form.control} name={name as any} render={({ field }) => (
+                <FormItem className="flex items-center gap-3">
+                  <FormControl><Checkbox checked={field.value as boolean} onCheckedChange={field.onChange} /></FormControl>
+                  <FormLabel className="text-[10px] font-bold uppercase cursor-pointer">{name.replace(/([A-Z])/g, " $1")}</FormLabel>
+                </FormItem>
+              )} />
+            ))}
+          </div>
+        )}
+        {currentStep === 10 && (
+          <div className="space-y-3">
+            {["whatWorked", "whatFailed", "oneRuleToReinforce", "oneRuleToAdjust"].map(name => (
+              <FormField key={name} control={form.control} name={name as any} render={({ field }) => (
+                <FormItem><FormLabel className="text-[10px] font-bold uppercase">{name.replace(/([A-Z])/g, " $1")}</FormLabel>
+                <FormControl><Textarea {...field} className="bg-background border-border resize-none" placeholder="Notes..." rows={2} /></FormControl></FormItem>
+              )} />
+            ))}
+            <FormField control={form.control} name="setupWorthRepeating" render={({ field }) => (
+              <FormItem className="flex items-center gap-3">
+                <FormControl><Checkbox checked={field.value as boolean} onCheckedChange={field.onChange} /></FormControl>
+                <FormLabel className="text-[10px] font-bold uppercase cursor-pointer">Setup Worth Repeating</FormLabel>
+              </FormItem>
+            )} />
+          </div>
+        )}
+        {currentStep === 11 && (
+          <div className="space-y-3">
+            <FormField control={form.control} name="minimumSetupScore" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Min Setup Score</FormLabel>
+              <FormControl><Input type="number" min="1" max="5" {...field} className="bg-background border-border" /></FormControl></FormItem>
+            )} />
+            <FormField control={form.control} name="approvedSessions" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Approved Sessions</FormLabel>
+              <FormControl><Input {...field} className="bg-background border-border" placeholder="London, NY, Asian..." /></FormControl></FormItem>
+            )} />
+            <FormField control={form.control} name="approvedMarketRegimes" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Approved Regimes</FormLabel>
+              <FormControl><Input {...field} className="bg-background border-border" placeholder="Trending, Ranging..." /></FormControl></FormItem>
+            )} />
+            <FormField control={form.control} name="disallowedVolatility" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Disallowed Volatility</FormLabel>
+              <FormControl><Input {...field} className="bg-background border-border" placeholder="States..." /></FormControl></FormItem>
+            )} />
+            <FormField control={form.control} name="blacklistedConditions" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Blacklisted Conditions</FormLabel>
+              <FormControl><Textarea {...field} className="bg-background border-border resize-none" placeholder="List..." rows={2} /></FormControl></FormItem>
+            )} />
+          </div>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -97,753 +392,47 @@ function LogEntryModal() {
           Log Entry
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl bg-card border-border">
+      <DialogContent className="max-w-2xl bg-card border-border max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-foreground">Commit Entry to Journal</DialogTitle>
+          <DialogTitle className="text-foreground">
+            {steps[currentStep].title}
+            <div className="text-xs text-muted-foreground mt-2">Step {currentStep + 1} of {totalSteps}</div>
+          </DialogTitle>
         </DialogHeader>
         
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 mt-4">
-            <div className="grid grid-cols-2 gap-6">
-              <FormField
-                control={form.control}
-                name="asset"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold text-muted-foreground uppercase">Asset</FormLabel>
-                    <FormControl>
-                      <Input placeholder="EURUSD" {...field} className="bg-background border-border" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="strategy"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold text-muted-foreground uppercase">Strategy</FormLabel>
-                    <FormControl>
-                      <Input placeholder="SMC Breaker" {...field} className="bg-background border-border" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="session"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold text-muted-foreground uppercase">Session</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger className="bg-background border-border">
-                          <SelectValue placeholder="Select session" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="London">London</SelectItem>
-                        <SelectItem value="New York">New York</SelectItem>
-                        <SelectItem value="Asian">Asian</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="condition"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold text-muted-foreground uppercase">Condition</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger className="bg-background border-border">
-                          <SelectValue placeholder="Select condition" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="Trending">Trending</SelectItem>
-                        <SelectItem value="Ranging">Ranging</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="bias"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold text-muted-foreground uppercase">Bias</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger className="bg-background border-border">
-                          <SelectValue placeholder="Select bias" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="Bullish">Bullish</SelectItem>
-                        <SelectItem value="Bearish">Bearish</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="outcome"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold text-muted-foreground uppercase">Outcome</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger className="bg-background border-border">
-                          <SelectValue placeholder="Select outcome" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="Win">Win</SelectItem>
-                        <SelectItem value="Loss">Loss</SelectItem>
-                        <SelectItem value="BE">BE</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="rAchieved"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold text-muted-foreground uppercase">R-Value</FormLabel>
-                    <FormControl>
-                      <Input type="number" step="any" {...field} className="bg-background border-border" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="plAmt"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold text-muted-foreground uppercase">P/L ($)</FormLabel>
-                    <FormControl>
-                      <Input type="number" step="any" {...field} className="bg-background border-border" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            {/* Panel 1: Market Regime & Environment */}
-            <Collapsible defaultOpen={false} className="border border-border rounded-lg p-4">
-              <CollapsibleTrigger className="flex items-center justify-between w-full hover:text-primary transition-colors">
-                <span className="text-xs font-black uppercase tracking-widest">🌍 Market Regime & Environment</span>
-                <ChevronDown className="w-4 h-4" />
-              </CollapsibleTrigger>
-              <CollapsibleContent className="mt-4 grid grid-cols-2 gap-4">
-                <FormField control={form.control} name="marketRegime" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Market Regime</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value || ""}>
-                      <FormControl>
-                        <SelectTrigger className="bg-background border-border"><SelectValue placeholder="Select" /></SelectTrigger>
-                      </FormControl>
-                      <SelectContent><SelectItem value="Trending">Trending</SelectItem><SelectItem value="Ranging">Ranging</SelectItem><SelectItem value="Transition">Transition</SelectItem></SelectContent>
-                    </Select>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="volatilityState" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Volatility State</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value || ""}>
-                      <FormControl>
-                        <SelectTrigger className="bg-background border-border"><SelectValue placeholder="Select" /></SelectTrigger>
-                      </FormControl>
-                      <SelectContent><SelectItem value="Expanding">Expanding</SelectItem><SelectItem value="Contracting">Contracting</SelectItem></SelectContent>
-                    </Select>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="liquidityConditions" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Liquidity Conditions</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value || ""}>
-                      <FormControl>
-                        <SelectTrigger className="bg-background border-border"><SelectValue placeholder="Select" /></SelectTrigger>
-                      </FormControl>
-                      <SelectContent><SelectItem value="High">High</SelectItem><SelectItem value="Normal">Normal</SelectItem><SelectItem value="Thin">Thin</SelectItem></SelectContent>
-                    </Select>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="newsEnvironment" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">News Environment</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value || ""}>
-                      <FormControl>
-                        <SelectTrigger className="bg-background border-border"><SelectValue placeholder="Select" /></SelectTrigger>
-                      </FormControl>
-                      <SelectContent><SelectItem value="None">None</SelectItem><SelectItem value="Medium Impact">Medium Impact</SelectItem><SelectItem value="High Impact">High Impact</SelectItem></SelectContent>
-                    </Select>
-                  </FormItem>
-                )} />
-              </CollapsibleContent>
-            </Collapsible>
-
-            {/* Panel 2: Time-of-Day & Session Precision */}
-            <Collapsible defaultOpen={false} className="border border-border rounded-lg p-4">
-              <CollapsibleTrigger className="flex items-center justify-between w-full hover:text-primary transition-colors">
-                <span className="text-xs font-black uppercase tracking-widest">⏰ Time-of-Day & Session Precision</span>
-                <ChevronDown className="w-4 h-4" />
-              </CollapsibleTrigger>
-              <CollapsibleContent className="mt-4 grid grid-cols-2 gap-4">
-                <FormField control={form.control} name="entryTimeUtc" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Entry Time (UTC)</FormLabel>
-                    <FormControl>
-                      <Input type="time" {...field} className="bg-background border-border" />
-                    </FormControl>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="sessionPhase" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Session Phase</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value || ""}>
-                      <FormControl>
-                        <SelectTrigger className="bg-background border-border"><SelectValue placeholder="Select" /></SelectTrigger>
-                      </FormControl>
-                      <SelectContent><SelectItem value="Session Open">Session Open</SelectItem><SelectItem value="Mid-Session">Mid-Session</SelectItem><SelectItem value="Session Close">Session Close</SelectItem></SelectContent>
-                    </Select>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="entryTimingContext" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Entry Timing Context</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value || ""}>
-                      <FormControl>
-                        <SelectTrigger className="bg-background border-border"><SelectValue placeholder="Select" /></SelectTrigger>
-                      </FormControl>
-                      <SelectContent><SelectItem value="Initial Impulse">Initial Impulse</SelectItem><SelectItem value="Pullback / Continuation">Pullback / Continuation</SelectItem><SelectItem value="Reversal Window">Reversal Window</SelectItem><SelectItem value="Pre-Move Condition">Pre-Move Condition</SelectItem></SelectContent>
-                    </Select>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="preExpansionCondition" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Expansion Timing</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value || ""}>
-                      <FormControl>
-                        <SelectTrigger className="bg-background border-border"><SelectValue placeholder="Select" /></SelectTrigger>
-                      </FormControl>
-                      <SelectContent><SelectItem value="Before Expansion">Before Expansion</SelectItem><SelectItem value="After Expansion">After Expansion</SelectItem></SelectContent>
-                    </Select>
-                  </FormItem>
-                )} />
-              </CollapsibleContent>
-            </Collapsible>
-
-            {/* Panel 3: Setup Quality Scoring */}
-            <Collapsible defaultOpen={false} className="border border-border rounded-lg p-4">
-              <CollapsibleTrigger className="flex items-center justify-between w-full hover:text-primary transition-colors">
-                <span className="text-xs font-black uppercase tracking-widest">⭐ Setup Quality Scoring</span>
-                <ChevronDown className="w-4 h-4" />
-              </CollapsibleTrigger>
-              <CollapsibleContent className="mt-4 grid grid-cols-2 gap-4">
-                <FormField control={form.control} name="marketAlignmentScore" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Market Alignment (1-5)</FormLabel>
-                    <FormControl>
-                      <Input type="number" min="1" max="5" {...field} className="bg-background border-border" />
-                    </FormControl>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="setupClarityScore" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Setup Clarity (1-5)</FormLabel>
-                    <FormControl>
-                      <Input type="number" min="1" max="5" {...field} className="bg-background border-border" />
-                    </FormControl>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="entryPrecisionScore" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Entry Precision (1-5)</FormLabel>
-                    <FormControl>
-                      <Input type="number" min="1" max="5" {...field} className="bg-background border-border" />
-                    </FormControl>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="confluenceScore" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Confluence Strength (1-5)</FormLabel>
-                    <FormControl>
-                      <Input type="number" min="1" max="5" {...field} className="bg-background border-border" />
-                    </FormControl>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="timingQualityScore" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Timing Quality (1-5)</FormLabel>
-                    <FormControl>
-                      <Input type="number" min="1" max="5" {...field} className="bg-background border-border" />
-                    </FormControl>
-                  </FormItem>
-                )} />
-              </CollapsibleContent>
-            </Collapsible>
-
-            {/* Panel 4: Structure / Signal Validation */}
-            <Collapsible defaultOpen={false} className="border border-border rounded-lg p-4">
-              <CollapsibleTrigger className="flex items-center justify-between w-full hover:text-primary transition-colors">
-                <span className="text-xs font-black uppercase tracking-widest">🧩 Structure / Signal Validation</span>
-                <ChevronDown className="w-4 h-4" />
-              </CollapsibleTrigger>
-              <CollapsibleContent className="mt-4 space-y-3">
-                <FormField control={form.control} name="primarySignalConfirmed" render={({ field }) => (
-                  <FormItem className="flex items-center gap-3">
-                    <FormControl>
-                      <Checkbox checked={field.value as boolean} onCheckedChange={field.onChange} />
-                    </FormControl>
-                    <FormLabel className="text-[10px] font-bold uppercase cursor-pointer">Primary Signal Confirmed</FormLabel>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="secondaryConfirmationPresent" render={({ field }) => (
-                  <FormItem className="flex items-center gap-3">
-                    <FormControl>
-                      <Checkbox checked={field.value as boolean} onCheckedChange={field.onChange} />
-                    </FormControl>
-                    <FormLabel className="text-[10px] font-bold uppercase cursor-pointer">Secondary Confirmation Present</FormLabel>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="keyLevelRespected" render={({ field }) => (
-                  <FormItem className="flex items-center gap-3">
-                    <FormControl>
-                      <Checkbox checked={field.value as boolean} onCheckedChange={field.onChange} />
-                    </FormControl>
-                    <FormLabel className="text-[10px] font-bold uppercase cursor-pointer">Key Level / Zone Respected</FormLabel>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="momentumSignalValid" render={({ field }) => (
-                  <FormItem className="flex items-center gap-3">
-                    <FormControl>
-                      <Checkbox checked={field.value as boolean} onCheckedChange={field.onChange} />
-                    </FormControl>
-                    <FormLabel className="text-[10px] font-bold uppercase cursor-pointer">Momentum / Confirmation Signal Valid</FormLabel>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="invalidationLevelDefined" render={({ field }) => (
-                  <FormItem className="flex items-center gap-3">
-                    <FormControl>
-                      <Checkbox checked={field.value as boolean} onCheckedChange={field.onChange} />
-                    </FormControl>
-                    <FormLabel className="text-[10px] font-bold uppercase cursor-pointer">Invalidation Level Defined</FormLabel>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="targetLogicClear" render={({ field }) => (
-                  <FormItem className="flex items-center gap-3">
-                    <FormControl>
-                      <Checkbox checked={field.value as boolean} onCheckedChange={field.onChange} />
-                    </FormControl>
-                    <FormLabel className="text-[10px] font-bold uppercase cursor-pointer">Target Logic Clear</FormLabel>
-                  </FormItem>
-                )} />
-              </CollapsibleContent>
-            </Collapsible>
-
-            {/* Panel 5: Execution Precision */}
-            <Collapsible defaultOpen={false} className="border border-border rounded-lg p-4">
-              <CollapsibleTrigger className="flex items-center justify-between w-full hover:text-primary transition-colors">
-                <span className="text-xs font-black uppercase tracking-widest">🎯 Execution Precision</span>
-                <ChevronDown className="w-4 h-4" />
-              </CollapsibleTrigger>
-              <CollapsibleContent className="mt-4 grid grid-cols-2 gap-4">
-                <FormField control={form.control} name="plannedEntry" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Planned Entry</FormLabel>
-                    <FormControl>
-                      <Input type="number" step="any" {...field} className="bg-background border-border" placeholder="Price" />
-                    </FormControl>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="actualEntry" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Actual Entry</FormLabel>
-                    <FormControl>
-                      <Input type="number" step="any" {...field} className="bg-background border-border" placeholder="Price" />
-                    </FormControl>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="plannedStopLoss" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Planned Stop Loss</FormLabel>
-                    <FormControl>
-                      <Input type="number" step="any" {...field} className="bg-background border-border" placeholder="Price" />
-                    </FormControl>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="actualStopLoss" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Actual Stop Loss</FormLabel>
-                    <FormControl>
-                      <Input type="number" step="any" {...field} className="bg-background border-border" placeholder="Price" />
-                    </FormControl>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="plannedTakeProfit" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Planned Take Profit</FormLabel>
-                    <FormControl>
-                      <Input type="number" step="any" {...field} className="bg-background border-border" placeholder="Price" />
-                    </FormControl>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="actualExit" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Actual Exit</FormLabel>
-                    <FormControl>
-                      <Input type="number" step="any" {...field} className="bg-background border-border" placeholder="Price" />
-                    </FormControl>
-                  </FormItem>
-                )} />
-              </CollapsibleContent>
-            </Collapsible>
-
-            {/* Panel 6: Risk & Capital Efficiency */}
-            <Collapsible defaultOpen={false} className="border border-border rounded-lg p-4">
-              <CollapsibleTrigger className="flex items-center justify-between w-full hover:text-primary transition-colors">
-                <span className="text-xs font-black uppercase tracking-widest">⚖️ Risk & Capital Efficiency</span>
-                <ChevronDown className="w-4 h-4" />
-              </CollapsibleTrigger>
-              <CollapsibleContent className="mt-4 grid grid-cols-2 gap-4">
-                <FormField control={form.control} name="riskPercentPerTrade" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Risk % per Trade</FormLabel>
-                    <FormControl>
-                      <Input type="number" step="0.01" {...field} className="bg-background border-border" placeholder="%" />
-                    </FormControl>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="plannedRiskReward" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Planned Risk:Reward</FormLabel>
-                    <FormControl>
-                      <Input type="text" {...field} className="bg-background border-border" placeholder="1:2" />
-                    </FormControl>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="achievedRiskReward" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Achieved Risk:Reward</FormLabel>
-                    <FormControl>
-                      <Input type="text" {...field} className="bg-background border-border" placeholder="1:2" />
-                    </FormControl>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="openRiskAtEntry" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Open Risk at Entry %</FormLabel>
-                    <FormControl>
-                      <Input type="number" step="0.01" {...field} className="bg-background border-border" placeholder="%" />
-                    </FormControl>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="drawdownAtEntry" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Drawdown at Entry %</FormLabel>
-                    <FormControl>
-                      <Input type="number" step="0.01" {...field} className="bg-background border-border" placeholder="%" />
-                    </FormControl>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="riskHeat" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Risk Heat</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value || ""}>
-                      <FormControl>
-                        <SelectTrigger className="bg-background border-border"><SelectValue placeholder="Select" /></SelectTrigger>
-                      </FormControl>
-                      <SelectContent><SelectItem value="Low">Low</SelectItem><SelectItem value="Medium">Medium</SelectItem><SelectItem value="High">High</SelectItem></SelectContent>
-                    </Select>
-                  </FormItem>
-                )} />
-              </CollapsibleContent>
-            </Collapsible>
-
-            {/* Panel 7: Trade Management Logic */}
-            <Collapsible defaultOpen={false} className="border border-border rounded-lg p-4">
-              <CollapsibleTrigger className="flex items-center justify-between w-full hover:text-primary transition-colors">
-                <span className="text-xs font-black uppercase tracking-widest">🧩 Trade Management Logic</span>
-                <ChevronDown className="w-4 h-4" />
-              </CollapsibleTrigger>
-              <CollapsibleContent className="mt-4 grid grid-cols-2 gap-4">
-                <FormField control={form.control} name="entryMethod" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Entry Method</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value || ""}>
-                      <FormControl>
-                        <SelectTrigger className="bg-background border-border"><SelectValue placeholder="Select" /></SelectTrigger>
-                      </FormControl>
-                      <SelectContent><SelectItem value="Market">Market</SelectItem><SelectItem value="Limit">Limit</SelectItem><SelectItem value="Confirmation">Confirmation</SelectItem></SelectContent>
-                    </Select>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="exitStrategy" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Exit Strategy</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value || ""}>
-                      <FormControl>
-                        <SelectTrigger className="bg-background border-border"><SelectValue placeholder="Select" /></SelectTrigger>
-                      </FormControl>
-                      <SelectContent><SelectItem value="Fixed Target">Fixed Target</SelectItem><SelectItem value="Partial + Runner">Partial + Runner</SelectItem><SelectItem value="Trailing Exit">Trailing Exit</SelectItem></SelectContent>
-                    </Select>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="breakEvenApplied" render={({ field }) => (
-                  <FormItem className="flex items-center gap-3">
-                    <FormControl>
-                      <Checkbox checked={field.value as boolean} onCheckedChange={field.onChange} />
-                    </FormControl>
-                    <FormLabel className="text-[10px] font-bold uppercase cursor-pointer">Break-Even Applied</FormLabel>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="earlyExit" render={({ field }) => (
-                  <FormItem className="flex items-center gap-3">
-                    <FormControl>
-                      <Checkbox checked={field.value as boolean} onCheckedChange={field.onChange} />
-                    </FormControl>
-                    <FormLabel className="text-[10px] font-bold uppercase cursor-pointer">Early Exit</FormLabel>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="managementType" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Management Type</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value || ""}>
-                      <FormControl>
-                        <SelectTrigger className="bg-background border-border"><SelectValue placeholder="Select" /></SelectTrigger>
-                      </FormControl>
-                      <SelectContent><SelectItem value="Rule-Based">Rule-Based</SelectItem><SelectItem value="Discretionary">Discretionary</SelectItem></SelectContent>
-                    </Select>
-                  </FormItem>
-                )} />
-              </CollapsibleContent>
-            </Collapsible>
-
-            {/* Panel 8: Psychological State */}
-            <Collapsible defaultOpen={false} className="border border-border rounded-lg p-4">
-              <CollapsibleTrigger className="flex items-center justify-between w-full hover:text-primary transition-colors">
-                <span className="text-xs font-black uppercase tracking-widest">🧠 Psychological State</span>
-                <ChevronDown className="w-4 h-4" />
-              </CollapsibleTrigger>
-              <CollapsibleContent className="mt-4 grid grid-cols-2 gap-4">
-                <FormField control={form.control} name="confidenceLevel" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Confidence Level (1-5)</FormLabel>
-                    <FormControl>
-                      <Input type="number" min="1" max="5" {...field} className="bg-background border-border" />
-                    </FormControl>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="emotionalState" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Emotional State</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value || ""}>
-                      <FormControl>
-                        <SelectTrigger className="bg-background border-border"><SelectValue placeholder="Select" /></SelectTrigger>
-                      </FormControl>
-                      <SelectContent><SelectItem value="Calm">Calm</SelectItem><SelectItem value="FOMO">FOMO</SelectItem><SelectItem value="Hesitant">Hesitant</SelectItem><SelectItem value="Overconfident">Overconfident</SelectItem></SelectContent>
-                    </Select>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="focusLevel" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Focus Level (1-5)</FormLabel>
-                    <FormControl>
-                      <Input type="number" min="1" max="5" {...field} className="bg-background border-border" />
-                    </FormControl>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="stressLevel" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Stress Level (1-5)</FormLabel>
-                    <FormControl>
-                      <Input type="number" min="1" max="5" {...field} className="bg-background border-border" />
-                    </FormControl>
-                  </FormItem>
-                )} />
-              </CollapsibleContent>
-            </Collapsible>
-
-            {/* Panel 9: Rule Adherence & Discipline */}
-            <Collapsible defaultOpen={false} className="border border-border rounded-lg p-4">
-              <CollapsibleTrigger className="flex items-center justify-between w-full hover:text-primary transition-colors">
-                <span className="text-xs font-black uppercase tracking-widest">📏 Rule Adherence & Discipline</span>
-                <ChevronDown className="w-4 h-4" />
-              </CollapsibleTrigger>
-              <CollapsibleContent className="mt-4 grid grid-cols-2 gap-4">
-                <FormField control={form.control} name="rulesFollowedPercent" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Rules Followed %</FormLabel>
-                    <FormControl>
-                      <Input type="number" min="0" max="100" {...field} className="bg-background border-border" placeholder="%" />
-                    </FormControl>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="forcedTrade" render={({ field }) => (
-                  <FormItem className="flex items-center gap-3">
-                    <FormControl>
-                      <Checkbox checked={field.value as boolean} onCheckedChange={field.onChange} />
-                    </FormControl>
-                    <FormLabel className="text-[10px] font-bold uppercase cursor-pointer">Forced Trade</FormLabel>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="missedValidSetup" render={({ field }) => (
-                  <FormItem className="flex items-center gap-3">
-                    <FormControl>
-                      <Checkbox checked={field.value as boolean} onCheckedChange={field.onChange} />
-                    </FormControl>
-                    <FormLabel className="text-[10px] font-bold uppercase cursor-pointer">Missed Valid Setup</FormLabel>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="overtrading" render={({ field }) => (
-                  <FormItem className="flex items-center gap-3">
-                    <FormControl>
-                      <Checkbox checked={field.value as boolean} onCheckedChange={field.onChange} />
-                    </FormControl>
-                    <FormLabel className="text-[10px] font-bold uppercase cursor-pointer">Overtrading</FormLabel>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="documentationSaved" render={({ field }) => (
-                  <FormItem className="flex items-center gap-3">
-                    <FormControl>
-                      <Checkbox checked={field.value as boolean} onCheckedChange={field.onChange} />
-                    </FormControl>
-                    <FormLabel className="text-[10px] font-bold uppercase cursor-pointer">Documentation Saved</FormLabel>
-                  </FormItem>
-                )} />
-              </CollapsibleContent>
-            </Collapsible>
-
-            {/* Panel 10: Post-Trade Learning & Optimization */}
-            <Collapsible defaultOpen={false} className="border border-border rounded-lg p-4">
-              <CollapsibleTrigger className="flex items-center justify-between w-full hover:text-primary transition-colors">
-                <span className="text-xs font-black uppercase tracking-widest">🔁 Post-Trade Learning & Optimization</span>
-                <ChevronDown className="w-4 h-4" />
-              </CollapsibleTrigger>
-              <CollapsibleContent className="mt-4 space-y-3">
-                <FormField control={form.control} name="whatWorked" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">What Worked</FormLabel>
-                    <FormControl>
-                      <Textarea {...field} className="bg-background border-border resize-none" placeholder="Describe..." rows={2} />
-                    </FormControl>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="whatFailed" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">What Failed</FormLabel>
-                    <FormControl>
-                      <Textarea {...field} className="bg-background border-border resize-none" placeholder="Describe..." rows={2} />
-                    </FormControl>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="oneRuleToReinforce" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">One Rule to Reinforce</FormLabel>
-                    <FormControl>
-                      <Textarea {...field} className="bg-background border-border resize-none" placeholder="Describe..." rows={2} />
-                    </FormControl>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="oneRuleToAdjust" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">One Rule to Adjust/Remove</FormLabel>
-                    <FormControl>
-                      <Textarea {...field} className="bg-background border-border resize-none" placeholder="Describe..." rows={2} />
-                    </FormControl>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="setupWorthRepeating" render={({ field }) => (
-                  <FormItem className="flex items-center gap-3">
-                    <FormControl>
-                      <Checkbox checked={field.value as boolean} onCheckedChange={field.onChange} />
-                    </FormControl>
-                    <FormLabel className="text-[10px] font-bold uppercase cursor-pointer">Setup Worth Repeating</FormLabel>
-                  </FormItem>
-                )} />
-              </CollapsibleContent>
-            </Collapsible>
-
-            {/* Panel 11: Edge Filters & Strategy Constraints */}
-            <Collapsible defaultOpen={false} className="border border-border rounded-lg p-4">
-              <CollapsibleTrigger className="flex items-center justify-between w-full hover:text-primary transition-colors">
-                <span className="text-xs font-black uppercase tracking-widest">🧪 Edge Filters & Strategy Constraints</span>
-                <ChevronDown className="w-4 h-4" />
-              </CollapsibleTrigger>
-              <CollapsibleContent className="mt-4 space-y-3">
-                <FormField control={form.control} name="minimumSetupScore" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Minimum Setup Score by Strategy</FormLabel>
-                    <FormControl>
-                      <Input type="number" min="1" max="5" {...field} className="bg-background border-border" placeholder="1-5" />
-                    </FormControl>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="approvedSessions" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Approved Sessions</FormLabel>
-                    <FormControl>
-                      <Input {...field} className="bg-background border-border" placeholder="London, New York, Asian..." />
-                    </FormControl>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="approvedMarketRegimes" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Approved Market Regimes</FormLabel>
-                    <FormControl>
-                      <Input {...field} className="bg-background border-border" placeholder="Trending, Ranging..." />
-                    </FormControl>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="disallowedVolatility" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Disallowed Volatility States</FormLabel>
-                    <FormControl>
-                      <Input {...field} className="bg-background border-border" placeholder="Expanding, Contracting..." />
-                    </FormControl>
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="blacklistedConditions" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[10px] font-bold uppercase">Blacklisted Conditions</FormLabel>
-                    <FormControl>
-                      <Textarea {...field} className="bg-background border-border resize-none" placeholder="List conditions..." rows={2} />
-                    </FormControl>
-                  </FormItem>
-                )} />
-              </CollapsibleContent>
-            </Collapsible>
+            {renderStepContent()}
             
-            <Button 
-              type="submit" 
-              className="w-full py-6 font-black uppercase text-sm tracking-widest" 
-              disabled={createTrade.isPending}
-            >
-              {createTrade.isPending ? "Committing..." : "Log to Journal"}
-            </Button>
+            <div className="flex gap-2 justify-between pt-4 border-t border-border">
+              <Button 
+                type="button"
+                variant="outline"
+                onClick={handlePrev}
+                disabled={currentStep === 0}
+                className="gap-2"
+              >
+                <ArrowLeft className="w-4 h-4" /> Back
+              </Button>
+
+              {currentStep < totalSteps - 1 ? (
+                <Button 
+                  type="button"
+                  onClick={handleNext}
+                  className="gap-2"
+                >
+                  Next <ArrowRight className="w-4 h-4" />
+                </Button>
+              ) : (
+                <Button 
+                  type="submit"
+                  className="gap-2 bg-emerald-500 hover:bg-emerald-600"
+                  disabled={createTrade.isPending}
+                >
+                  {createTrade.isPending ? "Logging..." : "Log Entry"}
+                </Button>
+              )}
+            </div>
           </form>
         </Form>
       </DialogContent>
