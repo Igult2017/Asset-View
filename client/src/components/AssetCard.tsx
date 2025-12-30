@@ -31,19 +31,19 @@ export function AssetCard({ asset, onDelete, onClick }: AssetCardProps) {
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
           />
         ) : (
-          <div className="w-full h-full bg-blue-50 flex items-center justify-center text-blue-500">
+          <div className="w-full h-full bg-primary/10 flex items-center justify-center text-primary">
             <FileImage className="w-12 h-12 opacity-50" />
           </div>
         );
       case "document":
         return (
-          <div className="w-full h-full bg-orange-50 flex items-center justify-center text-orange-500">
+          <div className="w-full h-full bg-primary/10 flex items-center justify-center text-primary">
             <FileText className="w-12 h-12 opacity-50" />
           </div>
         );
       default:
         return (
-          <div className="w-full h-full bg-gray-50 flex items-center justify-center text-gray-500">
+          <div className="w-full h-full bg-muted flex items-center justify-center text-muted-foreground">
             <FileText className="w-12 h-12 opacity-50" />
           </div>
         );
