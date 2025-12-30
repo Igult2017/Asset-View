@@ -1,6 +1,7 @@
 import { LayoutGrid, Image, FileText, Clock, Cloud, Settings, PieChart, Palette } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { useTheme } from "@/hooks/use-theme";
+import { Button } from "@/components/ui/button";
 
 interface SidebarProps {
   currentFilter: string;
@@ -42,6 +43,7 @@ export function Sidebar({ currentFilter, onFilterChange }: SidebarProps) {
                     : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground"
                 }
               `}
+              data-testid={`button-filter-${item.id}`}
             >
               <item.icon className="w-4 h-4" />
               {item.label}
@@ -55,18 +57,26 @@ export function Sidebar({ currentFilter, onFilterChange }: SidebarProps) {
           System
         </p>
         <nav className="space-y-1">
-          <button 
+          <Button
+            variant="ghost"
+            className="w-full justify-start gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-white hover:bg-secondary/50 hover:text-white transition-all h-auto"
             onClick={() => setTheme(theme === "black" ? "blue" : "black")}
-            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:bg-secondary/50 hover:text-foreground transition-all"
+            data-testid="button-theme-toggle"
           >
             <Palette className="w-4 h-4" />
             Theme: {theme === "black" ? "Black" : "Blue"}
-          </button>
-          <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:bg-secondary/50 hover:text-foreground transition-all">
+          </Button>
+          <button 
+            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:bg-secondary/50 hover:text-foreground transition-all"
+            data-testid="button-analytics"
+          >
             <PieChart className="w-4 h-4" />
             Analytics
           </button>
-          <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:bg-secondary/50 hover:text-foreground transition-all">
+          <button 
+            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:bg-secondary/50 hover:text-foreground transition-all"
+            data-testid="button-settings"
+          >
             <Settings className="w-4 h-4" />
             Settings
           </button>
