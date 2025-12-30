@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrix Terminal | High-Frequency Journal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #020617;
+            --card-bg: rgba(15, 23, 42, 0.6);
+            --accent: #3b82f6;
+            --border: rgba(51, 65, 85, 0.4);
+        }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: var(--bg-deep); 
+            color: #f8fafc;
+            background-image: radial-gradient(circle at 50% 0%, #1e293b 0%, #020617 70%);
+            background-attachment: fixed;
+        }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .glass-card { 
+            background: var(--card-bg); 
+            border: 1px solid var(--border); 
+            backdrop-filter: blur(12px); 
+            border-radius: 1rem;
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover { border-color: rgba(59, 130, 246, 0.4); }
+        input, select { 
+            background: rgba(30, 41, 59, 0.8) !important; 
+            border: 1px solid var(--border) !important; 
+            color: white !important;
+        }
+        .nav-link.active { color: var(--accent); position: relative; }
+        .nav-link.active::after {
+            content: ''; position: absolute; bottom: -4px; left: 0; 
+            width: 100%; height: 2px; background: var(--accent);
+            box-shadow: 0 0 8px var(--accent);
+        }
+        .hidden { display: none; }
+    </style>
+</head>
+<body class="min-h-screen pb-12">
+    <nav class="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/80 backdrop-blur-xl">
+        <div class="max-w-[1600px] mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/20">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-black tracking-tighter uppercase leading-none">Matrix<span class="text-blue-500">Edge</span></h1>
+                    <p class="text-[9px] font-bold text-slate-500 tracking-[0.2em] mt-1 uppercase">Granular Intelligence</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-10">
+                <div class="hidden md:flex gap-8">
+                    <button onclick="showTab('dashboard')" id="btn-dashboard" class="nav-link active text-xs font-black tracking-widest uppercase">Performance</button>
+                    <button onclick="showTab('history')" id="btn-history" class="nav-link text-xs font-black tracking-widest uppercase text-slate-400 hover:text-white">Trade Vault</button>
+                </div>
+                <button onclick="showTab('log')" class="bg-blue-600 hover:bg-blue-500 px-6 py-2.5 rounded-full text-[11px] font-black uppercase tracking-widest transition-all shadow-lg">Log Entry</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-[1600px] mx-auto px-6 pt-8">
+        
+        <div id="dashboard" class="space-y-8">
+            <!-- Global Stats -->
+            <div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
+                <div class="glass-card p-6">
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Total Net Profit</p>
+                    <h3 id="stat-profit" class="text-3xl font-black text-emerald-400">$0</h3>
+                </div>
+                <div class="glass-card p-6">
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Global Win Rate</p>
+                    <h3 id="stat-wr" class="text-3xl font-black text-white">0%</h3>
+                </div>
+                <div class="glass-card p-6">
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Expectancy (R)</p>
+                    <h3 id="stat-exp" class="text-3xl font-black text-blue-400">0.00</h3>
+                </div>
+                <div class="glass-card p-6">
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Trade Count</p>
+                    <h3 id="stat-count" class="text-3xl font-black text-white">0</h3>
+                </div>
+                <div class="glass-card p-6 bg-blue-600/10 border-blue-500/30">
+                    <p class="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-2">Profit Factor</p>
+                    <h3 id="stat-pf" class="text-3xl font-black text-blue-400">0.00</h3>
+                </div>
+            </div>
+
+            <!-- Granular Strategy Intel -->
+            <div class="glass-card p-1 border-blue-500/20 bg-blue-500/5">
+                <div class="p-4 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-2 h-8 bg-blue-500 rounded-full"></div>
+                        <h3 class="text-sm font-black uppercase tracking-widest">Granular Strategy Drill-Down</h3>
+                    </div>
+                    <select id="granular-strat-selector" onchange="renderMarketIntelligence()" class="bg-slate-900 text-xs font-bold px-4 py-2 rounded-lg border border-slate-700">
+                        <option value="All">All Strategies</option>
+                    </select>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 pt-0">
+                    <div class="bg-slate-900/40 p-5 rounded-xl border border-slate-800/50">
+                        <h4 class="text-[9px] font-black text-slate-500 uppercase mb-4 tracking-tighter">Win/Loss per Session %</h4>
+                        <div id="session-wl-box" class="space-y-4"></div>
+                    </div>
+                    <div class="bg-slate-900/40 p-5 rounded-xl border border-slate-800/50">
+                        <h4 class="text-[9px] font-black text-slate-500 uppercase mb-4 tracking-tighter">Market Bias Efficiency</h4>
+                        <div id="bias-wl-box" class="space-y-4"></div>
+                    </div>
+                    <div class="bg-slate-900/40 p-5 rounded-xl border border-slate-800/50">
+                        <h4 class="text-[9px] font-black text-slate-500 uppercase mb-4 tracking-tighter">Streak Intervals</h4>
+                        <div id="interval-box" class="grid grid-cols-2 gap-4"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Original Matrices -->
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                <div class="glass-card"><div class="p-4 border-b border-slate-800/50 bg-slate-900/40 text-[11px] font-black uppercase text-slate-400">Strat per Instrument</div><div id="rank-strat-inst" class="p-5 space-y-6"></div></div>
+                <div class="glass-card"><div class="p-4 border-b border-slate-800/50 bg-slate-900/40 text-[11px] font-black uppercase text-slate-400">Strat per Session</div><div id="rank-strat-sess" class="p-5 space-y-6"></div></div>
+                <div class="glass-card"><div class="p-4 border-b border-slate-800/50 bg-slate-900/40 text-[11px] font-black uppercase text-slate-400">Session per Instrument</div><div id="rank-sess-inst" class="p-5 space-y-6"></div></div>
+                <div class="glass-card"><div class="p-4 border-b border-slate-800/50 bg-slate-900/40 text-[11px] font-black uppercase text-slate-400">TF Cluster per Asset</div><div id="rank-tf-inst" class="p-5 space-y-6"></div></div>
+            </div>
+
+            <!-- Strategy Health Table -->
+            <div class="glass-card overflow-hidden">
+                <div class="p-4 border-b border-slate-800 bg-slate-900/60"><h3 class="text-xs font-black uppercase tracking-widest text-slate-300">Advanced Strategy Health Metrics</h3></div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-[11px]">
+                        <thead class="bg-slate-900/30 border-b border-slate-800/50 text-slate-500 font-black uppercase tracking-widest">
+                            <tr><th class="px-6 py-3">Strategy</th><th class="px-6 py-3">Win % (Trending)</th><th class="px-6 py-3">Win % (Ranging)</th><th class="px-6 py-3 text-center">Max Drawdown</th><th class="px-6 py-3 text-right">Recovery Rate</th></tr>
+                        </thead>
+                        <tbody id="stratDeepBody" class="divide-y divide-slate-800/30"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="history" class="hidden space-y-6">
+            <h2 class="text-2xl font-black italic tracking-tighter uppercase">Vault Data</h2>
+            <div class="glass-card overflow-hidden">
+                <table class="w-full text-left text-[11px]">
+                    <thead class="bg-slate-900/50 border-b border-slate-800 text-slate-500 font-black uppercase tracking-widest">
+                        <tr><th class="px-6 py-4">Instrument</th><th class="px-6 py-4">Strategy</th><th class="px-6 py-4 text-center">Outcome</th><th class="px-6 py-4 text-right">Net P/L</th></tr>
+                    </thead>
+                    <tbody id="historyBody" class="divide-y divide-slate-800/30"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="log" class="hidden max-w-2xl mx-auto py-10">
+            <div class="glass-card p-10">
+                <form id="tradeForm" class="space-y-8">
+                    <h2 class="text-2xl font-black italic tracking-tighter border-b border-slate-800 pb-4 uppercase">Commit Entry</h2>
+                    <div class="grid grid-cols-2 gap-6">
+                        <div><label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Asset</label><input type="text" id="asset" required class="w-full px-4 py-3 rounded-lg"></div>
+                        <div><label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Strategy</label><input type="text" id="strategy" required class="w-full px-4 py-3 rounded-lg"></div>
+                        <div><label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Session</label><select id="session" class="w-full px-4 py-3 rounded-lg"><option>London</option><option>New York</option><option>Asian</option></select></div>
+                        <div><label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Condition</label><select id="condition" class="w-full px-4 py-3 rounded-lg"><option>Trending</option><option>Ranging</option></select></div>
+                        <div><label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Market Bias</label><select id="bias" class="w-full px-4 py-3 rounded-lg"><option>Bullish</option><option>Bearish</option></select></div>
+                        <div><label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Outcome</label><select id="outcome" class="w-full px-4 py-3 rounded-lg"><option>Win</option><option>Loss</option><option>BE</option></select></div>
+                        <div><label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">R-Value</label><input type="number" step="any" id="rAchieved" required class="w-full px-4 py-3 rounded-lg"></div>
+                        <div><label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">P/L ($)</label><input type="number" step="any" id="plAmt" required class="w-full px-4 py-3 rounded-lg"></div>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-black uppercase text-sm tracking-widest shadow-xl">LOG TO MATRIX</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const mockData = [
+            { asset: 'EURUSD', strategy: 'SMC Breaker', session: 'London', condition: 'Trending', bias: 'Bullish', outcome: 'Win', rAchieved: 4.5, plAmt: 900, date: new Date().toISOString(), contextTF: 'D1', entryTF: 'M5' },
+            { asset: 'NAS100', strategy: 'Silver Bullet', session: 'New York', condition: 'Trending', bias: 'Bearish', outcome: 'Win', rAchieved: 5.0, plAmt: 1500, date: new Date().toISOString(), contextTF: 'H4', entryTF: 'M1' },
+            { asset: 'NAS100', strategy: 'Silver Bullet', session: 'New York', condition: 'Trending', bias: 'Bearish', outcome: 'Loss', rAchieved: -1, plAmt: -300, date: new Date().toISOString(), contextTF: 'H4', entryTF: 'M1' }
+        ];
+
+        let trades = JSON.parse(localStorage.getItem('matrix_journal_data_v7')) || mockData;
+
+        function showTab(id) {
+            ['dashboard', 'history', 'log'].forEach(t => document.getElementById(t).classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+            updateUI();
+        }
+
+        function updateUI() {
+            calculateGlobalStats();
+            updateStratSelector();
+            renderMatrices();
+            renderStrategyDeepDrive();
+            renderMarketIntelligence();
+            renderHistory();
+        }
+
+        function updateStratSelector() {
+            const selector = document.getElementById('granular-strat-selector');
+            const currentVal = selector.value;
+            const uniqueStrats = [...new Set(trades.map(t => t.strategy))];
+            selector.innerHTML = `<option value="All">All Strategies</option>`;
+            uniqueStrats.forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = s; opt.innerText = s;
+                selector.appendChild(opt);
+            });
+            selector.value = currentVal || "All";
+        }
+
+        function calculateGlobalStats() {
+            const net = trades.reduce((a, b) => a + parseFloat(b.plAmt), 0);
+            const wins = trades.filter(t => t.outcome === 'Win').length;
+            const wr = trades.length ? Math.round((wins / trades.length) * 100) : 0;
+            const exp = trades.length ? (trades.reduce((a, b) => a + parseFloat(b.rAchieved), 0) / trades.length).toFixed(2) : 0;
+            const grossWin = trades.reduce((a, b) => a + (parseFloat(b.plAmt) > 0 ? parseFloat(b.plAmt) : 0), 0);
+            const grossLoss = Math.abs(trades.reduce((a, b) => a + (parseFloat(b.plAmt) < 0 ? parseFloat(b.plAmt) : 0), 0));
+            const pf = grossLoss > 0 ? (grossWin / grossLoss).toFixed(2) : grossWin.toFixed(2);
+
+            document.getElementById('stat-profit').innerText = `$${net.toLocaleString()}`;
+            document.getElementById('stat-wr').innerText = `${wr}%`;
+            document.getElementById('stat-exp').innerText = `${exp}R`;
+            document.getElementById('stat-count').innerText = trades.length;
+            document.getElementById('stat-pf').innerText = pf;
+        }
+
+        function renderMarketIntelligence() {
+            const selectedStrat = document.getElementById('granular-strat-selector').value;
+            const filteredTrades = selectedStrat === "All" ? trades : trades.filter(t => t.strategy === selectedStrat);
+            
+            // Session Win Rate
+            const sessWl = document.getElementById('session-wl-box');
+            sessWl.innerHTML = '';
+            ['London', 'New York', 'Asian'].forEach(s => {
+                const sTrades = filteredTrades.filter(t => t.session === s);
+                const wins = sTrades.filter(t => t.outcome === 'Win').length;
+                const perc = sTrades.length ? Math.round((wins / sTrades.length) * 100) : 0;
+                sessWl.innerHTML += `
+                    <div>
+                        <div class="flex justify-between text-[10px] font-black uppercase mb-1"><span>${s}</span><span class="text-blue-400">${perc}%</span></div>
+                        <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden"><div class="h-full bg-blue-500" style="width: ${perc}%"></div></div>
+                    </div>`;
+            });
+
+            // Bias Efficiency
+            const biasWl = document.getElementById('bias-wl-box');
+            biasWl.innerHTML = '';
+            ['Bullish', 'Bearish'].forEach(b => {
+                const bTrades = filteredTrades.filter(t => t.bias === b);
+                const wins = bTrades.filter(t => t.outcome === 'Win').length;
+                const perc = bTrades.length ? Math.round((wins / bTrades.length) * 100) : 0;
+                biasWl.innerHTML += `
+                    <div class="flex items-center justify-between p-3 bg-slate-900/40 rounded-xl border border-slate-800/50 mb-2">
+                        <span class="text-[9px] font-black uppercase ${b === 'Bullish' ? 'text-blue-400' : 'text-rose-400'}">${b}</span>
+                        <span class="text-xs font-black text-white">${perc}% Win</span>
+                    </div>`;
+            });
+
+            // Streak Intervals
+            const intBox = document.getElementById('interval-box');
+            let maxWin = 0, maxLoss = 0, currentStreak = 0, streakType = 'None';
+            if(filteredTrades.length > 0) {
+                streakType = filteredTrades[filteredTrades.length-1].outcome;
+                for(let i=filteredTrades.length-1; i>=0; i--) {
+                    if(filteredTrades[i].outcome === streakType) currentStreak++; else break;
+                }
+                let w=0, l=0;
+                filteredTrades.forEach(t => {
+                    if(t.outcome === 'Win') { w++; l=0; if(w > maxWin) maxWin = w; }
+                    else if(t.outcome === 'Loss') { l++; w=0; if(l > maxLoss) maxLoss = l; }
+                });
+            }
+            intBox.innerHTML = `
+                <div class="p-3 bg-slate-900/40 rounded-xl border border-slate-800/50 text-center">
+                    <div class="text-[8px] text-slate-500 font-black uppercase">Current</div>
+                    <div class="text-xl font-black ${streakType === 'Win' ? 'text-emerald-400' : 'text-rose-400'}">${currentStreak}</div>
+                </div>
+                <div class="p-3 bg-slate-900/40 rounded-xl border border-slate-800/50 text-center">
+                    <div class="text-[8px] text-slate-500 font-black uppercase">Max Win</div>
+                    <div class="text-xl font-black text-blue-400">${maxWin}</div>
+                </div>`;
+        }
+
+        function renderStrategyDeepDrive() {
+            const body = document.getElementById('stratDeepBody');
+            body.innerHTML = '';
+            const strats = [...new Set(trades.map(t => t.strategy))];
+            strats.forEach(strat => {
+                const sTrades = trades.filter(t => t.strategy === strat);
+                const winTrending = sTrades.filter(t => t.condition === 'Trending' && t.outcome === 'Win').length;
+                const totalTrending = sTrades.filter(t => t.condition === 'Trending').length;
+                const winRanging = sTrades.filter(t => t.condition === 'Ranging' && t.outcome === 'Win').length;
+                const totalRanging = sTrades.filter(t => t.condition === 'Ranging').length;
+                
+                body.innerHTML += `
+                    <tr>
+                        <td class="px-6 py-4 font-black text-slate-200">${strat}</td>
+                        <td class="px-6 py-4 font-bold text-blue-400">${totalTrending ? Math.round((winTrending/totalTrending)*100)+'%' : '0%'}</td>
+                        <td class="px-6 py-4 font-bold text-indigo-400">${totalRanging ? Math.round((winRanging/totalRanging)*100)+'%' : '0%'}</td>
+                        <td class="px-6 py-4 text-center text-rose-500 font-black">---</td>
+                        <td class="px-6 py-4 text-right font-black text-emerald-400">Stable</td>
+                    </tr>`;
+            });
+        }
+
+        function renderMatrices() {
+            const computeRanking = (containerId, pk, sk) => {
+                const container = document.getElementById(containerId);
+                container.innerHTML = '';
+                const primaries = [...new Set(trades.map(t => t[pk]))];
+                primaries.forEach(pVal => {
+                    const filtered = trades.filter(t => t[pk] === pVal);
+                    const perf = {};
+                    filtered.forEach(t => {
+                        const sVal = t[sk];
+                        if(!perf[sVal]) perf[sVal] = { profit: 0 };
+                        perf[sVal].profit += parseFloat(t.plAmt);
+                    });
+                    const ranked = Object.entries(perf).sort((a,b) => b[1].profit - a[1].profit).slice(0, 3);
+                    const wrap = document.createElement('div');
+                    wrap.innerHTML = `<h5 class="text-[9px] font-black text-slate-500 uppercase mb-2 border-l-2 border-slate-700 pl-2">${pVal}</h5>`;
+                    ranked.forEach(([name, stats], i) => {
+                        wrap.innerHTML += `<div class="flex justify-between items-center mb-1 text-[11px]"><span class="truncate pr-2 text-slate-300 font-bold">#${i+1} ${name}</span><span class="${stats.profit >= 0 ? 'text-emerald-400' : 'text-rose-400'} font-black">+$${stats.profit.toFixed(0)}</span></div>`;
+                    });
+                    container.appendChild(wrap);
+                });
+            };
+            computeRanking('rank-strat-inst', 'asset', 'strategy');
+            computeRanking('rank-strat-sess', 'session', 'strategy');
+            computeRanking('rank-sess-inst', 'asset', 'session');
+            computeRanking('rank-tf-inst', 'asset', 'entryTF');
+        }
+
+        function renderHistory() {
+            const body = document.getElementById('historyBody');
+            body.innerHTML = '';
+            [...trades].reverse().forEach(t => {
+                body.innerHTML += `<tr class="border-b border-slate-800/30"><td class="px-6 py-4 font-black text-white">${t.asset}</td><td class="px-6 py-4 text-slate-400 font-bold uppercase text-[10px]">${t.strategy}</td><td class="px-6 py-4 text-center"><span class="px-2 py-1 rounded text-[9px] font-black ${t.outcome === 'Win' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'}">${t.outcome}</span></td><td class="px-6 py-4 text-right font-black ${t.plAmt >= 0 ? 'text-emerald-400' : 'text-rose-400'}">$${parseFloat(t.plAmt).toFixed(0)}</td></tr>`;
+            });
+        }
+
+        document.getElementById('tradeForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const data = { date: new Date().toISOString(), contextTF: 'D1', entryTF: 'M5' };
+            new FormData(e.target).forEach((val, key) => data[key] = val);
+            // Manual gathering since FormData needs 'name' attributes
+            const manual = ['asset', 'strategy', 'session', 'condition', 'bias', 'outcome', 'rAchieved', 'plAmt'];
+            manual.forEach(id => data[id] = document.getElementById(id).value);
+            trades.push(data);
+            localStorage.setItem('matrix_journal_data_v7', JSON.stringify(trades));
+            e.target.reset();
+            showTab('dashboard');
+        });
+
+        window.onload = () => showTab('dashboard');
+    </script>
+</body>
+</html>
