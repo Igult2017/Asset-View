@@ -1,5 +1,4 @@
 import * as React from "react"
-
 import { cn } from "@/lib/utils"
 
 const Table = React.forwardRef<
@@ -58,7 +57,7 @@ const TableRow = React.forwardRef<
   <tr
     ref={ref}
     className={cn(
-      "border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted",
+      "border-b border-slate-800/50 transition-colors hover:bg-slate-800/30 data-[state=selected]:bg-muted",
       className
     )}
     {...props}
@@ -73,7 +72,7 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      "h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0",
+      "h-12 px-6 py-3 text-left align-middle font-bold text-slate-500 uppercase tracking-widest text-[11px] [&:has([role=checkbox])]:pr-0",
       className
     )}
     {...props}
@@ -87,7 +86,7 @@ const TableCell = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <td
     ref={ref}
-    className={cn("p-4 align-middle [&:has([role=checkbox])]:pr-0", className)}
+    className={cn("p-6 align-middle [&:has([role=checkbox])]:pr-0 font-medium text-[12px]", className)}
     {...props}
   />
 ))

@@ -1,38 +1,35 @@
-import { type User, type InsertUser } from "@shared/schema";
-import { randomUUID } from "crypto";
-
-// modify the interface with any CRUD methods
-// you might need
+import { db } from "./db";
+import { trades, type Trade, type InsertTrade } from "@shared/schema";
+import { eq } from "drizzle-orm";
 
 export interface IStorage {
-  getUser(id: string): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
+  getTrades(): Promise<Trade[]>;
+  createTrade(trade: InsertTrade): Promise<Trade>;
+  deleteTrade(id: number): Promise<void>;
+  seedTrades(trades: InsertTrade[]): Promise<void>;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<string, User>;
-
-  constructor() {
-    this.users = new Map();
+export class DatabaseStorage implements IStorage {
+  async getTrades(): Promise<Trade[]> {
+    return await db.select().from(trades);
   }
 
-  async getUser(id: string): Promise<User | undefined> {
-    return this.users.get(id);
+  async createTrade(insertTrade: InsertTrade): Promise<Trade> {
+    const [trade] = await db
+      .insert(trades)
+      .values(insertTrade)
+      .returning();
+    return trade;
   }
 
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
+  async deleteTrade(id: number): Promise<void> {
+    await db.delete(trades).where(eq(trades.id, id));
   }
 
-  async createUser(insertUser: InsertUser): Promise<User> {
-    const id = randomUUID();
-    const user: User = { ...insertUser, id };
-    this.users.set(id, user);
-    return user;
+  async seedTrades(data: InsertTrade[]): Promise<void> {
+    if (data.length === 0) return;
+    await db.insert(trades).values(data);
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
