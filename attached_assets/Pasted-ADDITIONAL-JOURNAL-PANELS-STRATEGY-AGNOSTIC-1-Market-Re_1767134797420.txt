@@ -1,0 +1,338 @@
+ADDITIONAL JOURNAL PANELS (STRATEGY-AGNOSTIC)
+1. 🌍 Market Regime & Environment Panel
+
+Why this is missing
+You track results, but not the market environment at the moment of entry.
+
+Fields to Add
+
+Market Regime
+
+Trending
+
+Ranging
+
+Transition
+
+Volatility State
+
+Expanding
+
+Contracting
+
+Liquidity Conditions
+
+High
+
+Normal
+
+Thin
+
+News Environment
+
+None
+
+Medium Impact
+
+High Impact
+
+What this panel measures
+
+Whether each strategy performs better in specific market regimes and environments.
+
+Edge unlocked
+You eliminate trades taken in environments where a strategy has negative expectancy, regardless of strategy type.
+
+2. ⏰ Time-of-Day & Session Precision Panel
+
+Why this is missing
+You track sessions, but not timing precision inside sessions.
+
+Fields to Add
+
+Entry Time (UTC)
+
+Session Phase
+
+Session Open
+
+Mid-Session
+
+Session Close
+
+Entry Timing Context
+
+Initial Impulse
+
+Pullback / Continuation
+
+Reversal Window
+
+Pre-Move Condition
+
+Before Expansion
+
+After Expansion
+
+What this panel measures
+
+When, within a session, your strategies produce their edge.
+
+Edge unlocked
+Time compression → fewer trades, higher-quality execution across all strategies.
+
+3. ⭐ Setup Quality Scoring Panel (Universal)
+
+Why this is missing
+All trades are currently treated as equal quality.
+
+Fields to Add
+
+Market Alignment (HTF ↔ LTF) (1–5)
+
+Setup Clarity (1–5)
+
+Entry Precision (1–5)
+
+Confluence Strength (1–5)
+
+Timing Quality (1–5)
+
+Total Setup Score (Auto-calculated)
+
+What this panel measures
+
+The quality of the opportunity, independent of strategy type.
+
+Edge unlocked
+You trade only setups above a statistically proven quality threshold.
+
+4. 🧩 Structure / Signal Validation Panel (Strategy-Aware)
+
+Why this is missing
+You record strategies, but not whether their specific conditions were fully met.
+
+Fields to Add (Dynamic / Checkbox-Based)
+
+Primary Signal Confirmed (Y/N)
+
+Secondary Confirmation Present (Y/N)
+
+Key Level / Zone Respected (Y/N)
+
+Momentum / Confirmation Signal Valid (Y/N)
+
+Invalidation Level Defined (Y/N)
+
+Target Logic Clear (Y/N)
+
+What this panel measures
+
+Whether the rules of the selected strategy were truly satisfied.
+
+Edge unlocked
+Removes “partial-rule” trades across all strategies.
+
+5. 🎯 Execution Precision Panel
+
+Why this is missing
+Strong strategies fail due to execution inefficiencies.
+
+Fields to Add
+
+Planned Entry
+
+Actual Entry
+
+Entry Deviation (points / pips / %)
+
+Planned Stop Loss
+
+Actual Stop Loss
+
+Planned Take Profit
+
+Actual Exit
+
+Execution Error (R)
+
+What this panel measures
+
+How much edge is lost or preserved during execution.
+
+Edge unlocked
+You optimize execution quality, not strategy hopping.
+
+6. ⚖️ Risk & Capital Efficiency Panel
+
+Why this is missing
+Profit without controlled risk is unstable.
+
+Fields to Add
+
+Risk % per Trade
+
+Planned Risk-to-Reward
+
+Achieved Risk-to-Reward
+
+Open Risk at Entry (%)
+
+Drawdown at Entry (%)
+
+Risk Heat
+
+Low
+
+Medium
+
+High
+
+What this panel measures
+
+Whether returns are achieved efficiently and sustainably.
+
+Edge unlocked
+Capital protection + long-term scalability.
+
+7. 🧩 Trade Management Logic Panel
+
+Why this is missing
+Exit logic has a major impact on expectancy.
+
+Fields to Add
+
+Entry Method
+
+Market
+
+Limit
+
+Confirmation
+
+Exit Strategy
+
+Fixed Target
+
+Partial + Runner
+
+Trailing Exit
+
+Break-Even Applied? (Y/N)
+
+Early Exit? (Y/N)
+
+Management Type
+
+Rule-Based
+
+Discretionary
+
+What this panel measures
+
+The impact of management decisions on outcomes.
+
+Edge unlocked
+Best exit logic per strategy and market regime.
+
+8. 🧠 Psychological State Panel
+
+Why this is missing
+Behavioral factors are not being tracked.
+
+Fields to Add
+
+Confidence Level (1–5)
+
+Emotional State
+
+Calm
+
+FOMO
+
+Hesitant
+
+Overconfident
+
+Focus Level (1–5)
+
+Stress Level (1–5)
+
+What this panel measures
+
+Internal conditions that affect decision quality.
+
+Edge unlocked
+Avoids trading when psychology degrades expectancy.
+
+9. 📏 Rule Adherence & Discipline Panel
+
+Why this is missing
+You can’t yet isolate strategy failure vs execution failure.
+
+Fields to Add
+
+Rules Followed (%)
+
+Forced Trade? (Y/N)
+
+Missed Valid Setup? (Y/N)
+
+Overtrading? (Y/N)
+
+Trade Documentation Saved? (Y/N)
+
+What this panel measures
+
+Whether performance issues come from discipline or system logic.
+
+Edge unlocked
+Cleaner data → more reliable optimization.
+
+10. 🔁 Post-Trade Learning & Optimization Panel
+
+Why this is missing
+No formal feedback loop exists.
+
+Fields to Add
+
+What Worked
+
+What Failed
+
+One Rule to Reinforce
+
+One Rule to Adjust or Remove
+
+Setup Worth Repeating? (Y/N)
+
+What this panel measures
+
+Speed and quality of edge evolution.
+
+Edge unlocked
+Turns journaling into a continuous improvement engine.
+
+11. 🧪 Edge Filters & Strategy Constraints Panel (Advanced)
+
+Why this is missing
+There’s no automated exclusion of low-probability conditions.
+
+Fields to Add (Computed / Rule-Driven)
+
+Minimum Setup Score by Strategy
+
+Approved Sessions by Strategy
+
+Approved Market Regimes by Strategy
+
+Disallowed Volatility States
+
+Strategy-Specific Blacklisted Conditions
+
+What this panel measures
+
+Where not to trade.
+
+Edge unlocked
+Selective participation = real edge.
