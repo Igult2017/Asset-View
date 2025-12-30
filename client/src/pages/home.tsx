@@ -279,7 +279,7 @@ export default function Dashboard() {
             </div>
             <div>
               <h1 className="text-xl font-black tracking-tighter uppercase leading-none text-white">
-                Matrix<span className="text-blue-500">Edge</span>
+                FSDZONESJOURNAL
               </h1>
               <p className="text-[9px] font-bold text-slate-500 tracking-[0.2em] mt-1 uppercase">
                 Granular Intelligence
