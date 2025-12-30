@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { insertTradeSchema, trades } from './schema';
+import { insertTradeSchema, trades, insertAssetSchema, assets } from './schema';
 
 export const errorSchemas = {
   validation: z.object({
@@ -41,6 +41,30 @@ export const api = {
       },
     }
   },
+  assets: {
+    list: {
+      method: 'GET' as const,
+      path: '/api/assets',
+      responses: {
+        200: z.array(z.custom<typeof assets.$inferSelect>()),
+      },
+    },
+    create: {
+      method: 'POST' as const,
+      path: '/api/assets',
+      input: insertAssetSchema,
+      responses: {
+        201: z.custom<typeof assets.$inferSelect>(),
+      },
+    },
+    delete: {
+      method: 'DELETE' as const,
+      path: '/api/assets/:id',
+      responses: {
+        204: z.void(),
+      },
+    },
+  },
 };
 
 export function buildUrl(path: string, params?: Record<string, string | number>): string {
@@ -57,3 +81,5 @@ export function buildUrl(path: string, params?: Record<string, string | number>)
 
 export type TradeInput = z.infer<typeof api.trades.create.input>;
 export type TradeResponse = z.infer<typeof api.trades.create.responses[201]>;
+export type AssetInput = z.infer<typeof api.assets.create.input>;
+export type AssetResponse = z.infer<typeof api.assets.create.responses[201]>;

@@ -27,3 +27,18 @@ export const insertTradeSchema = createInsertSchema(trades).omit({
 
 export type Trade = typeof trades.$inferSelect;
 export type InsertTrade = z.infer<typeof insertTradeSchema>;
+
+// Adding Asset types for compatibility if needed by the frontend generator
+export const assets = pgTable("assets", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  type: text("type").notNull(),
+  url: text("url").notNull(),
+  size: text("size").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertAssetSchema = createInsertSchema(assets).omit({ id: true, createdAt: true });
+
+export type Asset = typeof assets.$inferSelect;
+export type InsertAsset = z.infer<typeof insertAssetSchema>;

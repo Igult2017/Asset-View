@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { insertTradeSchema, type InsertTrade, type Trade } from "@shared/schema";
 import { motion, AnimatePresence } from "framer-motion";
 import { format } from "date-fns";
-import { Activity, Plus, BarChart2, History, TrendingUp, Filter } from "lucide-react";
+import { Activity, Plus, BarChart2, History, TrendingUp, Filter, Palette } from "lucide-react";
 import { StatsCard } from "@/components/stats-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/table";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
+import { useTheme } from "@/hooks/use-theme";
 
 // --- Stats Calculation Helpers ---
 
@@ -256,6 +257,7 @@ export default function Dashboard() {
   const { data: trades, isLoading } = useTrades();
   const [activeTab, setActiveTab] = useState<'dashboard' | 'history'>('dashboard');
   const [selectedStrat, setSelectedStrat] = useState<string>("All");
+  const { theme, setTheme } = useTheme();
 
   if (isLoading || !trades) {
     return (
@@ -289,6 +291,14 @@ export default function Dashboard() {
           
           <div className="flex items-center gap-10">
             <div className="hidden md:flex gap-8">
+              <Button
+                variant="ghost"
+                className="text-xs font-black tracking-widest uppercase transition-all flex items-center gap-2 h-auto py-2 text-slate-400 hover:text-white"
+                onClick={() => setTheme(theme === "black" ? "blue" : "black")}
+                data-testid="button-theme-toggle"
+              >
+                <Palette className="w-4 h-4" /> Theme: {theme === "black" ? "Black" : "Blue"}
+              </Button>
               <button 
                 onClick={() => setActiveTab('dashboard')}
                 className={cn(
