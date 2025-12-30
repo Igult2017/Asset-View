@@ -59,12 +59,12 @@ export function Sidebar({ currentFilter, onFilterChange }: SidebarProps) {
         <nav className="space-y-1">
           <Button
             variant="ghost"
-            className="w-full justify-start gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-white hover:bg-secondary/50 hover:text-white transition-all h-auto"
-            onClick={() => setTheme(theme === "black" ? "blue" : "black")}
+            className="w-full justify-start gap-3 px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-secondary/50 transition-all h-auto"
+            onClick={() => setTheme(theme === "white" ? "blue" : "white")}
             data-testid="button-theme-toggle"
           >
             <Palette className="w-4 h-4" />
-            Theme: {theme === "black" ? "Black" : "Blue"}
+            Theme: {theme === "white" ? "White" : "Blue"}
           </Button>
           <button 
             className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:bg-secondary/50 hover:text-foreground transition-all"

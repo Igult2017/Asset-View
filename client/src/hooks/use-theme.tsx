@@ -1,6 +1,6 @@
 import * as React from "react"
 
-type Theme = "black" | "blue"
+type Theme = "white" | "blue"
 
 type ThemeProviderState = {
   theme: Theme
@@ -8,7 +8,7 @@ type ThemeProviderState = {
 }
 
 const initialState: ThemeProviderState = {
-  theme: "black",
+  theme: "white",
   setTheme: () => null,
 }
 
@@ -16,7 +16,7 @@ const ThemeProviderContext = React.createContext<ThemeProviderState>(initialStat
 
 export function ThemeProvider({
   children,
-  defaultTheme = "black",
+  defaultTheme = "white",
   storageKey = "asset-view-theme",
   ...props
 }: {
