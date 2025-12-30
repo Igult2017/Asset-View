@@ -35,12 +35,41 @@
   --ring: 221 83% 53%;
 }
 
+.theme-blue {
+  --background: 222 47% 11%;
+  --foreground: 210 40% 98%;
+  
+  --primary: 199 89% 48%; /* #0ea5e9 */
+  --primary-foreground: 210 40% 98%;
+
+  --card: 222 47% 15%;
+  --card-foreground: 210 40% 98%;
+  
+  --popover: 222 47% 11%;
+  --popover-foreground: 210 40% 98%;
+  
+  --secondary: 217 19% 35%;
+  --secondary-foreground: 210 40% 98%;
+  
+  --muted: 217 19% 35%;
+  --muted-foreground: 215 20% 75%;
+  
+  --accent: 199 89% 48%;
+  --accent-foreground: 210 40% 98%;
+  
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 217 19% 35%;
+  --input: 217 19% 35%;
+  --ring: 199 89% 48%;
+}
+
 @layer base {
   body {
     @apply bg-background text-foreground antialiased min-h-screen selection:bg-primary/30 selection:text-white;
     font-family: 'Plus Jakarta Sans', sans-serif;
-    background-color: #020617;
-    background-image: radial-gradient(circle at 50% 0%, #1e293b 0%, #020617 70%);
+    background-image: radial-gradient(circle at 50% 0%, hsl(var(--secondary) / 0.3) 0%, hsl(var(--background)) 70%);
     background-attachment: fixed;
   }
 
