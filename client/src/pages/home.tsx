@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { insertTradeSchema, type InsertTrade, type Trade } from "@shared/schema";
 import { motion, AnimatePresence } from "framer-motion";
 import { format } from "date-fns";
-import { Activity, Plus, BarChart2, History, TrendingUp, Filter, Palette, ChevronDown, ArrowRight, ArrowLeft } from "lucide-react";
+import { Activity, Plus, BarChart2, History, TrendingUp, Filter, Palette, ChevronDown, ArrowRight, ArrowLeft, Settings } from "lucide-react";
 import { StatsCard } from "@/components/stats-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/hooks/use-theme";
 import NotFound from "@/pages/not-found";
 import Dashboard from "@/pages/home";
+import { ThemeToggle } from "@/components/theme-toggle"; // Added import if it exists, or just use Palette logic from home.tsx
 
 function Router() {
   return (
