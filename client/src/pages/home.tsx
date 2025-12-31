@@ -65,13 +65,42 @@ function calculateStats(trades: Trade[]) {
     return acc;
   }, {});
 
+  // Advanced measurable groupings for Market Edge
+  const instrumentConditionPerformance = trades.reduce((acc: any, t) => {
+    const key = `${t.asset}-${t.condition}`;
+    if (!acc[key]) acc[key] = { wins: 0, total: 0 };
+    acc[key].total += 1;
+    if (t.outcome === 'Win') acc[key].wins += 1;
+    return acc;
+  }, {});
+
+  const complexEdgePerformance = trades.reduce((acc: any, t) => {
+    const key = `${t.asset}-${t.bias}-${t.session}`;
+    if (!acc[key]) acc[key] = { wins: 0, total: 0 };
+    acc[key].total += 1;
+    if (t.outcome === 'Win') acc[key].wins += 1;
+    return acc;
+  }, {});
+
+  const strategyContextPerformance = trades.reduce((acc: any, t) => {
+    const key = `${t.strategy}-${t.session}-${t.condition}`;
+    if (!acc[key]) acc[key] = { rTotal: 0, total: 0 };
+    acc[key].total += 1;
+    acc[key].rTotal += Number(t.rAchieved);
+    return acc;
+  }, {});
+
   // Monthly Drawdown in Percentage (Mock base 100k account if not provided)
   const baseBalance = 100000;
   const monthlyData = calculateDrawdownPerMonth(trades);
   const latestMonth = monthlyData[0] || { drawdown: 0 };
   const monthlyDrawdownPercent = ((latestMonth.drawdown / baseBalance) * 100).toFixed(2);
 
-  return { net, wr, exp, count: trades.length, pf, avgDiscipline, avgAlignment, instrumentPerformance, sessionPerformance, monthlyDrawdownPercent };
+  return { 
+    net, wr, exp, count: trades.length, pf, avgDiscipline, avgAlignment, 
+    instrumentPerformance, sessionPerformance, monthlyDrawdownPercent,
+    instrumentConditionPerformance, complexEdgePerformance, strategyContextPerformance
+  };
 }
 
 function getUniqueStrategies(trades: Trade[]) {
@@ -909,20 +938,53 @@ export default function Dashboard() {
                 </PanelSection>
 
                 <PanelSection 
-                  title="Market Condition Bias" 
-                  description="Performance per Trend, Consolidation, and Bias."
+                  title="Instrument x Market State" 
+                  description="Performance edge per condition (Trending/Ranging)."
                   icon={BarChart2}
                 >
-                  <div className="grid grid-cols-2 gap-2 text-[10px]">
-                    <div className="flex justify-between items-center p-1 border border-border/50 rounded">
-                      <span>Bullish Trend</span><span className="text-emerald-500 font-bold">75%</span>
-                    </div>
-                    <div className="flex justify-between items-center p-1 border border-border/50 rounded">
-                      <span>Bearish Trend</span><span className="text-emerald-500 font-bold">62%</span>
-                    </div>
-                    <div className="flex justify-between items-center p-1 border border-border/50 rounded col-span-2">
-                      <span>Consolidation</span><span className="text-amber-500 font-bold">48%</span>
-                    </div>
+                  <div className="text-[10px] space-y-1">
+                    {Object.entries(stats.instrumentConditionPerformance).slice(0, 3).map(([key, data]: [string, any]) => (
+                      <div key={key} className="flex justify-between border-b border-border/30 pb-1">
+                        <span>{key}</span>
+                        <span className="text-emerald-500 font-black">
+                          {data.total ? Math.round((data.wins / data.total) * 100) : 0}% WR
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </PanelSection>
+
+                <PanelSection 
+                  title="Edge Precision (Asset+Bias+Session)" 
+                  description="High-granularity confluence percentage."
+                  icon={Filter}
+                >
+                  <div className="text-[10px] space-y-1">
+                    {Object.entries(stats.complexEdgePerformance).slice(0, 3).map(([key, data]: [string, any]) => (
+                      <div key={key} className="flex justify-between items-center p-1.5 rounded bg-primary/5">
+                        <span className="font-bold">{key}</span>
+                        <span className="bg-primary/10 px-1.5 py-0.5 rounded text-primary font-black">
+                          {data.total ? Math.round((data.wins / data.total) * 100) : 0}%
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </PanelSection>
+
+                <PanelSection 
+                  title="Strategy Context Matrix" 
+                  description="Strategy + Session + Condition performance edge."
+                  icon={TrendingUp}
+                >
+                  <div className="text-[10px] space-y-1">
+                    {Object.entries(stats.strategyContextPerformance).slice(0, 3).map(([key, data]: [string, any]) => (
+                      <div key={key} className="flex justify-between border-b border-border/30 pb-1">
+                        <span className="truncate max-w-[180px]">{key}</span>
+                        <span className={cn("font-bold", data.rTotal >= 0 ? "text-emerald-500" : "text-red-400")}>
+                          {(data.rTotal / (data.total || 1)).toFixed(2)}R Avg
+                        </span>
+                      </div>
+                    ))}
                   </div>
                 </PanelSection>
 
