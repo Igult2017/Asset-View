@@ -101,10 +101,9 @@ function calculateStats(trades: Trade[]) {
   }, {});
 
   // Monthly Drawdown in Percentage (Mock base 100k account if not provided)
-  const baseBalance = 100000;
   const monthlyData = calculateDrawdownPerMonth(trades);
-  const latestMonth = monthlyData[0] || { drawdown: 0 };
-  const monthlyDrawdownPercent = ((latestMonth.drawdown / baseBalance) * 100).toFixed(2);
+  const latestMonth = monthlyData[0] || { drawdown: 0, drawdownPercent: "0.00" };
+  const monthlyDrawdownPercent = latestMonth.drawdownPercent;
 
   return { 
     net, wr, exp, count: trades.length, pf, avgDiscipline, avgAlignment, 
@@ -119,45 +118,37 @@ function getUniqueStrategies(trades: Trade[]) {
 }
 
 function calculateDrawdownPerMonth(trades: Trade[]) {
-  const monthlyData: { [key: string]: { cumulative: number; drawdown: number } } = {};
-  
-  // Sort trades by date
-  const sortedTrades = [...trades].sort((a, b) => 
-    new Date(a.date || 0).getTime() - new Date(b.date || 0).getTime()
-  );
-  
-  let runningBalance = 0;
-  let monthlyHighWaterMark: { [key: string]: number } = {};
-  
-  sortedTrades.forEach(trade => {
-    const date = new Date(trade.date || new Date());
+  // Group trades by month
+  const groupedByMonth = trades.reduce((acc: any, t) => {
+    const date = new Date(t.date || new Date());
     const monthKey = format(date, "MMM yyyy");
-    const plAmount = Number(trade.plAmt);
-    
-    runningBalance += plAmount;
-    
-    if (!monthlyHighWaterMark[monthKey]) {
-      monthlyHighWaterMark[monthKey] = runningBalance;
-    } else {
-      monthlyHighWaterMark[monthKey] = Math.max(monthlyHighWaterMark[monthKey], runningBalance);
-    }
-    
-    if (!monthlyData[monthKey]) {
-      monthlyData[monthKey] = { cumulative: 0, drawdown: 0 };
-    }
-    
-    monthlyData[monthKey].cumulative = runningBalance;
-    monthlyData[monthKey].drawdown = Math.min(0, runningBalance - monthlyHighWaterMark[monthKey]);
-  });
+    if (!acc[monthKey]) acc[monthKey] = [];
+    acc[monthKey].push(t);
+    return acc;
+  }, {});
+
+  const baseBalance = 100000;
   
-  return Object.entries(monthlyData)
-    .map(([month, data]) => ({
-      month,
-      drawdown: Math.abs(data.drawdown),
-      cumulative: data.cumulative
-    }))
-    .sort((a, b) => new Date(b.month).getTime() - new Date(a.month).getTime())
-    .slice(0, 6); // Last 6 months
+  return Object.entries(groupedByMonth).map(([month, monthTrades]: [string, any]) => {
+    let peak = baseBalance;
+    let balance = baseBalance;
+    let maxDD = 0;
+
+    // Sort trades by date for chronological DD calculation within the month
+    const sortedTrades = monthTrades.sort((a: Trade, b: Trade) => 
+      new Date(a.date || 0).getTime() - new Date(b.date || 0).getTime()
+    );
+
+    sortedTrades.forEach((t: Trade) => {
+      balance += Number(t.plAmt);
+      if (balance > peak) peak = balance;
+      const dd = peak - balance;
+      if (dd > maxDD) maxDD = dd;
+    });
+
+    const drawdownPercent = ((maxDD / baseBalance) * 100).toFixed(2);
+    return { month, drawdown: maxDD, drawdownPercent };
+  }).sort((a, b) => new Date(b.month).getTime() - new Date(a.month).getTime()); // Latest month first
 }
 
 function calculatePerformanceAfterLoss(trades: Trade[]) {
@@ -1032,18 +1023,26 @@ export default function Dashboard() {
                   description="Profit % per strategy and Monthly Drawdown %."
                   icon={TrendingUp}
                 >
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <div className="flex justify-between text-[10px]">
                       <span>Silver Bullet (Profit)</span><span className="text-emerald-500 font-bold">+12.4%</span>
                     </div>
                     <div className="flex justify-between text-[10px]">
                       <span>SMC (Profit)</span><span className="text-emerald-500 font-bold">+8.1%</span>
                     </div>
-                    <div className="pt-1 border-t border-border/50 flex justify-between text-[10px]">
-                      <span className="text-muted-foreground uppercase">Monthly DD %</span>
-                      <span className={cn("font-bold", Number(stats.monthlyDrawdownPercent) > 0 ? "text-red-400" : "text-emerald-500")}>
-                        -{stats.monthlyDrawdownPercent}%
-                      </span>
+                    <div className="pt-2 border-t border-border/50 space-y-2">
+                      <div className="flex justify-between text-[10px]">
+                        <span className="text-muted-foreground uppercase">Monthly DD %</span>
+                        <span className={cn("font-bold", Number(stats.monthlyDrawdownPercent) > 0 ? "text-red-400" : "text-emerald-500")}>
+                          -{stats.monthlyDrawdownPercent}%
+                        </span>
+                      </div>
+                      <div className="flex justify-between text-[10px]">
+                        <span className="text-muted-foreground uppercase">Max DD ($)</span>
+                        <span className="text-red-400 font-bold">
+                          -${(calculateDrawdownPerMonth(trades)[0]?.drawdown || 0).toLocaleString()}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </PanelSection>
