@@ -773,55 +773,6 @@ export default function Dashboard() {
                 </PanelSection>
 
                 <PanelSection 
-                  title="Session Precision" 
-                  description="Granular performance by entry timing relative to session open/close."
-                  icon={History}
-                >
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-[10px]">
-                      <span className="text-muted-foreground">Initial Impulse WR</span>
-                      <span className="text-emerald-500 font-bold">72%</span>
-                    </div>
-                    <div className="flex justify-between text-[10px]">
-                      <span className="text-muted-foreground">Late Extension WR</span>
-                      <span className="text-red-400 font-bold">28%</span>
-                    </div>
-                  </div>
-                </PanelSection>
-
-                <PanelSection 
-                  title="Setup Quality" 
-                  description="Statistical edge correlation with setup clarity and alignment scores."
-                  icon={TrendingUp}
-                >
-                  <div className="flex justify-between items-center">
-                    <div className="flex gap-1">
-                      {[1,2,3,4,5].map(i => (
-                        <div key={i} className={cn("w-3 h-3 rounded-full", i <= Math.round(Number(stats.avgAlignment)) ? "bg-primary" : "bg-muted")} />
-                      ))}
-                    </div>
-                    <span className="text-xs font-bold font-mono tracking-tighter">{stats.avgAlignment} / 5.0</span>
-                  </div>
-                </PanelSection>
-
-                <PanelSection 
-                  title="Signal Validation" 
-                  description="Measuring the cost of taking trades without full confluence."
-                  icon={Filter}
-                >
-                  <div className="grid grid-cols-2 gap-x-3 gap-y-1">
-                    <div className="flex items-center gap-1.5 text-[10px]">
-                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.5)]" />
-                      <span className="text-muted-foreground">Full Conf: +2.1R</span>
-                    </div>
-                    <div className="flex items-center gap-1.5 text-[10px]">
-                      <div className="w-1.5 h-1.5 rounded-full bg-red-400 shadow-[0_0_5px_rgba(248,113,113,0.5)]" />
-                      <span className="text-muted-foreground">Partial: -0.8R</span>
-                    </div>
-                  </div>
-                </PanelSection>
-
-                <PanelSection 
                   title="Execution Precision" 
                   description="Deviation analysis: slippage and entry timing accuracy."
                   icon={ArrowRight}
