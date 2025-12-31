@@ -1,0 +1,44 @@
+Panel: Market Regime & Environment
+Description:
+Captures market conditions at the time of trade entry, including market regime, volatility state, liquidity conditions, and news environment, and associates these conditions with strategy performance metrics.
+________________________________________
+Panel: Time-of-Day & Session Precision
+Description:
+Captures trade performance metrics based on time of entry within a trading session, including session phase and timing relative to market expansion or contraction.
+________________________________________
+Panel: Setup Quality Scoring
+Description:
+Captures pre-trade setup quality metrics and calculates an aggregate setup quality score used to evaluate opportunity strength independent of trade outcome.
+________________________________________
+Panel: Structure / Signal Validation
+Description:
+Captures rule-validation metrics indicating whether all required conditions of the selected strategy were satisfied at the time of entry.
+________________________________________
+Panel: Execution Precision
+Description:
+Captures execution accuracy metrics by measuring deviations between planned and actual entry, stop loss, take profit, and exit levels.
+________________________________________
+Panel: Risk & Capital Efficiency
+Description:
+Captures risk exposure and capital efficiency metrics, including risk allocation, reward efficiency, drawdown sensitivity, and overall risk pressure at trade entry.
+________________________________________
+Panel: Trade Management Logic
+Description:
+Captures post-entry trade management metrics, including exit methodology, break-even usage, early exit behavior, and rule-based versus discretionary management.
+________________________________________
+Panel: Psychological State
+Description:
+Captures trader psychological state metrics at the time of trade execution and associates these states with performance outcomes.
+________________________________________
+Panel: Rule Adherence & Discipline
+Description:
+Captures discipline and compliance metrics used to distinguish system performance from execution or behavioral deviations.
+________________________________________
+Panel: Post-Trade Learning & Optimization
+Description:
+Captures post-trade review metrics used to track learning, recurring execution patterns, and rule refinement over time.
+________________________________________
+Panel: Edge Filters & Strategy Constraints
+Description:
+Captures computed constraint metrics used to define approved and disallowed trading conditions based on historical performance data.
+
