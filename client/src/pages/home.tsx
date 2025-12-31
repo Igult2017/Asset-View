@@ -58,13 +58,20 @@ function calculateStats(trades: Trade[]) {
 
   const sessionPerformance = trades.reduce((acc: any, t) => {
     const key = `${t.asset}-${t.session}`;
-    if (!acc[key]) acc[key] = { wins: 0, total: 0 };
+    if (!acc[key]) acc[key] = { wins: 0, total: 0, losses: 0 };
     acc[key].total += 1;
     if (t.outcome === 'Win') acc[key].wins += 1;
+    if (t.outcome === 'Loss') acc[key].losses += 1;
     return acc;
   }, {});
 
-  return { net, wr, exp, count: trades.length, pf, avgDiscipline, avgAlignment, instrumentPerformance, sessionPerformance };
+  // Monthly Drawdown in Percentage (Mock base 100k account if not provided)
+  const baseBalance = 100000;
+  const monthlyData = calculateDrawdownPerMonth(trades);
+  const latestMonth = monthlyData[0] || { drawdown: 0 };
+  const monthlyDrawdownPercent = ((latestMonth.drawdown / baseBalance) * 100).toFixed(2);
+
+  return { net, wr, exp, count: trades.length, pf, avgDiscipline, avgAlignment, instrumentPerformance, sessionPerformance, monthlyDrawdownPercent };
 }
 
 function getUniqueStrategies(trades: Trade[]) {
@@ -875,19 +882,29 @@ export default function Dashboard() {
 
                 <PanelSection 
                   title="Instrument x Session" 
-                  description="Asian, NY, London performance per asset."
+                  description="Win/Loss rate breakdown per asset and session."
                   icon={History}
                 >
-                  <div className="text-[10px] space-y-1">
-                    <div className="flex justify-between border-b border-border/30 pb-1">
-                      <span>NAS100: NY Session</span><span className="text-emerald-500 font-bold">+$4,200</span>
-                    </div>
-                    <div className="flex justify-between border-b border-border/30 pb-1">
-                      <span>EURUSD: London Session</span><span className="text-emerald-500 font-bold">+$1,100</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>XAUUSD: Asian Session</span><span className="text-red-400 font-bold">-$450</span>
-                    </div>
+                  <div className="text-[10px] space-y-2">
+                    {Object.entries(stats.sessionPerformance).slice(0, 3).map(([key, data]: [string, any]) => {
+                      const wr = data.total ? Math.round((data.wins / data.total) * 100) : 0;
+                      const lr = data.total ? Math.round((data.losses / data.total) * 100) : 0;
+                      return (
+                        <div key={key} className="space-y-1 border-b border-border/30 pb-1">
+                          <div className="flex justify-between font-bold">
+                            <span>{key}</span>
+                            <span className="text-emerald-500">{wr}% WR</span>
+                          </div>
+                          <div className="flex gap-1 h-1 w-full bg-muted rounded-full overflow-hidden">
+                            <div className="bg-emerald-500" style={{ width: `${wr}%` }} />
+                            <div className="bg-red-400" style={{ width: `${lr}%` }} />
+                          </div>
+                          <div className="flex justify-end text-[8px] text-muted-foreground">
+                            {lr}% Loss Rate
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </PanelSection>
 
@@ -922,7 +939,10 @@ export default function Dashboard() {
                       <span>SMC (Profit)</span><span className="text-emerald-500 font-bold">+8.1%</span>
                     </div>
                     <div className="pt-1 border-t border-border/50 flex justify-between text-[10px]">
-                      <span className="text-muted-foreground uppercase">Monthly DD</span><span className="text-red-400 font-bold">-2.1%</span>
+                      <span className="text-muted-foreground uppercase">Monthly DD %</span>
+                      <span className={cn("font-bold", Number(stats.monthlyDrawdownPercent) > 0 ? "text-red-400" : "text-emerald-500")}>
+                        -{stats.monthlyDrawdownPercent}%
+                      </span>
                     </div>
                   </div>
                 </PanelSection>
