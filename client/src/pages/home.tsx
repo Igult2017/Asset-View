@@ -846,64 +846,62 @@ export default function Dashboard() {
                   description="Mindset impact on execution quality and rule adherence."
                   icon={Palette}
                 >
-                  <div className="flex items-center gap-2 px-2 py-1 rounded bg-blue-500/10 border border-blue-500/20">
-                    <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-                    <span className="text-[10px] font-bold text-blue-500 uppercase">Calm WR: 75%</span>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2 px-3 py-2 rounded bg-blue-500/10 border border-blue-500/20">
+                      <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                      <span className="text-[11px] font-bold text-blue-500 uppercase">Calm WR: 75%</span>
+                    </div>
                   </div>
                 </PanelSection>
 
-                <div className="md:col-span-2 lg:col-span-2 xl:col-span-2">
-                  <PanelSection 
-                    title="Best Strategy" 
-                    description="Top performing strategy based on multiple metrics."
-                    icon={TrendingUp}
-                  >
-                    {calculateBestStrategy(stats.strategyPerformance) ? (
-                      <div className="space-y-3">
-                        <div className="flex justify-between text-[11px]">
-                          <span className="font-bold">{calculateBestStrategy(stats.strategyPerformance)?.name}</span>
-                          <span className="text-emerald-500 font-black">{calculateBestStrategy(stats.strategyPerformance)?.wr}% WR</span>
-                        </div>
-                        <div className="flex justify-between text-[11px]">
-                          <span className="text-muted-foreground">Avg R:</span>
-                          <span className="text-primary font-bold">{calculateBestStrategy(stats.strategyPerformance)?.avgR}R</span>
-                        </div>
-                        <div className="flex justify-between text-[11px]">
-                          <span className="text-muted-foreground">Total Profit:</span>
-                          <span className={cn("font-bold", (calculateBestStrategy(stats.strategyPerformance)?.profit || 0) > 0 ? "text-emerald-500" : "text-red-400")}>
-                            ${(calculateBestStrategy(stats.strategyPerformance)?.profit || 0).toLocaleString()}
+                <PanelSection 
+                  title="Best Strategy" 
+                  description="Top performing strategy based on multiple metrics."
+                  icon={TrendingUp}
+                >
+                  {calculateBestStrategy(stats.strategyPerformance) ? (
+                    <div className="space-y-3">
+                      <div className="flex justify-between text-[11px]">
+                        <span className="font-bold">{calculateBestStrategy(stats.strategyPerformance)?.name}</span>
+                        <span className="text-emerald-500 font-black">{calculateBestStrategy(stats.strategyPerformance)?.wr}% WR</span>
+                      </div>
+                      <div className="flex justify-between text-[11px]">
+                        <span className="text-muted-foreground">Avg R:</span>
+                        <span className="text-primary font-bold">{calculateBestStrategy(stats.strategyPerformance)?.avgR}R</span>
+                      </div>
+                      <div className="flex justify-between text-[11px]">
+                        <span className="text-muted-foreground">Total Profit:</span>
+                        <span className={cn("font-bold", (calculateBestStrategy(stats.strategyPerformance)?.profit || 0) > 0 ? "text-emerald-500" : "text-red-400")}>
+                          ${(calculateBestStrategy(stats.strategyPerformance)?.profit || 0).toLocaleString()}
+                        </span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-[11px] text-muted-foreground">No strategies yet</div>
+                  )}
+                </PanelSection>
+
+                <PanelSection 
+                  title="Profit & Loss by Strategy" 
+                  description="Total profit and loss breakdown per strategy."
+                  icon={BarChart2}
+                >
+                  <div className="space-y-3 text-[11px]">
+                    {Object.entries(stats.strategyPerformance).slice(0, 3).map(([name, data]: [string, any]) => (
+                      <div key={name} className="space-y-1.5 border-b border-border/30 pb-2">
+                        <div className="flex justify-between font-bold text-[11px]">
+                          <span className="truncate">{name}</span>
+                          <span className={cn("font-black", data.profit > 0 ? "text-emerald-500" : "text-red-400")}>
+                            ${data.profit > 0 ? '+' : ''}{data.profit}
                           </span>
                         </div>
-                      </div>
-                    ) : (
-                      <div className="text-[10px] text-muted-foreground">No strategies yet</div>
-                    )}
-                  </PanelSection>
-                </div>
-
-                <div className="md:col-span-2 lg:col-span-2 xl:col-span-2">
-                  <PanelSection 
-                    title="Profit & Loss by Strategy" 
-                    description="Total profit and loss breakdown per strategy."
-                    icon={BarChart2}
-                  >
-                    <div className="space-y-3 text-[10px]">
-                      {Object.entries(stats.strategyPerformance).slice(0, 4).map(([name, data]: [string, any]) => (
-                        <div key={name} className="space-y-1 border-b border-border/30 pb-2">
-                          <div className="flex justify-between font-bold text-[11px]">
-                            <span className="truncate">{name}</span>
-                            <span className={cn("font-black", data.profit > 0 ? "text-emerald-500" : "text-red-400")}>
-                              ${data.profit > 0 ? '+' : ''}{data.profit}
-                            </span>
-                          </div>
-                          <div className="flex justify-between text-[9px] text-muted-foreground">
-                            <span>{data.total} trades</span>
-                          </div>
+                        <div className="flex justify-between text-[10px] text-muted-foreground">
+                          <span>{data.total} trades</span>
                         </div>
-                      ))}
-                    </div>
-                  </PanelSection>
-                </div>
+                      </div>
+                    ))}
+                  </div>
+                </PanelSection>
               </div>
 
               {/* Advanced Confluence Analytics */}
