@@ -137,3 +137,5 @@ export const insertAssetSchema = createInsertSchema(assets).omit({ id: true, cre
 
 export type Asset = typeof trades.$inferSelect;
 export type InsertAsset = z.infer<typeof insertAssetSchema>;
+
+export * from "./models/chat";

@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useTrades, useCreateTrade } from "@/hooks/use-trades";
+import { useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { insertTradeSchema, type InsertTrade, type Trade } from "@shared/schema";
 import { motion, AnimatePresence } from "framer-motion";
 import { format } from "date-fns";
-import { Activity, Plus, BarChart2, History, TrendingUp, Filter, Palette, ChevronDown, ArrowRight, ArrowLeft, Settings, LineChart } from "lucide-react";
+import { Activity, Plus, BarChart2, History, TrendingUp, Filter, Palette, ChevronDown, ArrowRight, ArrowLeft, Settings, LineChart, Sparkles } from "lucide-react";
 import { useLocation } from "wouter";
 import { StatsCard } from "@/components/stats-card";
 import { Button } from "@/components/ui/button";
@@ -676,6 +677,83 @@ function LogEntryModal() {
         </Form>
       </DialogContent>
     </Dialog>
+  );
+}
+
+// AI Analysis Section Component
+function AIAnalysisSection() {
+  const { data: analysis, isLoading, refetch } = useQuery<any>({
+    queryKey: ["/api/ai/analyze"],
+    enabled: false
+  });
+
+  return (
+    <Card className="p-6 bg-card/40 backdrop-blur-xl border-primary/20 shadow-xl overflow-hidden relative group mt-8">
+      <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+        <Sparkles className="w-24 h-24 text-primary" />
+      </div>
+      
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-lg bg-primary/10 text-primary">
+            <Sparkles className="w-5 h-5" />
+          </div>
+          <div>
+            <h3 className="text-sm font-black uppercase tracking-widest">AI Performance Intelligence</h3>
+            <p className="text-xs text-muted-foreground">Neural breakdown of edge clarity and actionable growth steps.</p>
+          </div>
+        </div>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={() => refetch()} 
+          disabled={isLoading}
+          className="gap-2 border-primary/30 hover:border-primary/60"
+        >
+          {isLoading ? (
+            <Activity className="w-3 h-3 animate-spin" />
+          ) : (
+            <Sparkles className="w-3 h-3" />
+          )}
+          Generate Analysis
+        </Button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="space-y-4">
+          <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/80">Performance Breakdown</h4>
+          {analysis ? (
+            <div className="text-[11px] leading-relaxed text-foreground/90 space-y-2">
+              <div className="p-3 rounded bg-primary/5 border border-primary/10">
+                {analysis.analysis}
+              </div>
+            </div>
+          ) : (
+            <div className="h-32 flex items-center justify-center rounded border border-dashed border-border/50 text-[10px] text-muted-foreground uppercase tracking-widest">
+              Awaiting data input...
+            </div>
+          )}
+        </div>
+
+        <div className="space-y-4">
+          <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-500/80">Growth Recommendations</h4>
+          {analysis?.recommendations ? (
+            <div className="space-y-2">
+              {Array.isArray(analysis.recommendations) ? analysis.recommendations.map((rec: string, i: number) => (
+                <div key={i} className="flex gap-3 p-3 rounded bg-emerald-500/5 border border-emerald-500/10">
+                  <div className="mt-1 w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+                  <p className="text-[11px] leading-snug text-foreground/90">{rec}</p>
+                </div>
+              )) : <p className="text-[11px]">{analysis.recommendations}</p>}
+            </div>
+          ) : (
+            <div className="h-32 flex items-center justify-center rounded border border-dashed border-border/50 text-[10px] text-muted-foreground uppercase tracking-widest">
+              Intelligence engine ready...
+            </div>
+          )}
+        </div>
+      </div>
+    </Card>
   );
 }
 
@@ -1352,6 +1430,9 @@ export default function Dashboard() {
                   </TableBody>
                 </Table>
               </Card>
+
+              {/* AI Analysis Section */}
+              <AIAnalysisSection />
             </motion.div>
           ) : (
             <motion.div
