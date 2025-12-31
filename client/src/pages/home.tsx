@@ -101,6 +101,18 @@ function calculateStats(trades: Trade[]) {
     return acc;
   }, {});
 
+  // Strategy Performance grouping
+  const strategyPerformance = trades.reduce((acc: any, t) => {
+    const strat = t.strategy || 'Unassigned';
+    if (!acc[strat]) acc[strat] = { wins: 0, losses: 0, total: 0, profit: 0, avgR: 0, rSum: 0 };
+    acc[strat].total += 1;
+    acc[strat].profit += Number(t.plAmt);
+    acc[strat].rSum += Number(t.rAchieved);
+    if (t.outcome === 'Win') acc[strat].wins += 1;
+    if (t.outcome === 'Loss') acc[strat].losses += 1;
+    return acc;
+  }, {});
+
   // Monthly Drawdown in Percentage (Mock base 100k account if not provided)
   const monthlyData = calculateDrawdownPerMonth(trades);
   const latestMonth = monthlyData[0] || { drawdown: 0, drawdownPercent: "0.00" };
@@ -110,7 +122,7 @@ function calculateStats(trades: Trade[]) {
     net, wr, exp, count: trades.length, pf, avgDiscipline, avgAlignment, 
     instrumentPerformance, sessionPerformance, monthlyDrawdownPercent,
     instrumentConditionPerformance, complexEdgePerformance, strategyContextPerformance,
-    hyperGranularPerformance
+    hyperGranularPerformance, strategyPerformance
   };
 }
 
@@ -178,6 +190,25 @@ function calculatePerformanceAfterLoss(trades: Trade[]) {
     winsAfterLoss: afterLossWins,
     winRate
   };
+}
+
+function calculateBestStrategy(strategyPerf: any) {
+  let bestStrategy = null;
+  let bestScore = -Infinity;
+  
+  Object.entries(strategyPerf).forEach(([name, data]: [string, any]) => {
+    const wr = data.total ? (data.wins / data.total) * 100 : 0;
+    const avgR = data.total ? data.rSum / data.total : 0;
+    const profitPerTrade = data.total ? data.profit / data.total : 0;
+    const score = (wr * 0.4) + (avgR * 25) + (profitPerTrade * 0.01);
+    
+    if (score > bestScore) {
+      bestScore = score;
+      bestStrategy = { name, wr: Math.round(wr), avgR: avgR.toFixed(2), profit: data.profit };
+    }
+  });
+  
+  return bestStrategy;
 }
 
 // --- Components ---
@@ -1002,6 +1033,53 @@ export default function Dashboard() {
                         </span>
                       </div>
                     </div>
+                  </div>
+                </PanelSection>
+
+                <PanelSection 
+                  title="Best Strategy" 
+                  description="Top performing strategy based on multiple metrics."
+                  icon={TrendingUp}
+                >
+                  {calculateBestStrategy(stats.strategyPerformance) ? (
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-[10px]">
+                        <span className="font-bold">{calculateBestStrategy(stats.strategyPerformance)?.name}</span>
+                        <span className="text-emerald-500 font-black">{calculateBestStrategy(stats.strategyPerformance)?.wr}% WR</span>
+                      </div>
+                      <div className="flex justify-between text-[10px]">
+                        <span className="text-muted-foreground">Avg R:</span>
+                        <span className="text-primary font-bold">{calculateBestStrategy(stats.strategyPerformance)?.avgR}R</span>
+                      </div>
+                      <div className="flex justify-between text-[10px]">
+                        <span className="text-muted-foreground">Total Profit:</span>
+                        <span className={cn("font-bold", (calculateBestStrategy(stats.strategyPerformance)?.profit || 0) > 0 ? "text-emerald-500" : "text-red-400")}>
+                          ${(calculateBestStrategy(stats.strategyPerformance)?.profit || 0).toLocaleString()}
+                        </span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-[10px] text-muted-foreground">No strategies yet</div>
+                  )}
+                </PanelSection>
+
+                <PanelSection 
+                  title="Profit & Loss by Strategy" 
+                  description="Total profit and loss breakdown per strategy."
+                  icon={BarChart2}
+                >
+                  <div className="space-y-2 text-[9px]">
+                    {Object.entries(stats.strategyPerformance).slice(0, 4).map(([name, data]: [string, any]) => (
+                      <div key={name} className="space-y-1 border-b border-border/30 pb-1">
+                        <div className="flex justify-between font-bold">
+                          <span className="truncate">{name}</span>
+                        </div>
+                        <div className="flex justify-between text-[8px] text-muted-foreground">
+                          <span>Profit: <span className="text-emerald-500 font-bold">${data.profit.toLocaleString()}</span></span>
+                          <span>Trades: {data.total}</span>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </PanelSection>
               </div>
