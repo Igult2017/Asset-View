@@ -45,6 +45,76 @@ function getUniqueStrategies(trades: Trade[]) {
   return Array.from(new Set(trades.map(t => t.strategy).filter(s => s)));
 }
 
+function calculateDrawdownPerMonth(trades: Trade[]) {
+  const monthlyData: { [key: string]: { cumulative: number; drawdown: number } } = {};
+  
+  // Sort trades by date
+  const sortedTrades = [...trades].sort((a, b) => 
+    new Date(a.date || 0).getTime() - new Date(b.date || 0).getTime()
+  );
+  
+  let runningBalance = 0;
+  let monthlyHighWaterMark: { [key: string]: number } = {};
+  
+  sortedTrades.forEach(trade => {
+    const date = new Date(trade.date || new Date());
+    const monthKey = format(date, "MMM yyyy");
+    const plAmount = Number(trade.plAmt);
+    
+    runningBalance += plAmount;
+    
+    if (!monthlyHighWaterMark[monthKey]) {
+      monthlyHighWaterMark[monthKey] = runningBalance;
+    } else {
+      monthlyHighWaterMark[monthKey] = Math.max(monthlyHighWaterMark[monthKey], runningBalance);
+    }
+    
+    if (!monthlyData[monthKey]) {
+      monthlyData[monthKey] = { cumulative: 0, drawdown: 0 };
+    }
+    
+    monthlyData[monthKey].cumulative = runningBalance;
+    monthlyData[monthKey].drawdown = Math.min(0, runningBalance - monthlyHighWaterMark[monthKey]);
+  });
+  
+  return Object.entries(monthlyData)
+    .map(([month, data]) => ({
+      month,
+      drawdown: Math.abs(data.drawdown),
+      cumulative: data.cumulative
+    }))
+    .sort((a, b) => new Date(b.month).getTime() - new Date(a.month).getTime())
+    .slice(0, 6); // Last 6 months
+}
+
+function calculatePerformanceAfterLoss(trades: Trade[]) {
+  const sortedTrades = [...trades].sort((a, b) => 
+    new Date(a.date || 0).getTime() - new Date(b.date || 0).getTime()
+  );
+  
+  let afterLossTrades = 0;
+  let afterLossWins = 0;
+  let lastWasLoss = false;
+  
+  sortedTrades.forEach((trade, idx) => {
+    if (lastWasLoss) {
+      afterLossTrades++;
+      if (trade.outcome === 'Win') {
+        afterLossWins++;
+      }
+    }
+    lastWasLoss = trade.outcome === 'Loss';
+  });
+  
+  const winRate = afterLossTrades > 0 ? Math.round((afterLossWins / afterLossTrades) * 100) : 0;
+  
+  return {
+    totalAfterLoss: afterLossTrades,
+    winsAfterLoss: afterLossWins,
+    winRate
+  };
+}
+
 // --- Components ---
 
 function LogEntryModal() {
@@ -740,6 +810,72 @@ export default function Dashboard() {
                       );
                     })}
                   </div>
+                </div>
+              </div>
+
+              {/* Drawdown & Recovery Analysis */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Drawdown Per Month */}
+                <div className="bg-card/40 p-5 rounded-xl border border-border/50">
+                  <h4 className="text-[9px] font-black text-muted-foreground uppercase mb-4 tracking-tighter">Monthly Drawdown (Last 6 Months)</h4>
+                  <div className="space-y-3">
+                    {calculateDrawdownPerMonth(filteredTrades).length > 0 ? (
+                      calculateDrawdownPerMonth(filteredTrades).map((month) => (
+                        <div key={month.month} className="p-3 bg-card/30 rounded-lg border border-border/30">
+                          <div className="flex justify-between items-center mb-2">
+                            <span className="text-[9px] font-black uppercase text-foreground">{month.month}</span>
+                            <span className={cn("text-xs font-black", month.drawdown > 500 ? "text-rose-500" : month.drawdown > 200 ? "text-amber-500" : "text-emerald-500")}>
+                              -${month.drawdown.toLocaleString()}
+                            </span>
+                          </div>
+                          <div className="flex justify-between text-[8px] text-muted-foreground">
+                            <span>Cumulative: ${month.cumulative.toLocaleString()}</span>
+                          </div>
+                          <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden mt-2">
+                            <motion.div 
+                              initial={{ width: 0 }} 
+                              animate={{ width: `${Math.min(100, (month.drawdown / (Math.max(...calculateDrawdownPerMonth(filteredTrades).map(m => m.drawdown)) || 1)) * 100)}%` }} 
+                              className="h-full bg-rose-500/60" 
+                            />
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-[9px] text-muted-foreground italic">No drawdown data available</div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Performance After Loss */}
+                <div className="bg-card/40 p-5 rounded-xl border border-border/50">
+                  <h4 className="text-[9px] font-black text-muted-foreground uppercase mb-4 tracking-tighter">Recovery Performance</h4>
+                  {(() => {
+                    const recoveryData = calculatePerformanceAfterLoss(filteredTrades);
+                    return (
+                      <div className="space-y-4">
+                        <div className="p-4 bg-card/30 rounded-lg border border-border/30">
+                          <div className="text-[8px] text-muted-foreground font-bold uppercase mb-2">Win Rate After Loss</div>
+                          <div className="text-3xl font-black text-primary">{recoveryData.winRate}%</div>
+                          <div className="text-[9px] text-muted-foreground mt-2">
+                            {recoveryData.winsAfterLoss} wins out of {recoveryData.totalAfterLoss} trades
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="p-3 bg-card/30 rounded-lg border border-border/30 text-center">
+                            <div className="text-[8px] text-muted-foreground font-bold uppercase mb-1">Trades After Loss</div>
+                            <div className="text-xl font-black text-foreground">{recoveryData.totalAfterLoss}</div>
+                          </div>
+                          <div className="p-3 bg-card/30 rounded-lg border border-border/30 text-center">
+                            <div className="text-[8px] text-muted-foreground font-bold uppercase mb-1">Wins</div>
+                            <div className="text-xl font-black text-emerald-500">{recoveryData.winsAfterLoss}</div>
+                          </div>
+                        </div>
+                        <div className="text-[8px] text-muted-foreground italic">
+                          Tracks your ability to bounce back after losses
+                        </div>
+                      </div>
+                    );
+                  })()}
                 </div>
               </div>
 
