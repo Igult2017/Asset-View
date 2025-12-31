@@ -5,7 +5,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { insertTradeSchema, type InsertTrade, type Trade } from "@shared/schema";
 import { motion, AnimatePresence } from "framer-motion";
 import { format } from "date-fns";
-import { Activity, Plus, BarChart2, History, TrendingUp, Filter, Palette, ChevronDown, ArrowRight, ArrowLeft, Settings } from "lucide-react";
+import { Activity, Plus, BarChart2, History, TrendingUp, Filter, Palette, ChevronDown, ArrowRight, ArrowLeft, Settings, LineChart } from "lucide-react";
+import { useLocation } from "wouter";
 import { StatsCard } from "@/components/stats-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -653,6 +654,7 @@ export default function Dashboard() {
   const { data: trades, isLoading } = useTrades();
   const [activeTab, setActiveTab] = useState<'dashboard' | 'history'>('dashboard');
   const [selectedStrat, setSelectedStrat] = useState<string>("All");
+  const [, navigate] = useLocation();
   const { theme, setTheme } = useTheme();
 
   if (isLoading || !trades) {
@@ -718,6 +720,12 @@ export default function Dashboard() {
                 {activeTab === 'history' && (
                   <motion.div layoutId="underline" className="absolute -bottom-7 left-0 right-0 h-0.5 bg-primary shadow-[0_0_8px_hsl(var(--primary))]" />
                 )}
+              </button>
+              <button 
+                onClick={() => navigate('/drawdown-analysis')}
+                className="text-xs font-black tracking-widest uppercase transition-all flex items-center gap-2 text-muted-foreground hover:text-foreground"
+              >
+                <LineChart className="w-4 h-4" /> Drawdown Analysis
               </button>
             </div>
             <LogEntryModal />
