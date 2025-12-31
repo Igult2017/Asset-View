@@ -784,8 +784,8 @@ export default function Dashboard() {
                 <StatsCard label="Profit Factor" value={stats.pf} variant="blue" highlight />
               </div>
 
-              {/* Intelligence Panels */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {/* Intelligence Panels Row 1 */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <PanelSection 
                   title="Market Regime" 
                   description="Performance edge across different volatility and regime states."
@@ -840,7 +840,10 @@ export default function Dashboard() {
                     <span className="text-[10px] font-medium text-red-400">-0.52R Opportunity Loss</span>
                   </div>
                 </PanelSection>
+              </div>
 
+              {/* Intelligence Panels Row 2 */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <PanelSection 
                   title="Psychological State" 
                   description="Mindset impact on execution quality and rule adherence."
