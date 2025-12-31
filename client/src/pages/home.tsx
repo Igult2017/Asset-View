@@ -32,13 +32,25 @@ function calculateStats(trades: Trade[]) {
   const net = trades.reduce((a, b) => a + Number(b.plAmt), 0);
   const wins = trades.filter(t => t.outcome === 'Win').length;
   const wr = trades.length ? Math.round((wins / trades.length) * 100) : 0;
+  
+  // Calculate Avg R based on reported R achieved
   const exp = trades.length ? (trades.reduce((a, b) => a + Number(b.rAchieved), 0) / trades.length).toFixed(2) : "0.00";
   
   const grossWin = trades.reduce((a, b) => a + (Number(b.plAmt) > 0 ? Number(b.plAmt) : 0), 0);
   const grossLoss = Math.abs(trades.reduce((a, b) => a + (Number(b.plAmt) < 0 ? Number(b.plAmt) : 0), 0));
   const pf = grossLoss > 0 ? (grossWin / grossLoss).toFixed(2) : grossWin.toFixed(2);
 
-  return { net, wr, exp, count: trades.length, pf };
+  // Measure Discipline (Rule Adherence)
+  const avgDiscipline = trades.length 
+    ? Math.round(trades.reduce((a, b) => a + (Number(b.rulesFollowedPercent) || 0), 0) / trades.length)
+    : 100;
+
+  // Measure Market Alignment (Setup Quality)
+  const avgAlignment = trades.length
+    ? (trades.reduce((a, b) => a + (Number(b.marketAlignmentScore) || 0), 0) / trades.length).toFixed(1)
+    : "5.0";
+
+  return { net, wr, exp, count: trades.length, pf, avgDiscipline, avgAlignment };
 }
 
 function getUniqueStrategies(trades: Trade[]) {
@@ -686,113 +698,116 @@ export default function Dashboard() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 <PanelSection 
                   title="Market Regime" 
-                  description="Captures market conditions at entry: regime, volatility, liquidity."
+                  description="Performance edge across different volatility and regime states."
                   icon={Activity}
                 >
-                  <div className="grid grid-cols-2 gap-2">
-                    <div className="p-2 rounded bg-muted/30 text-[10px] font-medium flex justify-between">
-                      <span>Regime</span><span className="text-primary font-bold">Trending</span>
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-[10px]">
+                      <span className="text-muted-foreground">Trending Efficiency</span>
+                      <span className="text-emerald-500 font-bold">1.8R Avg</span>
                     </div>
-                    <div className="p-2 rounded bg-muted/30 text-[10px] font-medium flex justify-between">
-                      <span>Volatility</span><span className="text-primary font-bold">High</span>
+                    <div className="flex justify-between text-[10px]">
+                      <span className="text-muted-foreground">Ranging Efficiency</span>
+                      <span className="text-amber-500 font-bold">0.4R Avg</span>
                     </div>
                   </div>
                 </PanelSection>
 
                 <PanelSection 
                   title="Session Precision" 
-                  description="Performance metrics based on entry time and session phase."
+                  description="Granular performance by entry timing relative to session open/close."
                   icon={History}
                 >
                   <div className="space-y-2">
-                    <div className="flex justify-between text-[10px] mb-1">
-                      <span>NY Open Momentum</span>
-                      <span className="font-bold">72% Efficiency</span>
+                    <div className="flex justify-between text-[10px]">
+                      <span className="text-muted-foreground">Initial Impulse WR</span>
+                      <span className="text-emerald-500 font-bold">72%</span>
                     </div>
-                    <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
-                      <div className="h-full bg-primary w-[72%]" />
+                    <div className="flex justify-between text-[10px]">
+                      <span className="text-muted-foreground">Late Extension WR</span>
+                      <span className="text-red-400 font-bold">28%</span>
                     </div>
                   </div>
                 </PanelSection>
 
                 <PanelSection 
                   title="Setup Quality" 
-                  description="Aggregate score used to evaluate opportunity strength."
+                  description="Statistical edge correlation with setup clarity and alignment scores."
                   icon={TrendingUp}
                 >
                   <div className="flex justify-between items-center">
                     <div className="flex gap-1">
                       {[1,2,3,4,5].map(i => (
-                        <div key={i} className={cn("w-3 h-3 rounded-full", i <= 4 ? "bg-primary" : "bg-muted")} />
+                        <div key={i} className={cn("w-3 h-3 rounded-full", i <= Math.round(Number(stats.avgAlignment)) ? "bg-primary" : "bg-muted")} />
                       ))}
                     </div>
-                    <span className="text-xs font-bold font-mono tracking-tighter">4.2 / 5.0</span>
+                    <span className="text-xs font-bold font-mono tracking-tighter">{stats.avgAlignment} / 5.0</span>
                   </div>
                 </PanelSection>
 
                 <PanelSection 
                   title="Signal Validation" 
-                  description="Verification of strategy rules and confluence requirements."
+                  description="Measuring the cost of taking trades without full confluence."
                   icon={Filter}
                 >
                   <div className="grid grid-cols-2 gap-x-3 gap-y-1">
                     <div className="flex items-center gap-1.5 text-[10px]">
                       <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.5)]" />
-                      <span className="text-muted-foreground">SMC Primary</span>
+                      <span className="text-muted-foreground">Full Conf: +2.1R</span>
                     </div>
                     <div className="flex items-center gap-1.5 text-[10px]">
-                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.5)]" />
-                      <span className="text-muted-foreground">Liquidity Taken</span>
+                      <div className="w-1.5 h-1.5 rounded-full bg-red-400 shadow-[0_0_5px_rgba(248,113,113,0.5)]" />
+                      <span className="text-muted-foreground">Partial: -0.8R</span>
                     </div>
                   </div>
                 </PanelSection>
 
                 <PanelSection 
                   title="Execution Precision" 
-                  description="Slippage and deviation metrics between planned and actual."
+                  description="Deviation analysis: slippage and entry timing accuracy."
                   icon={ArrowRight}
                 >
                   <div className="flex items-center justify-between text-[10px]">
-                    <span className="text-muted-foreground">Avg. Slippage</span>
-                    <span className="font-mono text-emerald-500">-0.1 pips</span>
+                    <span className="text-muted-foreground">Fill Slippage (Avg)</span>
+                    <span className="font-mono text-emerald-500">-0.15 pips</span>
                   </div>
                 </PanelSection>
 
                 <PanelSection 
                   title="Risk Efficiency" 
-                  description="Exposure, drawdown sensitivity, and reward efficiency."
+                  description="Capital utilization and reward-to-drawdown ratios."
                   icon={BarChart2}
                 >
                   <div className="flex gap-2">
                     <div className="flex-1 p-2 rounded bg-primary/5 border border-primary/10 text-center">
-                      <div className="text-[10px] font-bold text-primary">1.0%</div>
-                      <div className="text-[8px] text-muted-foreground uppercase">Risk/Trade</div>
+                      <div className="text-[10px] font-bold text-primary">1.25</div>
+                      <div className="text-[8px] text-muted-foreground uppercase">Profit/Risk</div>
                     </div>
                     <div className="flex-1 p-2 rounded bg-primary/5 border border-primary/10 text-center">
                       <div className="text-[10px] font-bold text-primary">Low</div>
-                      <div className="text-[8px] text-muted-foreground uppercase">Heat</div>
+                      <div className="text-[8px] text-muted-foreground uppercase">Risk Heat</div>
                     </div>
                   </div>
                 </PanelSection>
 
                 <PanelSection 
                   title="Management Logic" 
-                  description="Post-entry handling: break-even and rule-based logic."
+                  description="Opportunity loss analysis from early exits vs target rules."
                   icon={Settings}
                 >
                   <div className="p-2 rounded-md bg-muted/30 border border-border/50 text-center">
-                    <span className="text-[10px] font-medium text-foreground">Rule-Based Precision</span>
+                    <span className="text-[10px] font-medium text-red-400">-0.52R Opportunity Loss</span>
                   </div>
                 </PanelSection>
 
                 <PanelSection 
-                  title="Psychological" 
-                  description="Trader mindset and emotional state at execution."
+                  title="Psychological State" 
+                  description="Mindset impact on execution quality and rule adherence."
                   icon={Palette}
                 >
                   <div className="flex items-center gap-2 px-2 py-1 rounded bg-blue-500/10 border border-blue-500/20">
                     <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-                    <span className="text-[10px] font-bold text-blue-500 uppercase">Calm & Focused</span>
+                    <span className="text-[10px] font-bold text-blue-500 uppercase">Calm WR: 75%</span>
                   </div>
                 </PanelSection>
               </div>
