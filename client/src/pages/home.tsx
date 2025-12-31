@@ -90,6 +90,16 @@ function calculateStats(trades: Trade[]) {
     return acc;
   }, {});
 
+  const hyperGranularPerformance = trades.reduce((acc: any, t) => {
+    // Instrument + Strategy + Session + Condition
+    const key = `${t.asset}-${t.strategy}-${t.session}-${t.condition}`;
+    if (!acc[key]) acc[key] = { wins: 0, losses: 0, total: 0 };
+    acc[key].total += 1;
+    if (t.outcome === 'Win') acc[key].wins += 1;
+    if (t.outcome === 'Loss') acc[key].losses += 1;
+    return acc;
+  }, {});
+
   // Monthly Drawdown in Percentage (Mock base 100k account if not provided)
   const baseBalance = 100000;
   const monthlyData = calculateDrawdownPerMonth(trades);
@@ -99,7 +109,8 @@ function calculateStats(trades: Trade[]) {
   return { 
     net, wr, exp, count: trades.length, pf, avgDiscipline, avgAlignment, 
     instrumentPerformance, sessionPerformance, monthlyDrawdownPercent,
-    instrumentConditionPerformance, complexEdgePerformance, strategyContextPerformance
+    instrumentConditionPerformance, complexEdgePerformance, strategyContextPerformance,
+    hyperGranularPerformance
   };
 }
 
@@ -985,6 +996,34 @@ export default function Dashboard() {
                         </span>
                       </div>
                     ))}
+                  </div>
+                </PanelSection>
+
+                <PanelSection 
+                  title="Hyper-Granular Edge" 
+                  description="Asset + Strategy + Session + Condition WR/LR."
+                  icon={Activity}
+                >
+                  <div className="text-[10px] space-y-2">
+                    {Object.entries(stats.hyperGranularPerformance).slice(0, 3).map(([key, data]: [string, any]) => {
+                      const wr = data.total ? Math.round((data.wins / data.total) * 100) : 0;
+                      const lr = data.total ? Math.round((data.losses / data.total) * 100) : 0;
+                      return (
+                        <div key={key} className="space-y-1 border-b border-border/30 pb-1">
+                          <div className="flex justify-between font-bold truncate">
+                            <span>{key}</span>
+                          </div>
+                          <div className="flex justify-between text-[8px] mb-1">
+                            <span className="text-emerald-500 font-bold">{wr}% Win</span>
+                            <span className="text-red-400 font-bold">{lr}% Loss</span>
+                          </div>
+                          <div className="flex gap-1 h-1 w-full bg-muted rounded-full overflow-hidden">
+                            <div className="bg-emerald-500" style={{ width: `${wr}%` }} />
+                            <div className="bg-red-400" style={{ width: `${lr}%` }} />
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </PanelSection>
 
