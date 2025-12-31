@@ -42,7 +42,7 @@ function calculateStats(trades: Trade[]) {
 }
 
 function getUniqueStrategies(trades: Trade[]) {
-  return Array.from(new Set(trades.map(t => t.strategy)));
+  return Array.from(new Set(trades.map(t => t.strategy).filter(s => s)));
 }
 
 // --- Components ---
