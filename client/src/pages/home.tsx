@@ -851,6 +851,55 @@ export default function Dashboard() {
                     <span className="text-[10px] font-bold text-blue-500 uppercase">Calm WR: 75%</span>
                   </div>
                 </PanelSection>
+
+                <PanelSection 
+                  title="Best Strategy" 
+                  description="Top performing strategy based on multiple metrics."
+                  icon={TrendingUp}
+                >
+                  {calculateBestStrategy(stats.strategyPerformance) ? (
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-[10px]">
+                        <span className="font-bold">{calculateBestStrategy(stats.strategyPerformance)?.name}</span>
+                        <span className="text-emerald-500 font-black">{calculateBestStrategy(stats.strategyPerformance)?.wr}% WR</span>
+                      </div>
+                      <div className="flex justify-between text-[10px]">
+                        <span className="text-muted-foreground">Avg R:</span>
+                        <span className="text-primary font-bold">{calculateBestStrategy(stats.strategyPerformance)?.avgR}R</span>
+                      </div>
+                      <div className="flex justify-between text-[10px]">
+                        <span className="text-muted-foreground">Total Profit:</span>
+                        <span className={cn("font-bold", (calculateBestStrategy(stats.strategyPerformance)?.profit || 0) > 0 ? "text-emerald-500" : "text-red-400")}>
+                          ${(calculateBestStrategy(stats.strategyPerformance)?.profit || 0).toLocaleString()}
+                        </span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-[10px] text-muted-foreground">No strategies yet</div>
+                  )}
+                </PanelSection>
+
+                <PanelSection 
+                  title="Profit & Loss by Strategy" 
+                  description="Total profit and loss breakdown per strategy."
+                  icon={BarChart2}
+                >
+                  <div className="space-y-2 text-[9px]">
+                    {Object.entries(stats.strategyPerformance).slice(0, 3).map(([name, data]: [string, any]) => (
+                      <div key={name} className="space-y-1 border-b border-border/30 pb-1">
+                        <div className="flex justify-between font-bold text-[10px]">
+                          <span className="truncate">{name}</span>
+                          <span className={cn("font-black", data.profit > 0 ? "text-emerald-500" : "text-red-400")}>
+                            ${data.profit > 0 ? '+' : ''}{data.profit}
+                          </span>
+                        </div>
+                        <div className="flex justify-between text-[8px] text-muted-foreground">
+                          <span>{data.total} trades</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </PanelSection>
               </div>
 
               {/* Advanced Confluence Analytics */}
@@ -1033,53 +1082,6 @@ export default function Dashboard() {
                         </span>
                       </div>
                     </div>
-                  </div>
-                </PanelSection>
-
-                <PanelSection 
-                  title="Best Strategy" 
-                  description="Top performing strategy based on multiple metrics."
-                  icon={TrendingUp}
-                >
-                  {calculateBestStrategy(stats.strategyPerformance) ? (
-                    <div className="space-y-2">
-                      <div className="flex justify-between text-[10px]">
-                        <span className="font-bold">{calculateBestStrategy(stats.strategyPerformance)?.name}</span>
-                        <span className="text-emerald-500 font-black">{calculateBestStrategy(stats.strategyPerformance)?.wr}% WR</span>
-                      </div>
-                      <div className="flex justify-between text-[10px]">
-                        <span className="text-muted-foreground">Avg R:</span>
-                        <span className="text-primary font-bold">{calculateBestStrategy(stats.strategyPerformance)?.avgR}R</span>
-                      </div>
-                      <div className="flex justify-between text-[10px]">
-                        <span className="text-muted-foreground">Total Profit:</span>
-                        <span className={cn("font-bold", (calculateBestStrategy(stats.strategyPerformance)?.profit || 0) > 0 ? "text-emerald-500" : "text-red-400")}>
-                          ${(calculateBestStrategy(stats.strategyPerformance)?.profit || 0).toLocaleString()}
-                        </span>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="text-[10px] text-muted-foreground">No strategies yet</div>
-                  )}
-                </PanelSection>
-
-                <PanelSection 
-                  title="Profit & Loss by Strategy" 
-                  description="Total profit and loss breakdown per strategy."
-                  icon={BarChart2}
-                >
-                  <div className="space-y-2 text-[9px]">
-                    {Object.entries(stats.strategyPerformance).slice(0, 4).map(([name, data]: [string, any]) => (
-                      <div key={name} className="space-y-1 border-b border-border/30 pb-1">
-                        <div className="flex justify-between font-bold">
-                          <span className="truncate">{name}</span>
-                        </div>
-                        <div className="flex justify-between text-[8px] text-muted-foreground">
-                          <span>Profit: <span className="text-emerald-500 font-bold">${data.profit.toLocaleString()}</span></span>
-                          <span>Trades: {data.total}</span>
-                        </div>
-                      </div>
-                    ))}
                   </div>
                 </PanelSection>
               </div>
