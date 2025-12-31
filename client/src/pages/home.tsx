@@ -593,12 +593,12 @@ export default function Dashboard() {
                 <StatsCard label="Profit Factor" value={stats.pf} variant="blue" highlight />
               </div>
 
-              {/* Granular Strategy Intel */}
+              {/* Strategy Filter */}
               <div className="p-1 border border-primary/20 bg-primary/5 rounded-2xl">
                 <div className="p-4 flex flex-col md:flex-row justify-between items-center gap-4">
                   <div className="flex items-center gap-3">
                     <div className="w-2 h-8 bg-primary rounded-full shadow-lg shadow-primary/50"></div>
-                    <h3 className="text-sm font-black uppercase tracking-widest text-foreground">Granular Strategy Drill-Down</h3>
+                    <h3 className="text-sm font-black uppercase tracking-widest text-foreground">Strategy Drill-Down</h3>
                   </div>
                   <Select value={selectedStrat} onValueChange={setSelectedStrat}>
                     <SelectTrigger className="w-[200px] bg-card border-border">
@@ -612,72 +612,133 @@ export default function Dashboard() {
                     </SelectContent>
                   </Select>
                 </div>
+              </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 pt-0">
-                  {/* Session Win Rates */}
-                  <div className="bg-card/40 p-5 rounded-xl border border-border/50">
-                    <h4 className="text-[9px] font-black text-muted-foreground uppercase mb-4 tracking-tighter">Win/Loss per Session %</h4>
-                    <div className="space-y-4">
-                      {['London', 'New York', 'Asian'].map(s => {
-                        const sTrades = filteredTrades.filter(t => t.session === s);
-                        const wins = sTrades.filter(t => t.outcome === 'Win').length;
-                        const perc = sTrades.length ? Math.round((wins / sTrades.length) * 100) : 0;
-                        return (
-                          <div key={s}>
-                            <div className="flex justify-between text-[10px] font-black uppercase mb-1">
-                              <span className="text-foreground">{s}</span>
-                              <span className="text-primary">{perc}%</span>
-                            </div>
-                            <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden">
-                              <motion.div 
-                                initial={{ width: 0 }} 
-                                animate={{ width: `${perc}%` }} 
-                                className="h-full bg-primary shadow-[0_0_10px_rgba(59,130,246,0.5)]" 
-                              />
-                            </div>
+              {/* Performance Metrics Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Session Performance */}
+                <div className="bg-card/40 p-5 rounded-xl border border-border/50">
+                  <h4 className="text-[9px] font-black text-muted-foreground uppercase mb-4 tracking-tighter">Session Win Rates</h4>
+                  <div className="space-y-4">
+                    {['London', 'New York', 'Asian'].map(s => {
+                      const sTrades = filteredTrades.filter(t => t.session === s);
+                      const wins = sTrades.filter(t => t.outcome === 'Win').length;
+                      const perc = sTrades.length ? Math.round((wins / sTrades.length) * 100) : 0;
+                      return (
+                        <div key={s}>
+                          <div className="flex justify-between text-[10px] font-black uppercase mb-1">
+                            <span className="text-foreground">{s}</span>
+                            <span className="text-primary">{perc}% ({sTrades.length})</span>
                           </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Market Bias */}
-                  <div className="bg-card/40 p-5 rounded-xl border border-border/50">
-                    <h4 className="text-[9px] font-black text-muted-foreground uppercase mb-4 tracking-tighter">Market Bias Efficiency</h4>
-                    <div className="space-y-2">
-                      {['Bullish', 'Bearish'].map(b => {
-                        const bTrades = filteredTrades.filter(t => t.bias === b);
-                        const wins = bTrades.filter(t => t.outcome === 'Win').length;
-                        const perc = bTrades.length ? Math.round((wins / bTrades.length) * 100) : 0;
-                        return (
-                          <div key={b} className="flex items-center justify-between p-3 bg-card/40 rounded-xl border border-border/50 hover:border-primary/50 transition-colors">
-                            <span className={cn("text-[9px] font-black uppercase", b === 'Bullish' ? 'text-emerald-500' : 'text-rose-500')}>{b}</span>
-                            <span className="text-xs font-black text-foreground">{perc}% Win</span>
+                          <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden">
+                            <motion.div 
+                              initial={{ width: 0 }} 
+                              animate={{ width: `${perc}%` }} 
+                              className="h-full bg-primary shadow-[0_0_10px_rgba(59,130,246,0.5)]" 
+                            />
                           </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Streak Intervals */}
-                  <div className="bg-card/40 p-5 rounded-xl border border-border/50">
-                    <h4 className="text-[9px] font-black text-muted-foreground uppercase mb-4 tracking-tighter">Streak Intervals</h4>
-                    <div className="grid grid-cols-2 gap-4 h-[calc(100%-2rem)]">
-                      <div className="p-3 bg-card/40 rounded-xl border border-border/50 text-center flex flex-col justify-center">
-                        <div className="text-[8px] text-muted-foreground font-black uppercase mb-1">Current Streak</div>
-                        <div className="text-xl font-black text-foreground">
-                           {filteredTrades.length > 0 ? (
-                             <span className={filteredTrades[filteredTrades.length - 1].outcome === 'Win' ? 'text-emerald-500' : 'text-rose-500'}>
-                               {filteredTrades[filteredTrades.length - 1].outcome}
-                             </span>
-                           ) : "-"}
                         </div>
-                      </div>
-                      <div className="p-3 bg-card/40 rounded-xl border border-border/50 text-center flex flex-col justify-center">
-                        <div className="text-[8px] text-muted-foreground font-black uppercase mb-1">Total Trades</div>
-                        <div className="text-xl font-black text-primary">{filteredTrades.length}</div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Market Condition Performance */}
+                <div className="bg-card/40 p-5 rounded-xl border border-border/50">
+                  <h4 className="text-[9px] font-black text-muted-foreground uppercase mb-4 tracking-tighter">Market Condition Edge</h4>
+                  <div className="space-y-2">
+                    {['Trending', 'Ranging'].map(c => {
+                      const cTrades = filteredTrades.filter(t => t.condition === c);
+                      const wins = cTrades.filter(t => t.outcome === 'Win').length;
+                      const perc = cTrades.length ? Math.round((wins / cTrades.length) * 100) : 0;
+                      return (
+                        <div key={c} className="flex items-center justify-between p-3 bg-card/40 rounded-xl border border-border/50 hover:border-primary/50 transition-colors">
+                          <span className={cn("text-[9px] font-black uppercase", c === 'Trending' ? 'text-blue-500' : 'text-amber-500')}>{c}</span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-black text-foreground">{perc}%</span>
+                            <span className="text-[8px] text-muted-foreground">({cTrades.length})</span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Bias & Streak */}
+                <div className="bg-card/40 p-5 rounded-xl border border-border/50">
+                  <h4 className="text-[9px] font-black text-muted-foreground uppercase mb-4 tracking-tighter">Bias & Momentum</h4>
+                  <div className="space-y-3">
+                    {['Bullish', 'Bearish'].map(b => {
+                      const bTrades = filteredTrades.filter(t => t.bias === b);
+                      const wins = bTrades.filter(t => t.outcome === 'Win').length;
+                      const perc = bTrades.length ? Math.round((wins / bTrades.length) * 100) : 0;
+                      return (
+                        <div key={b} className="p-2 bg-card/30 rounded-lg border border-border/30">
+                          <div className="flex justify-between items-center mb-2">
+                            <span className={cn("text-[9px] font-black uppercase", b === 'Bullish' ? 'text-emerald-500' : 'text-rose-500')}>{b}</span>
+                            <span className="text-xs font-black text-foreground">{perc}%</span>
+                          </div>
+                          <div className="text-[8px] text-muted-foreground">{bTrades.length} trades</div>
+                        </div>
+                      );
+                    })}
+                    <div className="pt-2 mt-2 border-t border-border/30">
+                      <div className="text-[8px] text-muted-foreground font-bold mb-1">CURRENT STREAK</div>
+                      <div className="text-lg font-black">
+                        {filteredTrades.length > 0 ? (
+                          <span className={filteredTrades[filteredTrades.length - 1].outcome === 'Win' ? 'text-emerald-500' : 'text-rose-500'}>
+                            {filteredTrades[filteredTrades.length - 1].outcome}
+                          </span>
+                        ) : "-"}
                       </div>
                     </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Timeframe Analysis */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Context Timeframe Performance */}
+                <div className="bg-card/40 p-5 rounded-xl border border-border/50">
+                  <h4 className="text-[9px] font-black text-muted-foreground uppercase mb-4 tracking-tighter">Context TF Performance</h4>
+                  <div className="space-y-2">
+                    {Array.from(new Set(filteredTrades.map(t => t.contextTF))).sort().map(tf => {
+                      const tfTrades = filteredTrades.filter(t => t.contextTF === tf);
+                      const wins = tfTrades.filter(t => t.outcome === 'Win').length;
+                      const perc = tfTrades.length ? Math.round((wins / tfTrades.length) * 100) : 0;
+                      const avgR = (tfTrades.reduce((a, b) => a + Number(b.rAchieved), 0) / tfTrades.length).toFixed(2);
+                      return (
+                        <div key={tf} className="flex items-center justify-between p-2 bg-card/30 rounded-lg border border-border/30">
+                          <span className="text-[9px] font-black uppercase text-foreground">{tf}</span>
+                          <div className="flex items-center gap-3">
+                            <span className="text-xs font-bold text-primary">{perc}%</span>
+                            <span className="text-[8px] text-muted-foreground">{avgR}R</span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Entry Timeframe Performance */}
+                <div className="bg-card/40 p-5 rounded-xl border border-border/50">
+                  <h4 className="text-[9px] font-black text-muted-foreground uppercase mb-4 tracking-tighter">Entry TF Performance</h4>
+                  <div className="space-y-2">
+                    {Array.from(new Set(filteredTrades.map(t => t.entryTF))).sort().map(tf => {
+                      const tfTrades = filteredTrades.filter(t => t.entryTF === tf);
+                      const wins = tfTrades.filter(t => t.outcome === 'Win').length;
+                      const perc = tfTrades.length ? Math.round((wins / tfTrades.length) * 100) : 0;
+                      const avgR = (tfTrades.reduce((a, b) => a + Number(b.rAchieved), 0) / tfTrades.length).toFixed(2);
+                      return (
+                        <div key={tf} className="flex items-center justify-between p-2 bg-card/30 rounded-lg border border-border/30">
+                          <span className="text-[9px] font-black uppercase text-foreground">{tf}</span>
+                          <div className="flex items-center gap-3">
+                            <span className="text-xs font-bold text-primary">{perc}%</span>
+                            <span className="text-[8px] text-muted-foreground">{avgR}R</span>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
