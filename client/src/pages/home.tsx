@@ -183,19 +183,18 @@ function calculatePerformanceAfterLoss(trades: Trade[]) {
 
 function PanelSection({ title, description, children, icon: Icon }: { title: string, description: string, children?: React.ReactNode, icon: any }) {
   return (
-    <Card className="p-4 space-y-3 bg-card/50 backdrop-blur-sm border-border/50 hover-elevate transition-all duration-300">
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex items-center gap-2">
-          <div className="p-2 rounded-lg bg-primary/10 text-primary">
-            <Icon className="w-4 h-4" />
-          </div>
-          <div>
-            <h3 className="text-sm font-bold tracking-tight">{title}</h3>
-            <p className="text-[10px] text-muted-foreground leading-relaxed">{description}</p>
-          </div>
+    <Card className="p-5 space-y-4 bg-card/40 backdrop-blur-xl border-border/40 hover:border-primary/30 hover:bg-card/60 transition-all duration-500 group shadow-lg shadow-black/5 relative overflow-hidden">
+      <div className="absolute top-0 left-0 w-1 h-full bg-primary/0 group-hover:bg-primary/40 transition-all duration-500" />
+      <div className="flex items-start gap-4">
+        <div className="p-2.5 rounded-xl bg-primary/5 text-primary group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500 shadow-sm shadow-primary/5">
+          <Icon className="w-4 h-4" />
+        </div>
+        <div className="space-y-1.5 min-w-0">
+          <h3 className="text-[11px] font-black uppercase tracking-[0.15em] text-foreground/90 group-hover:text-primary transition-colors duration-300 truncate">{title}</h3>
+          <p className="text-[10px] font-medium text-muted-foreground/80 dark:text-muted-foreground leading-relaxed line-clamp-2 group-hover:text-muted-foreground transition-colors">{description}</p>
         </div>
       </div>
-      {children && <div className="pt-2">{children}</div>}
+      {children && <div className="relative z-10">{children}</div>}
     </Card>
   );
 }
