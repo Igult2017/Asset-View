@@ -6,7 +6,7 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
 
-function calculateDrawdownByDimension(trades: Trade[], dimension: 'session' | 'strategy' | 'entryTF' | 'condition') {
+function calculateDrawdownByDimension(trades: Trade[], dimension: 'session' | 'strategy' | 'entryTF' | 'condition' | 'asset') {
   const baseBalance = 100000;
   
   // Group trades by dimension
@@ -16,6 +16,7 @@ function calculateDrawdownByDimension(trades: Trade[], dimension: 'session' | 's
     else if (dimension === 'strategy') key = t.strategy;
     else if (dimension === 'entryTF') key = t.entryTF || 'Unknown';
     else if (dimension === 'condition') key = t.condition;
+    else if (dimension === 'asset') key = t.asset;
     
     if (!acc[key]) {
       acc[key] = {
@@ -69,46 +70,46 @@ function calculateDrawdownByDimension(trades: Trade[], dimension: 'session' | 's
 
 function BreakdownCard({ title, data, dimension }: { title: string; data: any[]; dimension: string }) {
   return (
-    <Card className="p-6 bg-card/40 backdrop-blur-xl border-border/40">
-      <h3 className="text-sm font-semibold mb-4 text-foreground/90">{title}</h3>
+    <Card className="p-6 bg-white border border-gray-200 shadow-sm">
+      <h3 className="text-sm font-semibold mb-4 text-gray-900">{title}</h3>
       <div className="space-y-3 max-h-96 overflow-y-auto">
         {data.length === 0 ? (
-          <p className="text-xs text-muted-foreground">No data available</p>
+          <p className="text-xs text-gray-600">No data available</p>
         ) : (
           data.map((item, idx) => (
-            <div key={idx} className="p-3 rounded-lg bg-background/40 border border-border/20 space-y-2">
+            <div key={idx} className="p-3 rounded-lg bg-gray-50 border border-gray-200 space-y-2">
               <div className="flex items-start justify-between gap-2">
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-medium text-foreground truncate">{item.dimension}</p>
-                  <p className="text-[10px] text-muted-foreground mt-1">
-                    Max DD: <span className="text-red-400">${item.maxDrawdown.toLocaleString()}</span> ({item.drawdownPercent}%)
+                  <p className="text-xs font-medium text-gray-900 truncate">{item.dimension}</p>
+                  <p className="text-[10px] text-gray-600 mt-1">
+                    Max DD: <span className="text-red-600 font-medium">${item.maxDrawdown.toLocaleString()}</span> ({item.drawdownPercent}%)
                   </p>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2 text-[10px]">
                 <div>
-                  <span className="text-muted-foreground">Total P/L:</span>
-                  <span className={`block font-medium ${item.totalPL >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                  <span className="text-gray-600">Total P/L:</span>
+                  <span className={`block font-medium ${item.totalPL >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                     ${item.totalPL.toLocaleString()}
                   </span>
                 </div>
                 <div>
-                  <span className="text-muted-foreground">Win Rate:</span>
-                  <span className="block font-medium text-primary">{item.winRate}%</span>
+                  <span className="text-gray-600">Win Rate:</span>
+                  <span className="block font-medium text-blue-600">{item.winRate}%</span>
                 </div>
               </div>
-              <div className="grid grid-cols-3 gap-1 text-[9px] pt-2 border-t border-border/20">
+              <div className="grid grid-cols-3 gap-1 text-[9px] pt-2 border-t border-gray-200">
                 <div className="text-center">
-                  <span className="block text-muted-foreground">Trades</span>
-                  <span className="block font-medium">{item.trades}</span>
+                  <span className="block text-gray-600">Trades</span>
+                  <span className="block font-medium text-gray-900">{item.trades}</span>
                 </div>
-                <div className="text-center text-green-400">
-                  <span className="block text-muted-foreground">Wins</span>
-                  <span className="block font-medium">{item.wins}</span>
+                <div className="text-center">
+                  <span className="block text-gray-600">Wins</span>
+                  <span className="block font-medium text-green-600">{item.wins}</span>
                 </div>
-                <div className="text-center text-red-400">
-                  <span className="block text-muted-foreground">Losses</span>
-                  <span className="block font-medium">{item.losses}</span>
+                <div className="text-center">
+                  <span className="block text-gray-600">Losses</span>
+                  <span className="block font-medium text-red-600">{item.losses}</span>
                 </div>
               </div>
             </div>
@@ -139,8 +140,10 @@ export default function DrawdownAnalysis() {
   const byStrategy = calculateDrawdownByDimension(trades, 'strategy');
   const byEntry = calculateDrawdownByDimension(trades, 'entryTF');
   const byCondition = calculateDrawdownByDimension(trades, 'condition');
+  const byAsset = calculateDrawdownByDimension(trades, 'asset');
 
   const chartData = [
+    ...byAsset.map(d => ({ category: `${d.dimension} (Instrument)`, drawdown: d.maxDrawdown })),
     ...bySession.map(d => ({ category: `${d.dimension} (Session)`, drawdown: d.maxDrawdown })),
     ...byStrategy.map(d => ({ category: `${d.dimension} (Strategy)`, drawdown: d.maxDrawdown })),
     ...byEntry.map(d => ({ category: `${d.dimension} (Entry)`, drawdown: d.maxDrawdown })),
@@ -148,41 +151,46 @@ export default function DrawdownAnalysis() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-background/50 p-6">
+    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 p-6">
       <div className="max-w-7xl mx-auto space-y-6">
-        <Button variant="ghost" onClick={() => navigate("/")} className="mb-4">
+        <Button variant="ghost" onClick={() => navigate("/")} className="mb-4 text-gray-700 hover:text-gray-900">
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back to Dashboard
         </Button>
 
         <div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">Drawdown Analysis</h1>
-          <p className="text-muted-foreground">Breakdown of maximum drawdown by sessions, strategies, entry timeframes, and market conditions</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Drawdown Analysis</h1>
+          <p className="text-gray-600">Breakdown of maximum drawdown by instruments, sessions, strategies, entry timeframes, and market conditions</p>
         </div>
 
         {/* Overview Chart */}
-        <Card className="p-6 bg-card/40 backdrop-blur-xl border-border/40">
-          <h3 className="text-sm font-semibold mb-4 text-foreground/90">Drawdown Comparison</h3>
+        <Card className="p-6 bg-white border border-gray-200 shadow-sm">
+          <h3 className="text-sm font-semibold mb-4 text-gray-900">Drawdown Comparison</h3>
           {chartData.length > 0 ? (
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                <XAxis dataKey="category" stroke="rgba(255,255,255,0.5)" angle={-45} textAnchor="end" height={100} tick={{ fontSize: 11 }} />
-                <YAxis stroke="rgba(255,255,255,0.5)" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.1)" />
+                <XAxis dataKey="category" stroke="rgba(0,0,0,0.5)" angle={-45} textAnchor="end" height={100} tick={{ fontSize: 11 }} />
+                <YAxis stroke="rgba(0,0,0,0.5)" />
                 <Tooltip 
-                  contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', border: '1px solid rgba(255,255,255,0.1)' }}
+                  contentStyle={{ backgroundColor: 'rgba(255,255,255,0.95)', border: '1px solid rgba(0,0,0,0.1)' }}
                   formatter={(value) => `$${Number(value).toLocaleString()}`}
                 />
-                <Bar dataKey="drawdown" fill="#ef4444" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="drawdown" fill="#dc2626" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           ) : (
-            <p className="text-muted-foreground">No data available</p>
+            <p className="text-gray-600">No data available</p>
           )}
         </Card>
 
-        {/* Four Column Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Five Column Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+          <BreakdownCard 
+            title="By Instrument" 
+            data={byAsset} 
+            dimension="asset"
+          />
           <BreakdownCard 
             title="By Session" 
             data={bySession} 
