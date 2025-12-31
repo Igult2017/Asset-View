@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -73,7 +73,8 @@
 @layer base {
   body {
     @apply bg-background text-foreground antialiased min-h-screen selection:bg-primary/30;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
   }
 
   h1, h2, h3, h4, h5, h6 {
