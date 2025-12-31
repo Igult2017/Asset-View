@@ -64,7 +64,62 @@ function LogEntryModal() {
       rAchieved: 0,
       plAmt: 0,
       contextTF: "D1",
-      entryTF: "M5"
+      entryTF: "M5",
+      marketRegime: "Trending",
+      volatilityState: "Expanding",
+      liquidityConditions: "High",
+      newsEnvironment: "None",
+      entryTimeUtc: "",
+      sessionPhase: "Session Open",
+      entryTimingContext: "Initial Impulse",
+      preExpansionCondition: "Before Expansion",
+      marketAlignmentScore: 3,
+      setupClarityScore: 3,
+      entryPrecisionScore: 3,
+      confluenceScore: 3,
+      timingQualityScore: 3,
+      primarySignalConfirmed: false,
+      secondaryConfirmationPresent: false,
+      keyLevelRespected: false,
+      momentumSignalValid: false,
+      invalidationLevelDefined: false,
+      targetLogicClear: false,
+      plannedEntry: 0,
+      actualEntry: 0,
+      plannedStopLoss: 0,
+      actualStopLoss: 0,
+      plannedTakeProfit: 0,
+      actualExit: 0,
+      riskPercentPerTrade: 0,
+      plannedRiskReward: "",
+      achievedRiskReward: "",
+      openRiskAtEntry: 0,
+      drawdownAtEntry: 0,
+      riskHeat: "Low",
+      entryMethod: "Market",
+      exitStrategy: "Fixed Target",
+      breakEvenApplied: false,
+      earlyExit: false,
+      managementType: "Rule-Based",
+      confidenceLevel: 3,
+      emotionalState: "Calm",
+      focusLevel: 3,
+      stressLevel: 2,
+      rulesFollowedPercent: 100,
+      forcedTrade: false,
+      missedValidSetup: false,
+      overtrading: false,
+      documentationSaved: false,
+      whatWorked: "",
+      whatFailed: "",
+      oneRuleToReinforce: "",
+      oneRuleToAdjust: "",
+      setupWorthRepeating: false,
+      minimumSetupScore: 3,
+      approvedSessions: "",
+      approvedMarketRegimes: "",
+      disallowedVolatility: "",
+      blacklistedConditions: ""
     }
   });
 
@@ -136,26 +191,26 @@ function LogEntryModal() {
             )} />
             <FormField control={form.control} name="session" render={({ field }) => (
               <FormItem><FormLabel className="text-[10px] font-bold uppercase">Session</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-              <FormControl><SelectTrigger className="bg-background border-border"><SelectValue placeholder="Select" /></SelectTrigger></FormControl>
+              <Select onValueChange={field.onChange} value={field.value || "New York"}>
+              <FormControl><SelectTrigger className="bg-background border-border"><SelectValue /></SelectTrigger></FormControl>
               <SelectContent><SelectItem value="London">London</SelectItem><SelectItem value="New York">New York</SelectItem><SelectItem value="Asian">Asian</SelectItem></SelectContent></Select></FormItem>
             )} />
             <FormField control={form.control} name="condition" render={({ field }) => (
               <FormItem><FormLabel className="text-[10px] font-bold uppercase">Condition</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-              <FormControl><SelectTrigger className="bg-background border-border"><SelectValue placeholder="Select" /></SelectTrigger></FormControl>
+              <Select onValueChange={field.onChange} value={field.value || "Trending"}>
+              <FormControl><SelectTrigger className="bg-background border-border"><SelectValue /></SelectTrigger></FormControl>
               <SelectContent><SelectItem value="Trending">Trending</SelectItem><SelectItem value="Ranging">Ranging</SelectItem></SelectContent></Select></FormItem>
             )} />
             <FormField control={form.control} name="bias" render={({ field }) => (
               <FormItem><FormLabel className="text-[10px] font-bold uppercase">Bias</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-              <FormControl><SelectTrigger className="bg-background border-border"><SelectValue placeholder="Select" /></SelectTrigger></FormControl>
+              <Select onValueChange={field.onChange} value={field.value || "Bullish"}>
+              <FormControl><SelectTrigger className="bg-background border-border"><SelectValue /></SelectTrigger></FormControl>
               <SelectContent><SelectItem value="Bullish">Bullish</SelectItem><SelectItem value="Bearish">Bearish</SelectItem></SelectContent></Select></FormItem>
             )} />
             <FormField control={form.control} name="outcome" render={({ field }) => (
               <FormItem><FormLabel className="text-[10px] font-bold uppercase">Outcome</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-              <FormControl><SelectTrigger className="bg-background border-border"><SelectValue placeholder="Select" /></SelectTrigger></FormControl>
+              <Select onValueChange={field.onChange} value={field.value || "Win"}>
+              <FormControl><SelectTrigger className="bg-background border-border"><SelectValue /></SelectTrigger></FormControl>
               <SelectContent><SelectItem value="Win">Win</SelectItem><SelectItem value="Loss">Loss</SelectItem><SelectItem value="BE">BE</SelectItem></SelectContent></Select></FormItem>
             )} />
             <FormField control={form.control} name="rAchieved" render={({ field }) => (
