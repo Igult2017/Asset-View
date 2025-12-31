@@ -147,7 +147,7 @@ function calculateDrawdownPerMonth(trades: Trade[]) {
     });
 
     const drawdownPercent = ((maxDD / baseBalance) * 100).toFixed(2);
-    return { month, drawdown: maxDD, drawdownPercent };
+    return { month, drawdown: maxDD, drawdownPercent, cumulative: balance };
   }).sort((a, b) => new Date(b.month).getTime() - new Date(a.month).getTime()); // Latest month first
 }
 
@@ -1214,7 +1214,7 @@ export default function Dashboard() {
                             </span>
                           </div>
                           <div className="flex justify-between text-[8px] text-muted-foreground">
-                            <span>Cumulative: ${month.cumulative.toLocaleString()}</span>
+                            <span>Cumulative: ${(month.cumulative || 0).toLocaleString()}</span>
                           </div>
                           <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden mt-2">
                             <motion.div 
