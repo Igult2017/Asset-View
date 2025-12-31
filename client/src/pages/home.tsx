@@ -33,24 +33,38 @@ function calculateStats(trades: Trade[]) {
   const wins = trades.filter(t => t.outcome === 'Win').length;
   const wr = trades.length ? Math.round((wins / trades.length) * 100) : 0;
   
-  // Calculate Avg R based on reported R achieved
   const exp = trades.length ? (trades.reduce((a, b) => a + Number(b.rAchieved), 0) / trades.length).toFixed(2) : "0.00";
   
   const grossWin = trades.reduce((a, b) => a + (Number(b.plAmt) > 0 ? Number(b.plAmt) : 0), 0);
   const grossLoss = Math.abs(trades.reduce((a, b) => a + (Number(b.plAmt) < 0 ? Number(b.plAmt) : 0), 0));
   const pf = grossLoss > 0 ? (grossWin / grossLoss).toFixed(2) : grossWin.toFixed(2);
 
-  // Measure Discipline (Rule Adherence)
   const avgDiscipline = trades.length 
     ? Math.round(trades.reduce((a, b) => a + (Number(b.rulesFollowedPercent) || 0), 0) / trades.length)
     : 100;
 
-  // Measure Market Alignment (Setup Quality)
   const avgAlignment = trades.length
     ? (trades.reduce((a, b) => a + (Number(b.marketAlignmentScore) || 0), 0) / trades.length).toFixed(1)
     : "5.0";
 
-  return { net, wr, exp, count: trades.length, pf, avgDiscipline, avgAlignment };
+  // New measurable groupings
+  const instrumentPerformance = trades.reduce((acc: any, t) => {
+    if (!acc[t.asset]) acc[t.asset] = { net: 0, wins: 0, total: 0 };
+    acc[t.asset].net += Number(t.plAmt);
+    acc[t.asset].total += 1;
+    if (t.outcome === 'Win') acc[t.asset].wins += 1;
+    return acc;
+  }, {});
+
+  const sessionPerformance = trades.reduce((acc: any, t) => {
+    const key = `${t.asset}-${t.session}`;
+    if (!acc[key]) acc[key] = { wins: 0, total: 0 };
+    acc[key].total += 1;
+    if (t.outcome === 'Win') acc[key].wins += 1;
+    return acc;
+  }, {});
+
+  return { net, wr, exp, count: trades.length, pf, avgDiscipline, avgAlignment, instrumentPerformance, sessionPerformance };
 }
 
 function getUniqueStrategies(trades: Trade[]) {
@@ -808,6 +822,108 @@ export default function Dashboard() {
                   <div className="flex items-center gap-2 px-2 py-1 rounded bg-blue-500/10 border border-blue-500/20">
                     <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
                     <span className="text-[10px] font-bold text-blue-500 uppercase">Calm WR: 75%</span>
+                  </div>
+                </PanelSection>
+              </div>
+
+              {/* Advanced Confluence Analytics */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <PanelSection 
+                  title="Confluence Matrix" 
+                  description="TF + Session + Instrument performance cluster."
+                  icon={Filter}
+                >
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-[10px] p-1.5 rounded bg-emerald-500/10 border border-emerald-500/20">
+                      <span className="font-bold">NAS100 + NY + M1</span>
+                      <span className="text-emerald-500 font-black">82% WR</span>
+                    </div>
+                    <div className="flex justify-between text-[10px] p-1.5 rounded bg-red-500/10 border border-red-500/20">
+                      <span className="font-bold">EURUSD + Asian + M5</span>
+                      <span className="text-red-400 font-black">31% WR</span>
+                    </div>
+                  </div>
+                </PanelSection>
+
+                <PanelSection 
+                  title="TFS Alignment" 
+                  description="HTF+ATF+ETF per instrument performance edge."
+                  icon={TrendingUp}
+                >
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="p-2 rounded bg-muted/30 text-[10px] text-center">
+                      <div className="text-primary font-bold">1.4R</div>
+                      <div className="text-[8px] text-muted-foreground uppercase">Aligned</div>
+                    </div>
+                    <div className="p-2 rounded bg-muted/30 text-[10px] text-center">
+                      <div className="text-red-400 font-bold">-0.2R</div>
+                      <div className="text-[8px] text-muted-foreground uppercase">Divergent</div>
+                    </div>
+                  </div>
+                </PanelSection>
+
+                <PanelSection 
+                  title="Rules & Discipline" 
+                  description="Performance when all strategy rules are followed."
+                  icon={Activity}
+                >
+                  <div className="flex flex-col items-center justify-center p-2 rounded bg-emerald-500/5 border border-emerald-500/10">
+                    <div className="text-2xl font-black text-emerald-500">2.4R</div>
+                    <div className="text-[9px] font-bold text-muted-foreground uppercase">Edge per 100% Rules</div>
+                  </div>
+                </PanelSection>
+
+                <PanelSection 
+                  title="Instrument x Session" 
+                  description="Asian, NY, London performance per asset."
+                  icon={History}
+                >
+                  <div className="text-[10px] space-y-1">
+                    <div className="flex justify-between border-b border-border/30 pb-1">
+                      <span>NAS100: NY Session</span><span className="text-emerald-500 font-bold">+$4,200</span>
+                    </div>
+                    <div className="flex justify-between border-b border-border/30 pb-1">
+                      <span>EURUSD: London Session</span><span className="text-emerald-500 font-bold">+$1,100</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>XAUUSD: Asian Session</span><span className="text-red-400 font-bold">-$450</span>
+                    </div>
+                  </div>
+                </PanelSection>
+
+                <PanelSection 
+                  title="Market Condition Bias" 
+                  description="Performance per Trend, Consolidation, and Bias."
+                  icon={BarChart2}
+                >
+                  <div className="grid grid-cols-2 gap-2 text-[10px]">
+                    <div className="flex justify-between items-center p-1 border border-border/50 rounded">
+                      <span>Bullish Trend</span><span className="text-emerald-500 font-bold">75%</span>
+                    </div>
+                    <div className="flex justify-between items-center p-1 border border-border/50 rounded">
+                      <span>Bearish Trend</span><span className="text-emerald-500 font-bold">62%</span>
+                    </div>
+                    <div className="flex justify-between items-center p-1 border border-border/50 rounded col-span-2">
+                      <span>Consolidation</span><span className="text-amber-500 font-bold">48%</span>
+                    </div>
+                  </div>
+                </PanelSection>
+
+                <PanelSection 
+                  title="Capital Health" 
+                  description="Profit % per strategy and Monthly Drawdown %."
+                  icon={TrendingUp}
+                >
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-[10px]">
+                      <span>Silver Bullet (Profit)</span><span className="text-emerald-500 font-bold">+12.4%</span>
+                    </div>
+                    <div className="flex justify-between text-[10px]">
+                      <span>SMC (Profit)</span><span className="text-emerald-500 font-bold">+8.1%</span>
+                    </div>
+                    <div className="pt-1 border-t border-border/50 flex justify-between text-[10px]">
+                      <span className="text-muted-foreground uppercase">Monthly DD</span><span className="text-red-400 font-bold">-2.1%</span>
+                    </div>
                   </div>
                 </PanelSection>
               </div>
