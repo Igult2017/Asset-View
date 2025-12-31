@@ -117,6 +117,25 @@ function calculatePerformanceAfterLoss(trades: Trade[]) {
 
 // --- Components ---
 
+function PanelSection({ title, description, children, icon: Icon }: { title: string, description: string, children?: React.ReactNode, icon: any }) {
+  return (
+    <Card className="p-4 space-y-3 bg-card/50 backdrop-blur-sm border-border/50 hover-elevate transition-all duration-300">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <div className="p-2 rounded-lg bg-primary/10 text-primary">
+            <Icon className="w-4 h-4" />
+          </div>
+          <div>
+            <h3 className="text-sm font-bold tracking-tight">{title}</h3>
+            <p className="text-[10px] text-muted-foreground leading-relaxed">{description}</p>
+          </div>
+        </div>
+      </div>
+      {children && <div className="pt-2">{children}</div>}
+    </Card>
+  );
+}
+
 function LogEntryModal() {
   const [open, setOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
@@ -661,6 +680,121 @@ export default function Dashboard() {
                 <StatsCard label="Expectancy (R)" value={`${stats.exp}R`} variant="blue" />
                 <StatsCard label="Trade Count" value={stats.count} variant="white" />
                 <StatsCard label="Profit Factor" value={stats.pf} variant="blue" highlight />
+              </div>
+
+              {/* Intelligence Panels */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                <PanelSection 
+                  title="Market Regime" 
+                  description="Captures market conditions at entry: regime, volatility, liquidity."
+                  icon={Activity}
+                >
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="p-2 rounded bg-muted/30 text-[10px] font-medium flex justify-between">
+                      <span>Regime</span><span className="text-primary font-bold">Trending</span>
+                    </div>
+                    <div className="p-2 rounded bg-muted/30 text-[10px] font-medium flex justify-between">
+                      <span>Volatility</span><span className="text-primary font-bold">High</span>
+                    </div>
+                  </div>
+                </PanelSection>
+
+                <PanelSection 
+                  title="Session Precision" 
+                  description="Performance metrics based on entry time and session phase."
+                  icon={History}
+                >
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-[10px] mb-1">
+                      <span>NY Open Momentum</span>
+                      <span className="font-bold">72% Efficiency</span>
+                    </div>
+                    <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+                      <div className="h-full bg-primary w-[72%]" />
+                    </div>
+                  </div>
+                </PanelSection>
+
+                <PanelSection 
+                  title="Setup Quality" 
+                  description="Aggregate score used to evaluate opportunity strength."
+                  icon={TrendingUp}
+                >
+                  <div className="flex justify-between items-center">
+                    <div className="flex gap-1">
+                      {[1,2,3,4,5].map(i => (
+                        <div key={i} className={cn("w-3 h-3 rounded-full", i <= 4 ? "bg-primary" : "bg-muted")} />
+                      ))}
+                    </div>
+                    <span className="text-xs font-bold font-mono tracking-tighter">4.2 / 5.0</span>
+                  </div>
+                </PanelSection>
+
+                <PanelSection 
+                  title="Signal Validation" 
+                  description="Verification of strategy rules and confluence requirements."
+                  icon={Filter}
+                >
+                  <div className="grid grid-cols-2 gap-x-3 gap-y-1">
+                    <div className="flex items-center gap-1.5 text-[10px]">
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.5)]" />
+                      <span className="text-muted-foreground">SMC Primary</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-[10px]">
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.5)]" />
+                      <span className="text-muted-foreground">Liquidity Taken</span>
+                    </div>
+                  </div>
+                </PanelSection>
+
+                <PanelSection 
+                  title="Execution Precision" 
+                  description="Slippage and deviation metrics between planned and actual."
+                  icon={ArrowRight}
+                >
+                  <div className="flex items-center justify-between text-[10px]">
+                    <span className="text-muted-foreground">Avg. Slippage</span>
+                    <span className="font-mono text-emerald-500">-0.1 pips</span>
+                  </div>
+                </PanelSection>
+
+                <PanelSection 
+                  title="Risk Efficiency" 
+                  description="Exposure, drawdown sensitivity, and reward efficiency."
+                  icon={BarChart2}
+                >
+                  <div className="flex gap-2">
+                    <div className="flex-1 p-2 rounded bg-primary/5 border border-primary/10 text-center">
+                      <div className="text-[10px] font-bold text-primary">1.0%</div>
+                      <div className="text-[8px] text-muted-foreground uppercase">Risk/Trade</div>
+                    </div>
+                    <div className="flex-1 p-2 rounded bg-primary/5 border border-primary/10 text-center">
+                      <div className="text-[10px] font-bold text-primary">Low</div>
+                      <div className="text-[8px] text-muted-foreground uppercase">Heat</div>
+                    </div>
+                  </div>
+                </PanelSection>
+
+                <PanelSection 
+                  title="Management Logic" 
+                  description="Post-entry handling: break-even and rule-based logic."
+                  icon={Settings}
+                >
+                  <div className="p-2 rounded-md bg-muted/30 border border-border/50 text-center">
+                    <span className="text-[10px] font-medium text-foreground">Rule-Based Precision</span>
+                  </div>
+                </PanelSection>
+
+                <PanelSection 
+                  title="Psychological" 
+                  description="Trader mindset and emotional state at execution."
+                  icon={Palette}
+                >
+                  <div className="flex items-center gap-2 px-2 py-1 rounded bg-blue-500/10 border border-blue-500/20">
+                    <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                    <span className="text-[10px] font-bold text-blue-500 uppercase">Calm & Focused</span>
+                  </div>
+                </PanelSection>
               </div>
 
               {/* Strategy Filter */}
