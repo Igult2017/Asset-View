@@ -1210,7 +1210,7 @@ export default function Dashboard() {
                           <div className="flex justify-between items-center mb-2">
                             <span className="text-[9px] font-black uppercase text-foreground">{month.month}</span>
                             <span className={cn("text-xs font-black", month.drawdown > 500 ? "text-rose-500" : month.drawdown > 200 ? "text-amber-500" : "text-emerald-500")}>
-                              -${month.drawdown.toLocaleString()}
+                              {month.drawdownPercent}% (-${month.drawdown.toLocaleString()})
                             </span>
                           </div>
                           <div className="flex justify-between text-[8px] text-muted-foreground">
