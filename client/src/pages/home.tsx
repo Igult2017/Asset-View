@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { insertTradeSchema, type InsertTrade, type Trade } from "@shared/schema";
 import { motion, AnimatePresence } from "framer-motion";
 import { format } from "date-fns";
-import { Activity, Plus, BarChart2, History, TrendingUp, Filter, Palette, ChevronDown, ArrowRight, ArrowLeft, Settings, LineChart, Sparkles } from "lucide-react";
+import { Activity, Plus, BarChart2, History, TrendingUp, Filter, Palette, ChevronDown, ArrowRight, ArrowLeft, Settings, LineChart, Sparkles, Upload, ImageIcon, X } from "lucide-react";
 import { useLocation } from "wouter";
 import { StatsCard } from "@/components/stats-card";
 import { Button } from "@/components/ui/button";
@@ -248,6 +248,7 @@ function LogEntryModal() {
       outcome: "Win",
       rAchieved: 0,
       plAmt: 0,
+      imageUrl: "",
       contextTF: "D1",
       entryTF: "M5",
       marketRegime: "Trending",
@@ -347,6 +348,7 @@ function LogEntryModal() {
       outcome: data.outcome,
       rAchieved: data.rAchieved,
       plAmt: data.plAmt,
+      imageUrl: data.imageUrl,
       contextTF: data.contextTF,
       entryTF: data.entryTF
     };
@@ -357,6 +359,32 @@ function LogEntryModal() {
         setCurrentStep(0);
       }
     });
+  };
+
+  const [isUploading, setIsUploading] = useState(false);
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    const formData = new FormData();
+    formData.append('tradeImage', file);
+
+    try {
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      const result = await response.json();
+      if (result.imageUrl) {
+        form.setValue('imageUrl', result.imageUrl);
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const renderStepContent = () => {
@@ -406,6 +434,61 @@ function LogEntryModal() {
               <FormItem><FormLabel className="text-[10px] font-bold uppercase">P/L ($)</FormLabel>
               <FormControl><Input type="number" step="any" {...field} className="bg-background border-border" /></FormControl></FormItem>
             )} />
+            <div className="col-span-2 space-y-2">
+              <FormLabel className="text-[10px] font-bold uppercase">Trade Screenshot</FormLabel>
+              <div className="flex items-center gap-4">
+                <FormControl>
+                  <div className="relative">
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileUpload}
+                      className="hidden"
+                      id="trade-image-upload"
+                      disabled={isUploading}
+                    />
+                    <label
+                      htmlFor="trade-image-upload"
+                      className={cn(
+                        "flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-xl cursor-pointer hover:border-primary/50 transition-colors",
+                        form.watch('imageUrl') ? "bg-muted/10 border-primary/30" : "bg-background border-border"
+                      )}
+                    >
+                      {form.watch('imageUrl') ? (
+                        <div className="relative w-full h-full p-2">
+                          <img 
+                            src={form.watch('imageUrl')} 
+                            alt="Trade Preview" 
+                            className="w-full h-full object-contain rounded-lg"
+                          />
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            className="absolute -top-2 -right-2 h-6 w-6 rounded-full"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              form.setValue('imageUrl', "");
+                            }}
+                          >
+                            <X className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                          {isUploading ? (
+                            <Activity className="h-6 w-6 animate-spin" />
+                          ) : (
+                            <Upload className="h-6 w-6" />
+                          )}
+                          <span className="text-[10px] font-medium">{isUploading ? "Uploading..." : "Upload Chart"}</span>
+                        </div>
+                      )}
+                    </label>
+                  </div>
+                </FormControl>
+              </div>
+            </div>
           </div>
         )}
         {currentStep === 1 && (

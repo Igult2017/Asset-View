@@ -12,12 +12,43 @@ const openai = new OpenAI({
   baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
 });
 
+import express from "express";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+
+const storage_config = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const uploadDir = 'uploads/';
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir);
+    }
+    cb(null, uploadDir);
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({ storage: storage_config });
+
 export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
   registerChatRoutes(app);
   registerImageRoutes(app);
+
+  app.use('/uploads', express.static('uploads'));
+
+  app.post("/api/upload", upload.single('tradeImage'), (req, res) => {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+    const imageUrl = `/uploads/${req.file.filename}`;
+    res.json({ imageUrl });
+  });
 
   // AI Analysis Endpoint
   app.get("/api/ai/analyze", async (req, res) => {

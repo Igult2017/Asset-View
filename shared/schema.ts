@@ -92,6 +92,7 @@ export const trades = pgTable("trades", {
   approvedMarketRegimes: text("approved_market_regimes"),
   disallowedVolatility: text("disallowed_volatility"),
   blacklistedConditions: text("blacklisted_conditions"),
+  imageUrl: text("image_url"),
 });
 
 export const insertTradeSchema = createInsertSchema(trades).omit({ 
