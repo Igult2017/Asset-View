@@ -30,6 +30,72 @@ import { useTheme } from "@/hooks/use-theme";
 
 // --- Stats Calculation Helpers ---
 
+export function Layout({ children }: { children: React.ReactNode }) {
+  const [, navigate] = useLocation();
+  const { theme, setTheme } = useTheme();
+
+  return (
+    <div className="min-h-screen pb-12 bg-background">
+      {/* Navigation Bar */}
+      <nav className="border-b bg-card/40 backdrop-blur-xl sticky top-0 z-[100] border-border/40">
+        <div className="max-w-[1600px] mx-auto px-6 h-16 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-8">
+            <div 
+              className="flex items-center gap-3 group cursor-pointer" 
+              onClick={() => navigate("/")}
+            >
+              <div className="p-2 rounded-xl bg-primary/10 text-primary group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500 shadow-lg shadow-primary/20">
+                <Activity className="w-5 h-5" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-sm font-black tracking-tighter text-foreground uppercase italic group-hover:text-primary transition-colors">FSD Zones</span>
+                <span className="text-[9px] font-bold text-muted-foreground/60 uppercase tracking-[0.2em] -mt-1">Terminal v2.0</span>
+              </div>
+            </div>
+
+            <div className="hidden md:flex items-center gap-1.5 p-1 bg-muted/20 rounded-xl border border-border/40">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className={cn("text-[10px] font-bold uppercase tracking-wider h-8 rounded-lg", window.location.pathname === "/" && "bg-background shadow-sm text-primary")}
+                onClick={() => navigate("/")}
+              >
+                Journal
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className={cn("text-[10px] font-bold uppercase tracking-wider h-8 rounded-lg", window.location.pathname === "/drawdown-analysis" && "bg-background shadow-sm text-primary")}
+                onClick={() => navigate("/drawdown-analysis")}
+              >
+                Drawdown
+              </Button>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <LogEntryModal />
+            
+            <div className="h-4 w-px bg-border/40 mx-1" />
+            
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9 rounded-xl hover:bg-primary/10 hover:text-primary transition-all duration-300"
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            >
+              <Palette className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+      </nav>
+      <main>
+        {children}
+      </main>
+    </div>
+  );
+}
+
 function calculateStats(trades: Trade[]) {
   const net = trades.reduce((a, b) => a + Number(b.plAmt), 0);
   const wins = trades.filter(t => t.outcome === 'Win').length;
