@@ -136,9 +136,20 @@ function calculateStats(trades: Trade[]) {
   // Advanced measurable groupings for Market Edge
   const instrumentConditionPerformance = trades.reduce((acc: any, t) => {
     const key = `${t.asset}-${t.condition}`;
-    if (!acc[key]) acc[key] = { wins: 0, total: 0 };
+    if (!acc[key]) acc[key] = { wins: 0, losses: 0, total: 0 };
     acc[key].total += 1;
     if (t.outcome === 'Win') acc[key].wins += 1;
+    if (t.outcome === 'Loss') acc[key].losses += 1;
+    return acc;
+  }, {});
+
+  const marketRegimePerformance = trades.reduce((acc: any, t) => {
+    const key = t.condition || 'Unknown';
+    if (!acc[key]) acc[key] = { wins: 0, losses: 0, total: 0, rTotal: 0 };
+    acc[key].total += 1;
+    acc[key].rTotal += Number(t.rAchieved);
+    if (t.outcome === 'Win') acc[key].wins += 1;
+    if (t.outcome === 'Loss') acc[key].losses += 1;
     return acc;
   }, {});
 
@@ -189,7 +200,7 @@ function calculateStats(trades: Trade[]) {
     net, wr, exp, count: trades.length, pf, avgDiscipline, avgAlignment, 
     instrumentPerformance, sessionPerformance, monthlyDrawdownPercent,
     instrumentConditionPerformance, complexEdgePerformance, strategyContextPerformance,
-    hyperGranularPerformance, strategyPerformance
+    hyperGranularPerformance, strategyPerformance, marketRegimePerformance
   };
 }
 
@@ -1018,15 +1029,26 @@ export default function Dashboard() {
                   description="Performance edge across different volatility and regime states."
                   icon={Activity}
                 >
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-[10px]">
-                      <span className="text-muted-foreground">Trending Efficiency</span>
-                      <span className="text-emerald-500 font-bold">1.8R Avg</span>
-                    </div>
-                    <div className="flex justify-between text-[10px]">
-                      <span className="text-muted-foreground">Ranging Efficiency</span>
-                      <span className="text-amber-500 font-bold">0.4R Avg</span>
-                    </div>
+                  <div className="space-y-3">
+                    {['Trending', 'Ranging'].map(condition => {
+                      const data = (stats as any).marketRegimePerformance?.[condition] || { wins: 0, losses: 0, total: 0 };
+                      const wr = data.total ? Math.round((data.wins / data.total) * 100) : 0;
+                      const lr = data.total ? Math.round((data.losses / data.total) * 100) : 0;
+                      return (
+                        <div key={condition} className="space-y-1.5">
+                          <div className="flex justify-between text-[10px] font-black uppercase tracking-tighter">
+                            <span className="text-muted-foreground">{condition} Efficiency</span>
+                            <span className={condition === 'Trending' ? "text-emerald-500" : "text-amber-500"}>
+                              {data.wins}W / {data.losses}L ({wr}%)
+                            </span>
+                          </div>
+                          <div className="h-1 bg-muted/20 rounded-full overflow-hidden flex">
+                            <div className="h-full bg-emerald-500" style={{ width: `${wr}%` }} />
+                            <div className="h-full bg-red-500" style={{ width: `${lr}%` }} />
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </PanelSection>
 
