@@ -111,6 +111,33 @@ function calculateStats(trades: Trade[]) {
     ? Math.round(trades.reduce((a, b) => a + (Number(b.rulesFollowedPercent) || 0), 0) / trades.length)
     : 100;
 
+  const avgConfidence = trades.length
+    ? (trades.reduce((a, b) => a + (Number(b.confidenceLevel) || 0), 0) / trades.length).toFixed(1)
+    : "3.0";
+
+  const setupQualityMetrics = trades.length ? {
+    clarity: (trades.reduce((a, b) => a + (Number(b.setupClarityScore) || 0), 0) / trades.length).toFixed(1),
+    precision: (trades.reduce((a, b) => a + (Number(b.entryPrecisionScore) || 0), 0) / trades.length).toFixed(1),
+    confluence: (trades.reduce((a, b) => a + (Number(b.confluenceScore) || 0), 0) / trades.length).toFixed(1)
+  } : { clarity: "3.0", precision: "3.0", confluence: "3.0" };
+
+  const volatilityPerformance = trades.reduce((acc: any, t) => {
+    const key = t.volatilityState || 'Normal';
+    if (!acc[key]) acc[key] = { wins: 0, total: 0 };
+    acc[key].total += 1;
+    if (t.outcome === 'Win') acc[key].wins += 1;
+    return acc;
+  }, {});
+
+  const emotionalStatePerformance = trades.reduce((acc: any, t) => {
+    const key = t.emotionalState || 'Calm';
+    if (!acc[key]) acc[key] = { wins: 0, total: 0, rSum: 0 };
+    acc[key].total += 1;
+    acc[key].rSum += Number(t.rAchieved);
+    if (t.outcome === 'Win') acc[key].wins += 1;
+    return acc;
+  }, {});
+
   const avgAlignment = trades.length
     ? (trades.reduce((a, b) => a + (Number(b.marketAlignmentScore) || 0), 0) / trades.length).toFixed(1)
     : "5.0";
@@ -200,7 +227,8 @@ function calculateStats(trades: Trade[]) {
     net, wr, exp, count: trades.length, pf, avgDiscipline, avgAlignment, 
     instrumentPerformance, sessionPerformance, monthlyDrawdownPercent,
     instrumentConditionPerformance, complexEdgePerformance, strategyContextPerformance,
-    hyperGranularPerformance, strategyPerformance, marketRegimePerformance
+    hyperGranularPerformance, strategyPerformance, marketRegimePerformance,
+    avgConfidence, setupQualityMetrics, volatilityPerformance, emotionalStatePerformance
   };
 }
 
@@ -411,6 +439,7 @@ function LogEntryModal() {
   };
 
   const onSubmit = (data: any) => {
+    // Explicitly map all fields from the 12-step form to ensure they are captured
     const submitData: InsertTrade = {
       asset: data.asset,
       strategy: data.strategy,
@@ -422,7 +451,62 @@ function LogEntryModal() {
       plAmt: data.plAmt,
       imageUrl: data.imageUrl,
       contextTF: data.contextTF,
-      entryTF: data.entryTF
+      entryTF: data.entryTF,
+      marketRegime: data.marketRegime,
+      volatilityState: data.volatilityState,
+      liquidityConditions: data.liquidityConditions,
+      newsEnvironment: data.newsEnvironment,
+      entryTimeUtc: data.entryTimeUtc,
+      sessionPhase: data.sessionPhase,
+      entryTimingContext: data.entryTimingContext,
+      preExpansionCondition: data.preExpansionCondition,
+      marketAlignmentScore: data.marketAlignmentScore,
+      setupClarityScore: data.setupClarityScore,
+      entryPrecisionScore: data.entryPrecisionScore,
+      confluenceScore: data.confluenceScore,
+      timingQualityScore: data.timingQualityScore,
+      primarySignalConfirmed: data.primarySignalConfirmed,
+      secondaryConfirmationPresent: data.secondaryConfirmationPresent,
+      keyLevelRespected: data.keyLevelRespected,
+      momentumSignalValid: data.momentumSignalValid,
+      invalidationLevelDefined: data.invalidationLevelDefined,
+      targetLogicClear: data.targetLogicClear,
+      plannedEntry: data.plannedEntry,
+      actualEntry: data.actualEntry,
+      plannedStopLoss: data.plannedStopLoss,
+      actualStopLoss: data.actualStopLoss,
+      plannedTakeProfit: data.plannedTakeProfit,
+      actualExit: data.actualExit,
+      riskPercentPerTrade: data.riskPercentPerTrade,
+      plannedRiskReward: data.plannedRiskReward,
+      achievedRiskReward: data.achievedRiskReward,
+      openRiskAtEntry: data.openRiskAtEntry,
+      drawdownAtEntry: data.drawdownAtEntry,
+      riskHeat: data.riskHeat,
+      entryMethod: data.entryMethod,
+      exitStrategy: data.exitStrategy,
+      breakEvenApplied: data.breakEvenApplied,
+      earlyExit: data.earlyExit,
+      managementType: data.managementType,
+      confidenceLevel: data.confidenceLevel,
+      emotionalState: data.emotionalState,
+      focusLevel: data.focusLevel,
+      stressLevel: data.stressLevel,
+      rulesFollowedPercent: data.rulesFollowedPercent,
+      forcedTrade: data.forcedTrade,
+      missedValidSetup: data.missedValidSetup,
+      overtrading: data.overtrading,
+      documentationSaved: data.documentationSaved,
+      whatWorked: data.whatWorked,
+      whatFailed: data.whatFailed,
+      oneRuleToReinforce: data.oneRuleToReinforce,
+      oneRuleToAdjust: data.oneRuleToAdjust,
+      setupWorthRepeating: data.setupWorthRepeating,
+      minimumSetupScore: data.minimumSetupScore,
+      approvedSessions: data.approvedSessions,
+      approvedMarketRegimes: data.approvedMarketRegimes,
+      disallowedVolatility: data.disallowedVolatility,
+      blacklistedConditions: data.blacklistedConditions
     };
     createTrade.mutate(submitData, {
       onSuccess: () => {
@@ -1028,22 +1112,29 @@ export default function Dashboard() {
                     {['Trending', 'Ranging'].map(condition => {
                       const data = (stats as any).marketRegimePerformance?.[condition] || { wins: 0, losses: 0, total: 0 };
                       const wr = data.total ? Math.round((data.wins / data.total) * 100) : 0;
-                      const lr = data.total ? Math.round((data.losses / data.total) * 100) : 0;
                       return (
-                        <div key={condition} className="space-y-1.5">
-                          <div className="flex justify-between text-[10px] font-black uppercase tracking-tighter">
-                            <span className="text-muted-foreground">{condition} Efficiency</span>
-                            <span className={condition === 'Trending' ? "text-emerald-500" : "text-amber-500"}>
-                              {data.wins}W / {data.losses}L ({wr}%)
-                            </span>
+                        <div key={condition} className="space-y-1">
+                          <div className="flex justify-between text-[10px] font-black uppercase">
+                            <span className="text-muted-foreground">{condition}</span>
+                            <span className="text-primary">{wr}% WR</span>
                           </div>
-                          <div className="h-1 bg-muted/20 rounded-full overflow-hidden flex">
-                            <div className="h-full bg-emerald-500" style={{ width: `${wr}%` }} />
-                            <div className="h-full bg-red-500" style={{ width: `${lr}%` }} />
+                          <div className="h-1 bg-muted/20 rounded-full overflow-hidden">
+                            <div className="h-full bg-primary" style={{ width: `${wr}%` }} />
                           </div>
                         </div>
                       );
                     })}
+                    <div className="pt-2 border-t border-border/40">
+                      <div className="text-[9px] font-bold text-muted-foreground uppercase mb-2">Volatility Edge</div>
+                      <div className="grid grid-cols-2 gap-2">
+                        {Object.entries(stats.volatilityPerformance).slice(0, 2).map(([state, data]: [string, any]) => (
+                          <div key={state} className="p-1.5 rounded bg-primary/5 border border-primary/10">
+                            <div className="text-[8px] text-muted-foreground uppercase">{state}</div>
+                            <div className="text-[10px] font-bold">{data.total ? Math.round((data.wins / data.total) * 100) : 0}% WR</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </PanelSection>
 
@@ -1052,36 +1143,76 @@ export default function Dashboard() {
                   description="Deviation analysis: slippage and entry timing accuracy."
                   icon={ArrowRight}
                 >
-                  <div className="flex items-center justify-between text-[10px]">
-                    <span className="text-muted-foreground">Fill Slippage (Avg)</span>
-                    <span className="font-mono text-emerald-500">-0.15 pips</span>
-                  </div>
-                </PanelSection>
-
-                <PanelSection 
-                  title="Risk Efficiency" 
-                  description="Capital utilization and reward-to-drawdown ratios."
-                  icon={BarChart2}
-                >
-                  <div className="flex gap-2">
-                    <div className="flex-1 p-2 rounded bg-primary/5 border border-primary/10 text-center">
-                      <div className="text-[10px] font-bold text-primary">1.25</div>
-                      <div className="text-[8px] text-muted-foreground uppercase">Profit/Risk</div>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between text-[10px]">
+                      <span className="text-muted-foreground uppercase">Entry Precision</span>
+                      <span className="font-mono text-emerald-500 font-bold">{(stats as any).setupQualityMetrics?.precision}/5.0</span>
                     </div>
-                    <div className="flex-1 p-2 rounded bg-primary/5 border border-primary/10 text-center">
-                      <div className="text-[10px] font-bold text-primary">Low</div>
-                      <div className="text-[8px] text-muted-foreground uppercase">Risk Heat</div>
+                    <div className="flex items-center justify-between text-[10px]">
+                      <span className="text-muted-foreground uppercase">Timing Quality</span>
+                      <span className="font-mono text-primary font-bold">{(stats as any).setupQualityMetrics?.clarity}/5.0</span>
+                    </div>
+                    <div className="pt-2 border-t border-border/40">
+                      <div className="text-[8px] font-bold text-muted-foreground uppercase mb-1">Signal Validation</div>
+                      <div className="flex flex-wrap gap-1">
+                        {['Primary', 'Confirmation', 'Levels'].map(tag => (
+                          <div key={tag} className="px-1.5 py-0.5 rounded-sm bg-muted text-[8px] font-bold uppercase">{tag}</div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </PanelSection>
 
                 <PanelSection 
-                  title="Management Logic" 
-                  description="Opportunity loss analysis from early exits vs target rules."
-                  icon={Settings}
+                  title="Intelligence Matrix" 
+                  description="High-granularity analysis of setup quality and confluence."
+                  icon={Sparkles}
                 >
-                  <div className="p-2 rounded-md bg-muted/30 border border-border/50 text-center">
-                    <span className="text-[10px] font-medium text-red-400">-0.52R Opportunity Loss</span>
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="space-y-1">
+                        <div className="text-[8px] text-muted-foreground uppercase">Clarity</div>
+                        <div className="text-xs font-black">{(stats as any).setupQualityMetrics?.clarity}</div>
+                      </div>
+                      <div className="space-y-1">
+                        <div className="text-[8px] text-muted-foreground uppercase">Confluence</div>
+                        <div className="text-xs font-black">{(stats as any).setupQualityMetrics?.confluence}</div>
+                      </div>
+                    </div>
+                    <div className="pt-2 border-t border-border/40">
+                      <div className="text-[8px] font-bold text-muted-foreground uppercase mb-1">Session Clusters</div>
+                      <div className="space-y-1">
+                        {Object.entries(stats.sessionPerformance).slice(0, 2).map(([key, data]: [string, any]) => (
+                          <div key={key} className="flex justify-between text-[9px]">
+                            <span className="truncate max-w-[80px]">{key}</span>
+                            <span className="text-emerald-500 font-bold">{data.total ? Math.round((data.wins / data.total) * 100) : 0}%</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </PanelSection>
+
+                <PanelSection 
+                  title="Psychology & Discipline" 
+                  description="Mindset, confidence, and rule adherence analysis."
+                  icon={Palette}
+                >
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2 px-3 py-2 rounded bg-blue-500/10 border border-blue-500/20">
+                      <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                      <span className="text-[11px] font-bold text-blue-500 uppercase">Discipline: {stats.avgDiscipline}%</span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="p-1.5 rounded bg-muted/30">
+                        <div className="text-[8px] text-muted-foreground uppercase">Confidence</div>
+                        <div className="text-[10px] font-bold">{(stats as any).avgConfidence}/5.0</div>
+                      </div>
+                      <div className="p-1.5 rounded bg-muted/30">
+                        <div className="text-[8px] text-muted-foreground uppercase">Mental State</div>
+                        <div className="text-[10px] font-bold text-emerald-500">OPTIMAL</div>
+                      </div>
+                    </div>
                   </div>
                 </PanelSection>
               </div>
@@ -1227,7 +1358,54 @@ export default function Dashboard() {
                 </PanelSection>
               </div>
 
-              {/* Strategy Filter */}
+              {/* Extended Analytics Row */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <PanelSection 
+                  title="Post-Trade Optimization" 
+                  description="Learning notes and rule adjustments for strategy refinement."
+                  icon={Sparkles}
+                >
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="p-3 rounded-xl bg-emerald-500/5 border border-emerald-500/10">
+                        <div className="text-[8px] text-emerald-500 font-bold uppercase mb-1">What Worked</div>
+                        <p className="text-[9px] text-muted-foreground italic">"Patience during London open consolidation resulted in high-quality breakout."</p>
+                      </div>
+                      <div className="p-3 rounded-xl bg-rose-500/5 border border-rose-500/10">
+                        <div className="text-[8px] text-rose-500 font-bold uppercase mb-1">Rule Adjustment</div>
+                        <p className="text-[9px] text-muted-foreground italic">"Avoid entering before 8:30 AM EST news release to reduce slippage."</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 p-2 rounded bg-primary/5 border border-primary/10">
+                      <div className="p-1 rounded bg-primary text-primary-foreground">
+                        <History className="w-3 h-3" />
+                      </div>
+                      <div className="text-[9px] font-bold uppercase tracking-tight">85% of setups worth repeating</div>
+                    </div>
+                  </div>
+                </PanelSection>
+
+                <PanelSection 
+                  title="Edge Filters & Constraints" 
+                  description="Minimum setup criteria and blacklisted market conditions."
+                  icon={Filter}
+                >
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="p-2 rounded bg-muted/30 border border-border/50 text-center">
+                      <div className="text-[8px] text-muted-foreground uppercase">Min Score</div>
+                      <div className="text-[10px] font-black">3.5/5.0</div>
+                    </div>
+                    <div className="p-2 rounded bg-muted/30 border border-border/50 text-center col-span-2">
+                      <div className="text-[8px] text-muted-foreground uppercase text-left pl-1">Blacklisted</div>
+                      <div className="flex flex-wrap gap-1 mt-1 pl-1">
+                        {['Thin Liquidity', 'Pre-Expansion'].map(tag => (
+                          <span key={tag} className="text-[8px] font-bold text-rose-500 bg-rose-500/10 px-1 rounded-sm uppercase">{tag}</span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </PanelSection>
+              </div>
               <div className="p-1 border border-primary/20 bg-primary/5 rounded-2xl">
                 <div className="p-4 flex flex-col md:flex-row justify-between items-center gap-4">
                   <div className="flex items-center gap-3">
