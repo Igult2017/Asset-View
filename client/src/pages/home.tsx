@@ -82,7 +82,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
               variant="ghost"
               size="icon"
               className="h-9 w-9 rounded-xl hover:bg-primary/10 hover:text-primary transition-all duration-300"
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              onClick={() => setTheme((theme as string) === "dark" ? "light" : "dark")}
             >
               <Palette className="w-4 h-4" />
             </Button>
@@ -270,23 +270,18 @@ function calculatePerformanceAfterLoss(trades: Trade[]) {
   };
 }
 
-function calculateBestStrategy(strategyPerf: any) {
-  let bestStrategy = null;
-  let bestScore = -Infinity;
+function calculateBestStrategy(strategyPerformance: Record<string, any>) {
+  const entries = Object.entries(strategyPerformance);
+  if (entries.length === 0) return null;
   
-  Object.entries(strategyPerf).forEach(([name, data]: [string, any]) => {
-    const wr = data.total ? (data.wins / data.total) * 100 : 0;
-    const avgR = data.total ? data.rSum / data.total : 0;
-    const profitPerTrade = data.total ? data.profit / data.total : 0;
-    const score = (wr * 0.4) + (avgR * 25) + (profitPerTrade * 0.01);
-    
-    if (score > bestScore) {
-      bestScore = score;
-      bestStrategy = { name, wr: Math.round(wr), avgR: avgR.toFixed(2), profit: data.profit };
-    }
-  });
-  
-  return bestStrategy;
+  const sorted = entries.sort((a, b) => (b[1].profit || 0) - (a[1].profit || 0));
+  const [name, data] = sorted[0];
+  return {
+    name,
+    wr: data.total ? Math.round((data.wins / data.total) * 100) : 0,
+    avgR: data.total ? (data.rSum / data.total).toFixed(2) : "0.00",
+    profit: data.profit || 0
+  };
 }
 
 // --- Components ---
@@ -1091,115 +1086,56 @@ export default function Dashboard() {
                 </PanelSection>
               </div>
 
-              {/* Intelligence Panels Row 2 */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {/* Intelligence Matrix */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <PanelSection 
-                  title="Psychological State" 
-                  description="Mindset impact on execution quality and rule adherence."
+                  title="Edge Precision" 
+                  description="High-granularity TF + Session + Instrument clusters."
+                  icon={Filter}
+                >
+                  <div className="space-y-2">
+                    {Object.entries(stats.complexEdgePerformance).slice(0, 3).map(([key, data]: [string, any]) => (
+                      <div key={key} className="flex justify-between items-center p-1.5 rounded bg-primary/5 border border-primary/10">
+                        <span className="text-[10px] font-bold truncate max-w-[150px]">{key}</span>
+                        <span className="text-[10px] text-emerald-500 font-black">
+                          {data.total ? Math.round((data.wins / data.total) * 100) : 0}% WR
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </PanelSection>
+
+                <PanelSection 
+                  title="Psychological & Discipline" 
+                  description="Mindset and rule adherence impact on performance."
                   icon={Palette}
                 >
                   <div className="space-y-3">
                     <div className="flex items-center gap-2 px-3 py-2 rounded bg-blue-500/10 border border-blue-500/20">
                       <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-                      <span className="text-[11px] font-bold text-blue-500 uppercase">Calm WR: 75%</span>
+                      <span className="text-[11px] font-bold text-blue-500 uppercase">Avg Discipline: {stats.avgDiscipline}%</span>
+                    </div>
+                    <div className="flex justify-between text-[10px] px-1">
+                      <span className="text-muted-foreground">Edge per 100% Rules:</span>
+                      <span className="text-emerald-500 font-bold">2.4R</span>
                     </div>
                   </div>
                 </PanelSection>
 
                 <PanelSection 
-                  title="Best Strategy" 
-                  description="Top performing strategy based on multiple metrics."
-                  icon={TrendingUp}
-                >
-                  {calculateBestStrategy(stats.strategyPerformance) ? (
-                    <div className="space-y-3">
-                      <div className="flex justify-between text-[11px]">
-                        <span className="font-bold">{calculateBestStrategy(stats.strategyPerformance)?.name}</span>
-                        <span className="text-emerald-500 font-black">{calculateBestStrategy(stats.strategyPerformance)?.wr}% WR</span>
-                      </div>
-                      <div className="flex justify-between text-[11px]">
-                        <span className="text-muted-foreground">Avg R:</span>
-                        <span className="text-primary font-bold">{calculateBestStrategy(stats.strategyPerformance)?.avgR}R</span>
-                      </div>
-                      <div className="flex justify-between text-[11px]">
-                        <span className="text-muted-foreground">Total Profit:</span>
-                        <span className={cn("font-bold", (calculateBestStrategy(stats.strategyPerformance)?.profit || 0) > 0 ? "text-emerald-500" : "text-red-400")}>
-                          ${(calculateBestStrategy(stats.strategyPerformance)?.profit || 0).toLocaleString()}
-                        </span>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="text-[11px] text-muted-foreground">No strategies yet</div>
-                  )}
-                </PanelSection>
-
-                <PanelSection 
-                  title="Profit & Loss by Strategy" 
-                  description="Total profit and loss breakdown per strategy."
-                  icon={BarChart2}
-                >
-                  <div className="space-y-3 text-[11px]">
-                    {Object.entries(stats.strategyPerformance).slice(0, 3).map(([name, data]: [string, any]) => (
-                      <div key={name} className="space-y-1.5 border-b border-border/30 pb-2">
-                        <div className="flex justify-between font-bold text-[11px]">
-                          <span className="truncate">{name}</span>
-                          <span className={cn("font-black", data.profit > 0 ? "text-emerald-500" : "text-red-400")}>
-                            ${data.profit > 0 ? '+' : ''}{data.profit}
-                          </span>
-                        </div>
-                        <div className="flex justify-between text-[10px] text-muted-foreground">
-                          <span>{data.total} trades</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </PanelSection>
-              </div>
-
-              {/* Advanced Confluence Analytics */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <PanelSection 
-                  title="Confluence Matrix" 
-                  description="TF + Session + Instrument performance cluster."
-                  icon={Filter}
+                  title="Execution Metrics" 
+                  description="Entry timing, slippage, and TFS alignment analysis."
+                  icon={ArrowRight}
                 >
                   <div className="space-y-2">
-                    <div className="flex justify-between text-[10px] p-1.5 rounded bg-emerald-500/10 border border-emerald-500/20">
-                      <span className="font-bold">NAS100 + NY + M1</span>
-                      <span className="text-emerald-500 font-black">82% WR</span>
+                    <div className="flex items-center justify-between text-[10px]">
+                      <span className="text-muted-foreground">Fill Slippage (Avg)</span>
+                      <span className="font-mono text-emerald-500">-0.15 pips</span>
                     </div>
-                    <div className="flex justify-between text-[10px] p-1.5 rounded bg-red-500/10 border border-red-500/20">
-                      <span className="font-bold">EURUSD + Asian + M5</span>
-                      <span className="text-red-400 font-black">31% WR</span>
+                    <div className="flex items-center justify-between text-[10px]">
+                      <span className="text-muted-foreground">TFS Alignment (Avg)</span>
+                      <span className="font-mono text-primary font-bold">1.4R</span>
                     </div>
-                  </div>
-                </PanelSection>
-
-                <PanelSection 
-                  title="TFS Alignment" 
-                  description="HTF+ATF+ETF per instrument performance edge."
-                  icon={TrendingUp}
-                >
-                  <div className="grid grid-cols-2 gap-2">
-                    <div className="p-2 rounded bg-muted/30 text-[10px] text-center">
-                      <div className="text-primary font-bold">1.4R</div>
-                      <div className="text-[8px] text-muted-foreground uppercase">Aligned</div>
-                    </div>
-                    <div className="p-2 rounded bg-muted/30 text-[10px] text-center">
-                      <div className="text-red-400 font-bold">-0.2R</div>
-                      <div className="text-[8px] text-muted-foreground uppercase">Divergent</div>
-                    </div>
-                  </div>
-                </PanelSection>
-
-                <PanelSection 
-                  title="Rules & Discipline" 
-                  description="Performance when all strategy rules are followed."
-                  icon={Activity}
-                >
-                  <div className="flex flex-col items-center justify-center p-2 rounded bg-emerald-500/5 border border-emerald-500/10">
-                    <div className="text-2xl font-black text-emerald-500">2.4R</div>
-                    <div className="text-[9px] font-bold text-muted-foreground uppercase">Edge per 100% Rules</div>
                   </div>
                 </PanelSection>
 
@@ -1222,9 +1158,6 @@ export default function Dashboard() {
                             <div className="bg-emerald-500" style={{ width: `${wr}%` }} />
                             <div className="bg-red-400" style={{ width: `${lr}%` }} />
                           </div>
-                          <div className="flex justify-end text-[8px] text-muted-foreground">
-                            {lr}% Loss Rate
-                          </div>
                         </div>
                       );
                     })}
@@ -1232,59 +1165,8 @@ export default function Dashboard() {
                 </PanelSection>
 
                 <PanelSection 
-                  title="Instrument x Market State" 
-                  description="Performance edge per condition (Trending/Ranging)."
-                  icon={BarChart2}
-                >
-                  <div className="text-[10px] space-y-1">
-                    {Object.entries(stats.instrumentConditionPerformance).slice(0, 3).map(([key, data]: [string, any]) => (
-                      <div key={key} className="flex justify-between border-b border-border/30 pb-1">
-                        <span>{key}</span>
-                        <span className="text-emerald-500 font-black">
-                          {data.total ? Math.round((data.wins / data.total) * 100) : 0}% WR
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </PanelSection>
-
-                <PanelSection 
-                  title="Edge Precision (Asset+Bias+Session)" 
-                  description="High-granularity confluence percentage."
-                  icon={Filter}
-                >
-                  <div className="text-[10px] space-y-1">
-                    {Object.entries(stats.complexEdgePerformance).slice(0, 3).map(([key, data]: [string, any]) => (
-                      <div key={key} className="flex justify-between items-center p-1.5 rounded bg-primary/5">
-                        <span className="font-bold">{key}</span>
-                        <span className="bg-primary/10 px-1.5 py-0.5 rounded text-primary font-black">
-                          {data.total ? Math.round((data.wins / data.total) * 100) : 0}%
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </PanelSection>
-
-                <PanelSection 
-                  title="Strategy Context Matrix" 
-                  description="Strategy + Session + Condition performance edge."
-                  icon={TrendingUp}
-                >
-                  <div className="text-[10px] space-y-1">
-                    {Object.entries(stats.strategyContextPerformance).slice(0, 3).map(([key, data]: [string, any]) => (
-                      <div key={key} className="flex justify-between border-b border-border/30 pb-1">
-                        <span className="truncate max-w-[180px]">{key}</span>
-                        <span className={cn("font-bold", data.rTotal >= 0 ? "text-emerald-500" : "text-red-400")}>
-                          {(data.rTotal / (data.total || 1)).toFixed(2)}R Avg
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </PanelSection>
-
-                <PanelSection 
                   title="Hyper-Granular Edge" 
-                  description="Asset + Strategy + Session + Condition WR/LR."
+                  description="Asset + Strategy + Session + Condition matrix."
                   icon={Activity}
                 >
                   <div className="text-[10px] space-y-2">
@@ -1312,16 +1194,21 @@ export default function Dashboard() {
 
                 <PanelSection 
                   title="Capital Health" 
-                  description="Profit % per strategy and Monthly Drawdown %."
+                  description="Profit breakdown per top strategies and monthly drawdown."
                   icon={TrendingUp}
                 >
                   <div className="space-y-3">
-                    <div className="flex justify-between text-[10px]">
-                      <span>Silver Bullet (Profit)</span><span className="text-emerald-500 font-bold">+12.4%</span>
-                    </div>
-                    <div className="flex justify-between text-[10px]">
-                      <span>SMC (Profit)</span><span className="text-emerald-500 font-bold">+8.1%</span>
-                    </div>
+                    {Object.entries(stats.strategyPerformance).slice(0, 2).map(([name, data]: [string, any]) => {
+                      const profitPct = stats.net ? ((data.profit / stats.net) * 100).toFixed(1) : "0.0";
+                      return (
+                        <div key={name} className="flex justify-between text-[10px]">
+                          <span>{name} (Contribution)</span>
+                          <span className={cn("font-bold", data.profit > 0 ? "text-emerald-500" : "text-red-400")}>
+                            {data.profit > 0 ? '+' : ''}{profitPct}%
+                          </span>
+                        </div>
+                      );
+                    })}
                     <div className="pt-2 border-t border-border/50 space-y-2">
                       <div className="flex justify-between text-[10px]">
                         <span className="text-muted-foreground uppercase">Monthly DD %</span>
@@ -1361,57 +1248,8 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              {/* Performance Metrics Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {/* Session Performance */}
-                <div className="bg-card/40 p-5 rounded-xl border border-border/50">
-                  <h4 className="text-[9px] font-black text-muted-foreground uppercase mb-4 tracking-tighter">Session Win Rates</h4>
-                  <div className="space-y-4">
-                    {['London', 'New York', 'Asian'].map(s => {
-                      const sTrades = filteredTrades.filter(t => t.session === s);
-                      const wins = sTrades.filter(t => t.outcome === 'Win').length;
-                      const perc = sTrades.length ? Math.round((wins / sTrades.length) * 100) : 0;
-                      return (
-                        <div key={s}>
-                          <div className="flex justify-between text-[10px] font-black uppercase mb-1">
-                            <span className="text-foreground">{s}</span>
-                            <span className="text-primary">{perc}% ({sTrades.length})</span>
-                          </div>
-                          <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden">
-                            <motion.div 
-                              initial={{ width: 0 }} 
-                              animate={{ width: `${perc}%` }} 
-                              className="h-full bg-primary shadow-[0_0_10px_rgba(59,130,246,0.5)]" 
-                            />
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Market Condition Performance */}
-                <div className="bg-card/40 p-5 rounded-xl border border-border/50">
-                  <h4 className="text-[9px] font-black text-muted-foreground uppercase mb-4 tracking-tighter">Market Condition Edge</h4>
-                  <div className="space-y-2">
-                    {['Trending', 'Ranging'].map(c => {
-                      const cTrades = filteredTrades.filter(t => t.condition === c);
-                      const wins = cTrades.filter(t => t.outcome === 'Win').length;
-                      const perc = cTrades.length ? Math.round((wins / cTrades.length) * 100) : 0;
-                      return (
-                        <div key={c} className="flex items-center justify-between p-3 bg-card/40 rounded-xl border border-border/50 hover:border-primary/50 transition-colors">
-                          <span className={cn("text-[9px] font-black uppercase", c === 'Trending' ? 'text-blue-500' : 'text-amber-500')}>{c}</span>
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs font-black text-foreground">{perc}%</span>
-                            <span className="text-[8px] text-muted-foreground">({cTrades.length})</span>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Bias & Streak */}
+              {/* Metrics Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-card/40 p-5 rounded-xl border border-border/50">
                   <h4 className="text-[9px] font-black text-muted-foreground uppercase mb-4 tracking-tighter">Bias & Momentum</h4>
                   <div className="space-y-3">
@@ -1437,6 +1275,34 @@ export default function Dashboard() {
                             {filteredTrades[filteredTrades.length - 1].outcome}
                           </span>
                         ) : "-"}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-card/40 p-5 rounded-xl border border-border/50">
+                  <h4 className="text-[9px] font-black text-muted-foreground uppercase mb-4 tracking-tighter">Top Performers</h4>
+                  <div className="space-y-4">
+                    {calculateBestStrategy(stats.strategyPerformance) && (
+                      <div className="flex justify-between items-center p-3 bg-primary/5 rounded-lg border border-primary/10">
+                        <div>
+                          <div className="text-[8px] text-muted-foreground uppercase font-bold">Best Strategy</div>
+                          <div className="text-xs font-black uppercase tracking-tight">{calculateBestStrategy(stats.strategyPerformance)?.name}</div>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-xs font-black text-emerald-500">{calculateBestStrategy(stats.strategyPerformance)?.wr}% WR</div>
+                          <div className="text-[9px] text-primary font-bold">{calculateBestStrategy(stats.strategyPerformance)?.avgR}R Avg</div>
+                        </div>
+                      </div>
+                    )}
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="p-2 bg-card/30 rounded-lg border border-border/30 text-center">
+                        <div className="text-[8px] text-muted-foreground uppercase">Management</div>
+                        <div className="text-xs font-black text-red-400">-0.52R Loss</div>
+                      </div>
+                      <div className="p-2 bg-card/30 rounded-lg border border-border/30 text-center">
+                        <div className="text-[8px] text-muted-foreground uppercase">Heat</div>
+                        <div className="text-xs font-black text-primary">LOW</div>
                       </div>
                     </div>
                   </div>
