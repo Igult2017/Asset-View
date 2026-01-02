@@ -82,7 +82,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
               variant="ghost"
               size="icon"
               className="h-9 w-9 rounded-xl hover:bg-primary/10 hover:text-primary transition-all duration-300"
-              onClick={() => setTheme((theme as string) === "dark" ? "light" : "dark")}
+              onClick={() => setTheme(theme === "white" ? "blue" : "white")}
             >
               <Palette className="w-4 h-4" />
             </Button>
@@ -131,6 +131,15 @@ function calculateStats(trades: Trade[]) {
 
   const emotionalStatePerformance = trades.reduce((acc: any, t) => {
     const key = t.emotionalState || 'Calm';
+    if (!acc[key]) acc[key] = { wins: 0, total: 0, rSum: 0 };
+    acc[key].total += 1;
+    acc[key].rSum += Number(t.rAchieved);
+    if (t.outcome === 'Win') acc[key].wins += 1;
+    return acc;
+  }, {});
+
+  const newsPerformance = trades.reduce((acc: any, t) => {
+    const key = t.newsEnvironment || 'None';
     if (!acc[key]) acc[key] = { wins: 0, total: 0, rSum: 0 };
     acc[key].total += 1;
     acc[key].rSum += Number(t.rAchieved);
@@ -228,7 +237,8 @@ function calculateStats(trades: Trade[]) {
     instrumentPerformance, sessionPerformance, monthlyDrawdownPercent,
     instrumentConditionPerformance, complexEdgePerformance, strategyContextPerformance,
     hyperGranularPerformance, strategyPerformance, marketRegimePerformance,
-    avgConfidence, setupQualityMetrics, volatilityPerformance, emotionalStatePerformance
+    avgConfidence, setupQualityMetrics, volatilityPerformance, emotionalStatePerformance,
+    newsPerformance
   };
 }
 
@@ -1209,8 +1219,23 @@ export default function Dashboard() {
                         <div className="text-[10px] font-bold">{(stats as any).avgConfidence}/5.0</div>
                       </div>
                       <div className="p-1.5 rounded bg-muted/30">
-                        <div className="text-[8px] text-muted-foreground uppercase">Mental State</div>
-                        <div className="text-[10px] font-bold text-emerald-500">OPTIMAL</div>
+                        <div className="text-[8px] text-muted-foreground uppercase">Emotional Edge</div>
+                        <div className="text-[10px] font-bold text-emerald-500">
+                          {Object.entries((stats as any).emotionalStatePerformance).length > 0 ? (
+                            Object.entries((stats as any).emotionalStatePerformance).sort((a: any, b: any) => b[1].wins - a[1].wins)[0][0]
+                          ) : "Optimal"}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="pt-2 border-t border-border/40">
+                      <div className="text-[8px] font-bold text-muted-foreground uppercase mb-1">State Breakdown</div>
+                      <div className="space-y-1">
+                        {Object.entries((stats as any).emotionalStatePerformance).slice(0, 3).map(([state, data]: [string, any]) => (
+                          <div key={state} className="flex justify-between text-[9px]">
+                            <span className="text-muted-foreground">{state}</span>
+                            <span className="font-bold">{data.total ? Math.round((data.wins / data.total) * 100) : 0}% WR</span>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </div>
@@ -1219,6 +1244,41 @@ export default function Dashboard() {
 
               {/* Intelligence Matrix */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <PanelSection 
+                  title="News & Catalyst Impact" 
+                  description="Strategy performance during High, Medium, and Low impact news."
+                  icon={BarChart2}
+                >
+                  <div className="space-y-3">
+                    {['High', 'Medium', 'Low', 'None'].map(impact => {
+                      const data = (stats as any).newsPerformance?.[impact] || { wins: 0, total: 0, rSum: 0 };
+                      const wr = data.total ? Math.round((data.wins / data.total) * 100) : 0;
+                      const avgR = data.total ? (data.rSum / data.total).toFixed(2) : "0.00";
+                      
+                      return (
+                        <div key={impact} className="space-y-1.5">
+                          <div className="flex justify-between text-[10px] font-black uppercase tracking-tighter">
+                            <span className={cn(
+                              impact === 'High' ? "text-red-500" : 
+                              impact === 'Medium' ? "text-amber-500" : 
+                              "text-muted-foreground"
+                            )}>{impact} Impact</span>
+                            <span className="text-foreground">{wr}% WR | {avgR}R</span>
+                          </div>
+                          <div className="h-1 bg-muted/20 rounded-full overflow-hidden">
+                            <div className={cn(
+                              "h-full transition-all duration-500",
+                              impact === 'High' ? "bg-red-500" : 
+                              impact === 'Medium' ? "bg-amber-500" : 
+                              "bg-emerald-500"
+                            )} style={{ width: `${wr}%` }} />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </PanelSection>
+
                 <PanelSection 
                   title="Edge Precision" 
                   description="High-granularity TF + Session + Instrument clusters."
