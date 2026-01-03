@@ -5,109 +5,110 @@
 @tailwind utilities;
 
 :root {
-  /* Black/Dark Theme - Default */
-  --background: 240 10% 3.9%;
-  --foreground: 0 0% 98%;
+  /* Bloomberg Terminal / Institution Grade Dark - Default */
+  --background: 220 20% 4%;
+  --foreground: 210 20% 98%;
   
-  --primary: 0 0% 98%;
-  --primary-foreground: 240 5.9% 10%;
+  --primary: 210 20% 98%;
+  --primary-foreground: 220 20% 4%;
 
-  --card: 240 10% 3.9%;
-  --card-foreground: 0 0% 98%;
-  --card-border: 240 3.7% 15.9%;
+  --card: 220 20% 6%;
+  --card-foreground: 210 20% 98%;
+  --card-border: 220 20% 12%;
   
-  --popover: 240 10% 3.9%;
-  --popover-foreground: 0 0% 98%;
-  --popover-border: 240 3.7% 15.9%;
+  --popover: 220 20% 4%;
+  --popover-foreground: 210 20% 98%;
+  --popover-border: 220 20% 12%;
   
-  --secondary: 240 3.7% 15.9%;
-  --secondary-foreground: 0 0% 98%;
+  --secondary: 220 20% 12%;
+  --secondary-foreground: 210 20% 98%;
   
-  --muted: 240 3.7% 15.9%;
-  --muted-foreground: 240 5% 64.9%;
+  --muted: 220 20% 12%;
+  --muted-foreground: 215 15% 65%;
   
-  --accent: 240 3.7% 15.9%;
-  --accent-foreground: 0 0% 98%;
+  --accent: 220 20% 12%;
+  --accent-foreground: 210 20% 98%;
   
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 0 0% 98%;
+  --destructive: 0 84% 45%;
+  --destructive-foreground: 210 20% 98%;
 
-  --border: 240 3.7% 15.9%;
-  --input: 240 3.7% 15.9%;
-  --ring: 240 4.9% 83.9%;
+  --border: 220 20% 12%;
+  --input: 220 20% 12%;
+  --ring: 210 20% 98%;
 }
 
 .theme-light {
-  /* White/Light Theme */
-  --background: 0 0% 100%;
-  --foreground: 222 47% 5%;
+  /* Clean Minimal Institution Light */
+  --background: 210 20% 98%;
+  --foreground: 220 25% 10%;
   
-  --primary: 221.2 83.2% 53.3%;
-  --primary-foreground: 210 40% 98%;
+  --primary: 220 25% 10%;
+  --primary-foreground: 210 20% 98%;
 
   --card: 0 0% 100%;
-  --card-foreground: 222 47% 5%;
-  --card-border: 214.3 31.8% 91.4%;
+  --card-foreground: 220 25% 10%;
+  --card-border: 220 15% 90%;
   
   --popover: 0 0% 100%;
-  --popover-foreground: 222 47% 5%;
-  --popover-border: 214.3 31.8% 91.4%;
+  --popover-foreground: 220 25% 10%;
+  --popover-border: 220 15% 90%;
   
-  --secondary: 210 40% 96.1%;
-  --secondary-foreground: 222 47% 12%;
+  --secondary: 220 15% 94%;
+  --secondary-foreground: 220 25% 10%;
   
-  --muted: 210 40% 96.1%;
-  --muted-foreground: 215 20% 25%;
+  --muted: 220 15% 94%;
+  --muted-foreground: 220 10% 45%;
   
-  --accent: 210 40% 96.1%;
-  --accent-foreground: 222 47% 8%;
+  --accent: 220 15% 94%;
+  --accent-foreground: 220 25% 10%;
   
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 210 40% 98%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 210 20% 98%;
 
-  --border: 214.3 31.8% 91.4%;
-  --input: 214.3 31.8% 91.4%;
-  --ring: 221.2 83.2% 53.3%;
+  --border: 220 15% 90%;
+  --input: 220 15% 90%;
+  --ring: 220 25% 10%;
 }
 
 .theme-blue {
-  /* Blue Theme - Refined */
-  --background: 222 47% 11%;
+  /* Deep Institutional Navy */
+  --background: 222 47% 6%;
   --foreground: 210 40% 98%;
   
-  --primary: 199 89% 48%;
+  --primary: 217 91% 60%;
   --primary-foreground: 210 40% 98%;
 
-  --card: 222 47% 15%;
+  --card: 222 47% 8%;
   --card-foreground: 210 40% 98%;
-  --card-border: 217 19% 35%;
+  --card-border: 217 33% 17%;
   
-  --popover: 222 47% 11%;
+  --popover: 222 47% 6%;
   --popover-foreground: 210 40% 98%;
-  --popover-border: 217 19% 35%;
+  --popover-border: 217 33% 17%;
   
-  --secondary: 217 19% 35%;
+  --secondary: 217 33% 17%;
   --secondary-foreground: 210 40% 98%;
   
-  --muted: 217 19% 35%;
+  --muted: 217 33% 17%;
   --muted-foreground: 215 20% 75%;
   
-  --accent: 199 89% 48%;
+  --accent: 217 91% 60%;
   --accent-foreground: 210 40% 98%;
   
   --destructive: 0 84% 60%;
   --destructive-foreground: 210 40% 98%;
 
-  --border: 217 19% 35%;
-  --input: 217 19% 35%;
-  --ring: 199 89% 48%;
+  --border: 217 33% 17%;
+  --input: 217 33% 17%;
+  --ring: 217 91% 60%;
 }
 
 @layer base {
   body {
-    @apply bg-background text-foreground/85 antialiased min-h-screen selection:bg-primary/30;
+    @apply bg-background text-foreground/90 antialiased min-h-screen selection:bg-primary/30;
     font-family: 'Montserrat', sans-serif;
     font-weight: 500;
+    letter-spacing: -0.01em;
   }
 
   h1, h2, h3, h4, h5, h6 {
