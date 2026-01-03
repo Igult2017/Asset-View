@@ -206,8 +206,8 @@ function calculateStats(trades: Trade[]) {
   }, {});
 
   const hyperGranularPerformance = trades.reduce((acc: any, t) => {
-    // Instrument + Strategy + Session + Condition
-    const key = `${t.asset}-${t.strategy}-${t.session}-${t.condition}`;
+    // Instrument + Context TF + Session
+    const key = `${t.asset}-${t.contextTF}-${t.session}`;
     if (!acc[key]) acc[key] = { wins: 0, losses: 0, total: 0 };
     acc[key].total += 1;
     if (t.outcome === 'Win') acc[key].wins += 1;
@@ -1281,12 +1281,12 @@ export default function Dashboard() {
                 </PanelSection>
 
                 <PanelSection 
-                  title="Edge Precision" 
-                  description="High-granularity TF + Session + Instrument clusters."
+                  title="Analysis" 
+                  description="TF + Session + Instrument clusters."
                   icon={Filter}
                 >
                   <div className="space-y-2">
-                    {Object.entries(stats.complexEdgePerformance).slice(0, 3).map(([key, data]: [string, any]) => (
+                    {Object.entries(stats.hyperGranularPerformance).slice(0, 3).map(([key, data]: [string, any]) => (
                       <div key={key} className="flex justify-between items-center p-1.5 rounded bg-primary/5 border border-primary/10">
                         <span className="text-[10px] font-bold truncate max-w-[150px]">{key}</span>
                         <span className="text-[10px] text-emerald-500 font-black">
