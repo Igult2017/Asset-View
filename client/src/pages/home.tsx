@@ -1384,62 +1384,6 @@ export default function Dashboard() {
                   </div>
                 </PanelSection>
 
-                <PanelSection 
-                  title="Capital Health" 
-                  description="Profit breakdown per top strategies and monthly drawdown."
-                  icon={TrendingUp}
-                >
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3">
-                      {Object.entries(stats.strategyPerformance).slice(0, 4).map(([name, data]: [string, any]) => {
-                        const profitPct = stats.net ? ((data.profit / stats.net) * 100).toFixed(1) : "0.0";
-                        const avgRules = data.total ? Math.round(data.rulesSum / data.total) : 100;
-                        return (
-                          <div key={name} className="flex flex-col gap-1 border-l-2 border-primary/20 pl-3 py-1">
-                            <div className="flex justify-between items-center text-[10px]">
-                              <span className="font-bold truncate max-w-[120px]">{name}</span>
-                              <span className={cn("font-black font-mono", data.profit >= 0 ? "text-emerald-500" : "text-red-400")}>
-                                {data.profit >= 0 ? '+' : ''}{profitPct}%
-                              </span>
-                            </div>
-                            <div className="flex justify-between items-center">
-                              <span className="text-[8px] text-muted-foreground uppercase font-black tracking-tighter">Rules Adherence</span>
-                              <span className={cn(
-                                "text-[9px] font-black font-mono",
-                                avgRules >= 90 ? "text-emerald-500" : avgRules >= 70 ? "text-amber-500" : "text-red-400"
-                              )}>{avgRules}%</span>
-                            </div>
-                            <div className="h-1 bg-muted/20 rounded-full overflow-hidden mt-0.5">
-                              <div className="h-full bg-primary/40" style={{ width: `${avgRules}%` }} />
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                    <div className="pt-3 border-t border-border/50 grid grid-cols-2 gap-4">
-                      <div className="space-y-1">
-                        <div className="flex justify-between text-[10px]">
-                          <span className="text-muted-foreground uppercase font-bold">Monthly DD %</span>
-                          <span className={cn("font-black font-mono", Number(stats.monthlyDrawdownPercent) > 0 ? "text-red-400" : "text-emerald-500")}>
-                            -{stats.monthlyDrawdownPercent}%
-                          </span>
-                        </div>
-                        <div className="h-1 bg-muted/20 rounded-full overflow-hidden">
-                          <div className="h-full bg-red-400/40" style={{ width: `${Math.min(100, Number(stats.monthlyDrawdownPercent) * 10)}%` }} />
-                        </div>
-                      </div>
-                      <div className="space-y-1">
-                        <div className="flex justify-between text-[10px]">
-                          <span className="text-muted-foreground uppercase font-bold">Max DD ($)</span>
-                          <span className="text-red-400 font-black font-mono">
-                            -${(calculateDrawdownPerMonth(trades)[0]?.drawdown || 0).toLocaleString()}
-                          </span>
-                        </div>
-                        <div className="text-[8px] text-muted-foreground/60 text-right uppercase font-bold italic tracking-widest">Risk Limit Active</div>
-                      </div>
-                    </div>
-                  </div>
-                </PanelSection>
               </div>
 
               {/* Extended Analytics Row */}
