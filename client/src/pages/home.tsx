@@ -563,6 +563,61 @@ function LogEntryModal() {
       <div className="space-y-4">
         {currentStep === 0 && (
           <div className="grid grid-cols-2 gap-4">
+            <div className="col-span-2 space-y-2">
+              <FormLabel className="text-[10px] font-bold uppercase">Trade Screenshot</FormLabel>
+              <div className="flex items-center gap-4">
+                <FormControl>
+                  <div className="relative w-full">
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileUpload}
+                      className="hidden"
+                      id="trade-image-upload"
+                      disabled={isUploading}
+                    />
+                    <label
+                      htmlFor="trade-image-upload"
+                      className={cn(
+                        "flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-xl cursor-pointer hover:border-primary/50 transition-colors",
+                        form.watch('imageUrl') ? "bg-muted/10 border-primary/30" : "bg-background border-border"
+                      )}
+                    >
+                      {form.watch('imageUrl') ? (
+                        <div className="relative w-full h-full p-2">
+                          <img 
+                            src={form.watch('imageUrl')} 
+                            alt="Trade Preview" 
+                            className="w-full h-full object-contain rounded-lg"
+                          />
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            className="absolute -top-2 -right-2 h-6 w-6 rounded-full"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              form.setValue('imageUrl', "");
+                            }}
+                          >
+                            <X className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                          {isUploading ? (
+                            <Activity className="h-6 w-6 animate-spin" />
+                          ) : (
+                            <Upload className="h-6 w-6" />
+                          )}
+                          <span className="text-[10px] font-medium">{isUploading ? "Uploading..." : "Upload Chart"}</span>
+                        </div>
+                      )}
+                    </label>
+                  </div>
+                </FormControl>
+              </div>
+            </div>
             <FormField control={form.control} name="asset" render={({ field }) => (
               <FormItem><FormLabel className="text-[10px] font-bold uppercase">Asset</FormLabel>
               <FormControl><Input placeholder="EURUSD" {...field} className="bg-background border-border" /></FormControl><FormMessage /></FormItem>
@@ -615,61 +670,6 @@ function LogEntryModal() {
               <FormItem><FormLabel className="text-[10px] font-bold uppercase">P/L ($)</FormLabel>
               <FormControl><Input type="number" step="any" {...field} className="bg-background border-border" /></FormControl></FormItem>
             )} />
-            <div className="col-span-2 space-y-2">
-              <FormLabel className="text-[10px] font-bold uppercase">Trade Screenshot</FormLabel>
-              <div className="flex items-center gap-4">
-                <FormControl>
-                  <div className="relative">
-                    <Input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleFileUpload}
-                      className="hidden"
-                      id="trade-image-upload"
-                      disabled={isUploading}
-                    />
-                    <label
-                      htmlFor="trade-image-upload"
-                      className={cn(
-                        "flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-xl cursor-pointer hover:border-primary/50 transition-colors",
-                        form.watch('imageUrl') ? "bg-muted/10 border-primary/30" : "bg-background border-border"
-                      )}
-                    >
-                      {form.watch('imageUrl') ? (
-                        <div className="relative w-full h-full p-2">
-                          <img 
-                            src={form.watch('imageUrl')} 
-                            alt="Trade Preview" 
-                            className="w-full h-full object-contain rounded-lg"
-                          />
-                          <Button
-                            type="button"
-                            variant="destructive"
-                            size="icon"
-                            className="absolute -top-2 -right-2 h-6 w-6 rounded-full"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              form.setValue('imageUrl', "");
-                            }}
-                          >
-                            <X className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      ) : (
-                        <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                          {isUploading ? (
-                            <Activity className="h-6 w-6 animate-spin" />
-                          ) : (
-                            <Upload className="h-6 w-6" />
-                          )}
-                          <span className="text-[10px] font-medium">{isUploading ? "Uploading..." : "Upload Chart"}</span>
-                        </div>
-                      )}
-                    </label>
-                  </div>
-                </FormControl>
-              </div>
-            </div>
           </div>
         )}
         {currentStep === 1 && (
