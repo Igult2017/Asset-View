@@ -206,8 +206,8 @@ function calculateStats(trades: Trade[]) {
   }, {});
 
   const hyperGranularPerformance = trades.reduce((acc: any, t) => {
-    // Instrument + Context TF + Session
-    const key = `${t.asset}-${t.contextTF}-${t.session}`;
+    // Instrument + Analysis TF + Session
+    const key = `${t.asset}-${t.analysisTF || 'H1'}-${t.session}`;
     if (!acc[key]) acc[key] = { wins: 0, losses: 0, total: 0 };
     acc[key].total += 1;
     if (t.outcome === 'Win') acc[key].wins += 1;
@@ -361,6 +361,7 @@ function LogEntryModal() {
       plAmt: 0,
       imageUrl: "",
       contextTF: "D1",
+      analysisTF: "H1",
       entryTF: "M5",
       marketRegime: "Trending",
       volatilityState: "Expanding",
@@ -423,7 +424,7 @@ function LogEntryModal() {
   const totalSteps = 12;
   
   const steps = [
-    { title: "🎯 Core Trade Data", fields: ["asset", "strategy", "session", "condition", "bias", "outcome", "rAchieved", "plAmt"] },
+    { title: "🎯 Core Trade Data", fields: ["asset", "strategy", "session", "condition", "bias", "outcome", "rAchieved", "plAmt", "contextTF", "analysisTF", "entryTF"] },
     { title: "🌍 Market Regime & Environment", fields: ["marketRegime", "volatilityState", "liquidityConditions", "newsEnvironment"] },
     { title: "⏰ Time-of-Day & Session Precision", fields: ["entryTimeUtc", "sessionPhase", "entryTimingContext", "preExpansionCondition"] },
     { title: "⭐ Setup Quality Scoring", fields: ["marketAlignmentScore", "setupClarityScore", "entryPrecisionScore", "confluenceScore", "timingQualityScore"] },
@@ -462,6 +463,7 @@ function LogEntryModal() {
       plAmt: data.plAmt,
       imageUrl: data.imageUrl,
       contextTF: data.contextTF,
+      analysisTF: data.analysisTF,
       entryTF: data.entryTF,
       marketRegime: data.marketRegime,
       volatilityState: data.volatilityState,
@@ -592,6 +594,18 @@ function LogEntryModal() {
               <Select onValueChange={field.onChange} value={field.value || "Win"}>
               <FormControl><SelectTrigger className="bg-background border-border"><SelectValue /></SelectTrigger></FormControl>
               <SelectContent><SelectItem value="Win">Win</SelectItem><SelectItem value="Loss">Loss</SelectItem><SelectItem value="BE">BE</SelectItem></SelectContent></Select></FormItem>
+            )} />
+            <FormField control={form.control} name="contextTF" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Context TF (HTF)</FormLabel>
+              <FormControl><Input placeholder="D1" {...field} className="bg-background border-border" /></FormControl><FormMessage /></FormItem>
+            )} />
+            <FormField control={form.control} name="analysisTF" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Analysis TF (ATF)</FormLabel>
+              <FormControl><Input placeholder="H1" {...field} className="bg-background border-border" /></FormControl><FormMessage /></FormItem>
+            )} />
+            <FormField control={form.control} name="entryTF" render={({ field }) => (
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Entry TF (LTF)</FormLabel>
+              <FormControl><Input placeholder="M5" {...field} className="bg-background border-border" /></FormControl><FormMessage /></FormItem>
             )} />
             <FormField control={form.control} name="rAchieved" render={({ field }) => (
               <FormItem><FormLabel className="text-[10px] font-bold uppercase">R-Value</FormLabel>
@@ -1281,7 +1295,7 @@ export default function Dashboard() {
                 </PanelSection>
 
                 <PanelSection 
-                  title="Analysis" 
+                  title="Analysis TF + Session + Instrument clusters" 
                   description="TF + Session + Instrument clusters."
                   icon={Filter}
                 >

@@ -13,6 +13,7 @@ export const trades = pgTable("trades", {
   rAchieved: numeric("r_achieved").notNull(),
   plAmt: numeric("pl_amt").notNull(),
   contextTF: text("context_tf").default('D1'),
+  analysisTF: text("analysis_tf").default('H1'),
   entryTF: text("entry_tf").default('M5'),
   date: timestamp("date").defaultNow(),
 
