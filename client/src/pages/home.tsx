@@ -1371,7 +1371,7 @@ export default function Dashboard() {
                 </PanelSection>
 
                 <PanelSection 
-                  title="Hyper-Granular Edge" 
+                  title="Asset + Strategy + Session + Condition" 
                   description="Asset + Strategy + Session + Condition matrix."
                   icon={Activity}
                 >
