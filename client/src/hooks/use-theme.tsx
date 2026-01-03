@@ -1,6 +1,6 @@
 import * as React from "react"
 
-type Theme = "white" | "blue"
+type Theme = "dark" | "white" | "blue"
 
 type ThemeProviderState = {
   theme: Theme
@@ -8,7 +8,7 @@ type ThemeProviderState = {
 }
 
 const initialState: ThemeProviderState = {
-  theme: "white",
+  theme: "dark",
   setTheme: () => null,
 }
 
@@ -16,7 +16,7 @@ const ThemeProviderContext = React.createContext<ThemeProviderState>(initialStat
 
 export function ThemeProvider({
   children,
-  defaultTheme = "white",
+  defaultTheme = "dark",
   storageKey = "asset-view-theme",
   ...props
 }: {
@@ -31,9 +31,11 @@ export function ThemeProvider({
   React.useEffect(() => {
     const root = window.document.documentElement
 
-    root.classList.remove("theme-blue")
+    root.classList.remove("theme-light", "theme-blue")
 
-    if (theme === "blue") {
+    if (theme === "white") {
+      root.classList.add("theme-light")
+    } else if (theme === "blue") {
       root.classList.add("theme-blue")
     }
   }, [theme])
