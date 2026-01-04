@@ -1208,17 +1208,6 @@ export default function Dashboard() {
                         <div className="text-xs font-black">{(stats as any).setupQualityMetrics?.confluence}</div>
                       </div>
                     </div>
-                    <div className="pt-2 border-t border-border/40">
-                      <div className="text-[8px] font-bold text-muted-foreground uppercase mb-1">Session Clusters</div>
-                      <div className="space-y-1">
-                        {Object.entries(stats.sessionPerformance).slice(0, 2).map(([key, data]: [string, any]) => (
-                          <div key={key} className="flex justify-between text-[9px]">
-                            <span className="truncate max-w-[80px]">{key}</span>
-                            <span className="text-emerald-500 font-bold">{data.total ? Math.round((data.wins / data.total) * 100) : 0}%</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
                   </div>
                 </PanelSection>
 
