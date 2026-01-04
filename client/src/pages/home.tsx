@@ -1193,7 +1193,7 @@ export default function Dashboard() {
                 </PanelSection>
 
                 <PanelSection 
-                  title="Intelligence Matrix" 
+                  title="Clarity and Confluence" 
                   description="High-granularity analysis of setup quality and confluence."
                   icon={Sparkles}
                 >
