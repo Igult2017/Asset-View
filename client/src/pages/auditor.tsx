@@ -1,7 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import {
   Activity, BrainCircuit, Box, Clock, Cpu, Database, Gauge,
-  Scale, ShieldCheck, Target, Thermometer, Layers
+  Scale, ShieldCheck, Target, Thermometer, Layers,
+  AlertTriangle, CheckCircle2, ChevronRight, Info,
+  LineChart, MousePointer2, RefreshCcw, TrendingUp, Zap
 } from 'lucide-react';
 import { Layout } from "./home";
 
@@ -20,7 +22,7 @@ const FontStyle = () => (
   `}} />
 );
 
-const AuditorExtras = ({ metrics, rollingExpectancy }) => {
+const AuditorExtras = ({ metrics, rollingExpectancy }: { metrics: any, rollingExpectancy: any }) => {
 
   /* ================= 1. Kill-Switch Rules ================= */
   const killSwitch = useMemo(() => ({
@@ -187,10 +189,27 @@ const Auditor = () => {
     slippageLoss: 0.6
   });
 
+  const [auditElements] = useState({
+    regime: 'High-Volatility Trending (Expansion Phases)',
+    entryLogic: 'AI-detected liquidity gaps + Order Flow Imbalance',
+    exitLogic: 'Dynamic volatility-adjusted trailing stops',
+    failureModes: 'Low-liquidity consolidation & ranging chop',
+    scalingProperties: 'Deep liquidity depth; scalable to institutional tiers',
+    behavioralFit: 'Fully autonomous; no discretionary input',
+    sessionDependency: 'Dominant in New York & London overlaps',
+    forwardConfirmation: '6-month live walk-forward verified'
+  });
+
   const expectancy = useMemo(() => {
     const winP = metrics.winRate / 100;
     return +((winP * metrics.avgWinR) - ((1 - winP) * metrics.avgLossR)).toFixed(2);
   }, [metrics]);
+
+  const edgeBreakdown = {
+    winRate: 46,
+    riskReward: 38,
+    outliers: 16
+  };
 
   const rollingExpectancy = {
     last50: 0.42,
@@ -245,6 +264,131 @@ const Auditor = () => {
               <p className="text-sm mt-2 font-black text-white relative z-10 font-blocky">Expectancy: {expectancy}R</p>
             </div>
           </header>
+
+          {/* GRID */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+            {/* LEFT COLUMN */}
+            <div className="lg:col-span-4 space-y-6">
+              <div className="bg-slate-900/40 p-6 rounded-[32px] border border-white/5 space-y-4">
+                <h3 className="text-[10px] font-black uppercase text-slate-500 tracking-widest mb-2 flex items-center gap-2">
+                  <BrainCircuit size={14}/> Core Robustness
+                </h3>
+                <div className="space-y-4">
+                  {[
+                    { label: 'Rule Stability', val: metrics.ruleStability, icon: Scale, color: 'text-blue-400' },
+                    { label: 'Execution Adherence', val: metrics.executionAdherence, icon: MousePointer2, color: 'text-indigo-400' },
+                    { label: 'Monte Carlo Stability', val: metrics.monteCarloStability, icon: RefreshCcw, color: 'text-emerald-400' }
+                  ].map((item) => (
+                    <div key={item.label} className="group">
+                      <div className="flex justify-between text-xs mb-1 font-bold">
+                        <span className="flex items-center gap-2 text-slate-400 group-hover:text-white transition-colors">
+                          <item.icon size={12} className={item.color}/> {item.label}
+                        </span>
+                        <span className="text-white">{item.val}%</span>
+                      </div>
+                      <div className="h-1 bg-white/5 rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-blue-500 rounded-full transition-all duration-1000"
+                          style={{ width: `${item.val}%` }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="bg-slate-900/40 p-6 rounded-[32px] border border-white/5">
+                <h3 className="text-[10px] font-black uppercase text-slate-500 tracking-widest mb-6 flex items-center gap-2">
+                  <Target size={14}/> Probabilistic Edge
+                </h3>
+                <div className="relative aspect-square max-w-[200px] mx-auto">
+                  <div className="absolute inset-0 border-[16px] border-white/5 rounded-full"></div>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+                    <span className="text-4xl font-blocky text-white leading-none">{metrics.winRate}%</span>
+                    <span className="text-[10px] font-black uppercase text-slate-500 tracking-widest mt-1">Base Rate</span>
+                  </div>
+                </div>
+                <div className="mt-8 space-y-3">
+                  <div className="flex justify-between items-center bg-white/5 p-3 rounded-2xl">
+                    <span className="text-xs font-bold text-slate-400">Avg Win</span>
+                    <span className="text-emerald-400 font-blocky text-lg">{metrics.avgWinR}R</span>
+                  </div>
+                  <div className="flex justify-between items-center bg-white/5 p-3 rounded-2xl">
+                    <span className="text-xs font-bold text-slate-400">Avg Loss</span>
+                    <span className="text-rose-400 font-blocky text-lg">{metrics.avgLossR}R</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* MAIN COLUMN */}
+            <div className="lg:col-span-8 space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="bg-slate-900/40 p-8 rounded-[40px] border border-white/5 group hover:border-blue-500/30 transition-all">
+                  <div className="flex justify-between items-start mb-6">
+                    <div className="p-3 bg-blue-500/10 rounded-2xl text-blue-400">
+                      <Gauge size={24}/>
+                    </div>
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Drawdown Metrics</span>
+                  </div>
+                  <p className="text-5xl font-blocky text-white group-hover:scale-105 transition-transform origin-left">{metrics.maxDrawdown}%</p>
+                  <p className="text-xs font-bold text-slate-500 mt-2 uppercase tracking-widest">Historical Max Peak-to-Valley</p>
+                  <div className="mt-6 flex items-center gap-4 text-xs font-bold">
+                    <div className="flex-1 bg-white/5 p-3 rounded-2xl">
+                      <span className="text-slate-500">Recovery</span>
+                      <p className="text-white mt-1">{metrics.recoveryTime} days</p>
+                    </div>
+                    <div className="flex-1 bg-white/5 p-3 rounded-2xl">
+                      <span className="text-slate-500">Stagnation</span>
+                      <p className="text-white mt-1">{metrics.timeInDrawdown}%</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-slate-900/40 p-8 rounded-[40px] border border-white/5 group hover:border-indigo-500/30 transition-all">
+                  <div className="flex justify-between items-start mb-6">
+                    <div className="p-3 bg-indigo-500/10 rounded-2xl text-indigo-400">
+                      <Activity size={24}/>
+                    </div>
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Equity Variance</span>
+                  </div>
+                  <p className="text-5xl font-blocky text-white group-hover:scale-105 transition-transform origin-left">{metrics.monteCarloStability}%</p>
+                  <p className="text-xs font-bold text-slate-500 mt-2 uppercase tracking-widest">Simulation Confidence (n=10k)</p>
+                  <div className="mt-6 flex items-center gap-4 text-xs font-bold">
+                    <div className="flex-1 bg-white/5 p-3 rounded-2xl">
+                      <span className="text-slate-500">Variance Skew</span>
+                      <p className="text-white mt-1">{metrics.varianceSkew}</p>
+                    </div>
+                    <div className="flex-1 bg-white/5 p-3 rounded-2xl">
+                      <span className="text-slate-500">Max Cluster</span>
+                      <p className="text-white mt-1">{metrics.maxLossStreak} trades</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-slate-900/20 border border-white/5 rounded-[40px] overflow-hidden">
+                <div className="p-8 border-b border-white/5 flex justify-between items-center bg-slate-900/40">
+                  <h2 className="text-xl font-blocky text-white flex items-center gap-3">
+                    <ShieldCheck className="text-emerald-400" size={24}/> Logical Verification Elements
+                  </h2>
+                  <div className="flex items-center gap-2 px-4 py-1.5 bg-emerald-500/10 rounded-full border border-emerald-500/20">
+                    <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                    <span className="text-[10px] font-black uppercase text-emerald-400 tracking-widest">System Certified</span>
+                  </div>
+                </div>
+                <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
+                  {Object.entries(auditElements).map(([key, value]) => (
+                    <div key={key} className="space-y-1">
+                      <p className="text-[10px] font-black uppercase text-slate-500 tracking-widest">{key.replace(/([A-Z])/g, ' $1')}</p>
+                      <p className="text-sm font-bold text-white leading-relaxed">{value}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
 
           <AuditorExtras metrics={metrics} rollingExpectancy={rollingExpectancy} />
 
