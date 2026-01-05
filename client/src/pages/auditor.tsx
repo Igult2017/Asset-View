@@ -424,6 +424,61 @@ const Auditor = () => {
 
           <AuditorExtras metrics={metrics} rollingExpectancy={rollingExpectancy} />
 
+          {/* ADDITIONAL METRICS PANEL */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-12 border-t border-white/5">
+            {/* Risk & Failure */}
+            <div className="bg-slate-900/40 p-6 rounded-[32px] border border-white/10">
+              <h3 className="text-[10px] font-black uppercase text-rose-400 mb-4 tracking-widest flex items-center gap-2">
+                <Thermometer size={14}/> Risk & Failure
+              </h3>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between font-bold"><span className="text-slate-500">Max Loss Streak</span><span className="text-white">{metrics.maxLossStreak}</span></div>
+                <div className="flex justify-between font-bold"><span className="text-slate-500">5-Loss Probability</span><span className="text-white">{metrics.probFiveLosses}%</span></div>
+                <div className="flex justify-between font-bold"><span className="text-slate-500">Time in Drawdown</span><span className="text-white">{metrics.timeInDrawdown}%</span></div>
+              </div>
+            </div>
+
+            {/* Edge Component Breakdown */}
+            <div className="bg-slate-900/40 p-6 rounded-[32px] border border-white/10">
+              <h3 className="text-[10px] font-black uppercase text-indigo-400 mb-4 tracking-widest">Edge Component Breakdown</h3>
+              <div className="space-y-4">
+                <div>
+                  <div className="flex justify-between text-[10px] font-black uppercase text-slate-500 mb-1">
+                    <span>Win Rate</span>
+                    <span className="text-white">46%</span>
+                  </div>
+                  <div className="h-1 bg-white/5 rounded-full overflow-hidden">
+                    <div className="h-full bg-blue-500 w-[46%] rounded-full"></div>
+                  </div>
+                </div>
+                <div>
+                  <div className="flex justify-between text-[10px] font-black uppercase text-slate-500 mb-1">
+                    <span>Risk-Reward</span>
+                    <span className="text-white">38%</span>
+                  </div>
+                  <div className="h-1 bg-white/5 rounded-full overflow-hidden">
+                    <div className="h-full bg-indigo-500 w-[38%] rounded-full"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Edge Decay / Rolling Trend */}
+            <div className="bg-slate-900/40 p-6 rounded-[32px] border border-white/10">
+              <h3 className="text-[10px] font-black uppercase text-slate-400 mb-4 tracking-widest">Edge Decay / Rolling Trend</h3>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-white/5 p-4 rounded-2xl">
+                  <span className="text-[8px] font-black uppercase text-slate-500 tracking-widest block mb-1">Last 50 Trades</span>
+                  <p className="text-xl font-blocky text-white">{rollingExpectancy.last50}R</p>
+                </div>
+                <div className="bg-white/5 p-4 rounded-2xl">
+                  <span className="text-[8px] font-black uppercase text-slate-500 tracking-widest block mb-1">Last 200 Trades</span>
+                  <p className="text-xl font-blocky text-white">{rollingExpectancy.last200}R</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </Layout>
