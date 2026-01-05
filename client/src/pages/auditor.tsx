@@ -216,6 +216,12 @@ const Auditor = () => {
     last200: 0.48
   };
 
+  const tradeQuality = {
+    A: { trades: 28, profit: 71 },
+    B: { trades: 46, profit: 24 },
+    C: { trades: 26, profit: 5 }
+  };
+
   const auditScore = useMemo(() => {
     const sampleFactor = Math.min(metrics.tradeSample / 500, 1);
     const math = expectancy > 0 ? expectancy * 45 : 0;
