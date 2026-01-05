@@ -1,0 +1,257 @@
+import React, { useState, useMemo } from 'react';
+import {
+  Activity, BrainCircuit, Box, Clock, Cpu, Database, Gauge,
+  Scale, ShieldCheck, Target, Thermometer, Layers
+} from 'lucide-react';
+import { Layout } from "./home";
+
+// Using Google Fonts to inject Montserrat for the "Blocky" premium feel
+const FontStyle = () => (
+  <style dangerouslySetInnerHTML={{ __html: `
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap');
+    :root {
+      font-family: 'Montserrat', sans-serif;
+    }
+    .font-blocky {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+  `}} />
+);
+
+const AuditorExtras = ({ metrics, rollingExpectancy }) => {
+
+  /* ================= 1. Kill-Switch Rules ================= */
+  const killSwitch = useMemo(() => ({
+    expectancyFail: rollingExpectancy.last50 < 0,
+    drawdownFail: metrics.maxDrawdown > 12,
+    regimeFail: false 
+  }), [rollingExpectancy, metrics.maxDrawdown]);
+
+  /* ================= 2. Conditional Edge Validation ================= */
+  const conditionalEdge = useMemo(() => ({
+    liquidityGapTrades: { expectancy: 1.05, sample: 120 },
+    nonQualifiedTrades: { expectancy: 0.50, sample: 338 }
+  }), []);
+
+  /* ================= 3. Trade Quality Stratification ================= */
+  const tradeQualityDist = useMemo(() => ({
+    A: { trades: 28, profitPct: 70 },
+    B: { trades: 46, profitPct: 24 },
+    C: { trades: 26, profitPct: 6 }
+  }), []);
+
+  /* ================= 4. Loss Clustering Severity ================= */
+  const lossClusters = useMemo(() => ({
+    avgCluster: 2.4,
+    worstClusterDrawdown: 4.5
+  }), []);
+
+  /* ================= 5. Execution Asymmetry ================= */
+  const executionAsymmetry = useMemo(() => ({
+    winSlippage: 0.3,
+    lossSlippage: 0.6
+  }), []);
+
+  /* ================= 6. Regime Transition Impact ================= */
+  const regimeTransition = useMemo(() => ({
+    avgDrawdown: 3.2,
+    recoveryTrades: 8
+  }), []);
+
+  /* ================= 7. Capital Heat / Exposure ================= */
+  const capitalHeat = useMemo(() => ({
+    peakEquityRisk: 37,
+    timeAtPeak: 22
+  }), []);
+
+  /* ================= 8. Automation Failure Probability ================= */
+  const automationRisk = useMemo(() => ({
+    failureProbability: 1.8
+  }), []);
+
+  /* ================= 9. Edge Transferability ================= */
+  const edgeTransfer = useMemo(() => ({
+    adjacentMarketRetention: 92
+  }), []);
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12 pt-12 border-t border-white/5">
+
+      {/* Kill-Switch */}
+      <div className="bg-slate-900/40 p-6 rounded-[32px] border border-white/10">
+        <h3 className="text-[10px] font-black uppercase text-rose-400 mb-4 tracking-widest flex items-center gap-2">
+          <ShieldCheck size={14}/> Kill-Switch Rules
+        </h3>
+        <div className="space-y-2 text-sm">
+          <div className="flex justify-between font-bold"><span className="text-slate-500">Expectancy Fail</span><span className={killSwitch.expectancyFail ? 'text-rose-500' : 'text-emerald-500'}>{killSwitch.expectancyFail ? 'YES' : 'NO'}</span></div>
+          <div className="flex justify-between font-bold"><span className="text-slate-500">Drawdown Fail</span><span className={killSwitch.drawdownFail ? 'text-rose-500' : 'text-emerald-500'}>{killSwitch.drawdownFail ? 'YES' : 'NO'}</span></div>
+          <div className="flex justify-between font-bold"><span className="text-slate-500">Regime Fail</span><span className="text-emerald-500">NO</span></div>
+        </div>
+      </div>
+
+      {/* Conditional Edge */}
+      <div className="bg-slate-900/40 p-6 rounded-[32px] border border-white/10">
+        <h3 className="text-[10px] font-black uppercase text-indigo-400 mb-4 tracking-widest">Conditional Edge Validation</h3>
+        <div className="space-y-2 text-sm">
+          <p className="text-slate-300 font-bold">Liquidity-Gap: <span className="text-white">{conditionalEdge.liquidityGapTrades.expectancy}R</span> <span className="text-xs text-slate-500">({conditionalEdge.liquidityGapTrades.sample} samples)</span></p>
+          <p className="text-slate-300 font-bold">Non-Qualified: <span className="text-white">{conditionalEdge.nonQualifiedTrades.expectancy}R</span> <span className="text-xs text-slate-500">({conditionalEdge.nonQualifiedTrades.sample} samples)</span></p>
+        </div>
+      </div>
+
+      {/* Trade Quality */}
+      <div className="bg-slate-900/40 p-6 rounded-[32px] border border-white/10">
+        <h3 className="text-[10px] font-black uppercase text-emerald-400 mb-4 tracking-widest">Trade Quality Stratification</h3>
+        <div className="space-y-2 text-sm">
+          {Object.entries(tradeQualityDist).map(([tier, data]) => (
+            <div key={tier} className="flex justify-between font-bold">
+              <span className="text-slate-500">{tier}-Trades ({data.trades})</span>
+              <span className="text-white">{data.profitPct}% Profit</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Loss Clustering */}
+      <div className="bg-slate-900/40 p-6 rounded-[32px] border border-white/10">
+        <h3 className="text-[10px] font-black uppercase text-slate-400 mb-4 tracking-widest">Loss Cluster Severity</h3>
+        <div className="space-y-2 text-sm">
+          <div className="flex justify-between font-bold"><span className="text-slate-500">Avg Cluster Length</span><span className="text-white">{lossClusters.avgCluster}</span></div>
+          <div className="flex justify-between font-bold"><span className="text-slate-500">Worst DD Cluster</span><span className="text-rose-400">{lossClusters.worstClusterDrawdown}%</span></div>
+        </div>
+      </div>
+
+      {/* Execution Asymmetry */}
+      <div className="bg-slate-900/40 p-6 rounded-[32px] border border-white/10">
+        <h3 className="text-[10px] font-black uppercase text-blue-400 mb-4 tracking-widest">Execution Asymmetry</h3>
+        <div className="space-y-2 text-sm font-bold">
+          <p className="text-slate-500">Slippage (Wins): <span className="text-white">{executionAsymmetry.winSlippage} ticks</span></p>
+          <p className="text-slate-500">Slippage (Losses): <span className="text-white">{executionAsymmetry.lossSlippage} ticks</span></p>
+        </div>
+      </div>
+
+      {/* Regime Transition */}
+      <div className="bg-slate-900/40 p-6 rounded-[32px] border border-white/10">
+        <h3 className="text-[10px] font-black uppercase text-amber-400 mb-4 tracking-widest">Regime Transition Impact</h3>
+        <div className="space-y-2 text-sm font-bold">
+          <p className="text-slate-500">Avg Transition DD: <span className="text-white">{regimeTransition.avgDrawdown}%</span></p>
+          <p className="text-slate-500">Recovery Trades: <span className="text-white">{regimeTransition.recoveryTrades}</span></p>
+        </div>
+      </div>
+
+      {/* Capital Heat */}
+      <div className="bg-slate-900/40 p-6 rounded-[32px] border border-white/10">
+        <h3 className="text-[10px] font-black uppercase text-slate-400 mb-4 tracking-widest">Capital Heat / Exposure</h3>
+        <div className="space-y-2 text-sm font-bold text-slate-500">
+          <p>Peak Equity at Risk: <span className="text-white">{capitalHeat.peakEquityRisk}%</span></p>
+          <p>Time at Peak: <span className="text-white">{capitalHeat.timeAtPeak}%</span></p>
+        </div>
+      </div>
+
+      {/* Automation Risk */}
+      <div className="bg-slate-900/40 p-6 rounded-[32px] border border-white/10">
+        <h3 className="text-[10px] font-black uppercase text-slate-400 mb-4 tracking-widest">Automation Risk</h3>
+        <p className="text-sm font-bold text-white">{automationRisk.failureProbability}% chance of execution failure</p>
+      </div>
+
+      {/* Edge Transferability */}
+      <div className="bg-slate-900/40 p-6 rounded-[32px] border border-white/10">
+        <h3 className="text-[10px] font-black uppercase text-slate-400 mb-4 tracking-widest">Edge Transferability</h3>
+        <p className="text-sm font-bold text-white">Market Retention: {edgeTransfer.adjacentMarketRetention}%</p>
+      </div>
+
+    </div>
+  );
+};
+
+const Auditor = () => {
+  const [systemName] = useState('AI-Automated Audit: Quant-Neural Alpha 4.0');
+
+  const [metrics] = useState({
+    winRate: 62.4,
+    avgWinR: 1.82,
+    avgLossR: 0.95,
+    tradeSample: 458,
+    maxDrawdown: 8.4,
+    recoveryTime: 12,
+    timeInDrawdown: 31,
+    frictionImpact: 8.2,
+    ruleStability: 94,
+    executionAdherence: 98.5,
+    monteCarloStability: 89.2,
+    varianceSkew: 1.4,
+    maxLossStreak: 6,
+    probFiveLosses: 14,
+    slippageWin: 0.3,
+    slippageLoss: 0.6
+  });
+
+  const expectancy = useMemo(() => {
+    const winP = metrics.winRate / 100;
+    return +((winP * metrics.avgWinR) - ((1 - winP) * metrics.avgLossR)).toFixed(2);
+  }, [metrics]);
+
+  const rollingExpectancy = {
+    last50: 0.42,
+    last200: 0.48
+  };
+
+  const auditScore = useMemo(() => {
+    const sampleFactor = Math.min(metrics.tradeSample / 500, 1);
+    const math = expectancy > 0 ? expectancy * 45 : 0;
+    const robustness =
+      metrics.ruleStability * 0.4 +
+      metrics.executionAdherence * 0.4 +
+      (100 - metrics.frictionImpact) * 0.2;
+    const survival = Math.max(0, 100 - metrics.maxDrawdown * 4);
+
+    return Math.min(
+      Math.round((math * 0.4 + robustness * 0.3 + survival * 0.3) * (0.85 + 0.15 * sampleFactor)),
+      100
+    );
+  }, [metrics, expectancy]);
+
+  const authorized = auditScore >= 80;
+
+  return (
+    <Layout>
+      <div className="min-h-screen bg-[#0a0c10] text-slate-300 p-6 md:p-10 font-sans selection:bg-blue-500/30">
+        <FontStyle />
+        <div className="max-w-7xl mx-auto space-y-12">
+
+          {/* HEADER */}
+          <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+            <div>
+              <div className="flex items-center gap-3 text-blue-400 text-xs font-black uppercase tracking-[0.2em]">
+                <Cpu size={18}/> Automated Intelligence Auditor
+              </div>
+              <h1 className="text-4xl md:text-5xl font-blocky text-white mt-2 tracking-tight">
+                {systemName}
+              </h1>
+              <div className="flex gap-6 text-[10px] mt-4 text-slate-500 font-black uppercase tracking-widest">
+                <span className="flex items-center gap-2"><Database size={12}/> Journal Sync</span>
+                <span className="flex items-center gap-2"><Layers size={12}/> Quant Model</span>
+                <span className="flex items-center gap-2 text-emerald-400"><ShieldCheck size={12}/> Verified Logic</span>
+              </div>
+            </div>
+
+            <div className="w-full md:w-auto bg-slate-900/60 border border-white/10 rounded-[32px] p-8 text-center backdrop-blur-md relative overflow-hidden group">
+              <div className={`absolute inset-0 opacity-5 blur-2xl transition-colors ${authorized ? 'bg-emerald-500' : 'bg-blue-500'}`}></div>
+              <p className="text-[10px] font-black uppercase text-slate-500 tracking-widest relative z-10">Reliability Index</p>
+              <p className={`text-6xl font-blocky relative z-10 ${authorized ? 'text-emerald-400' : 'text-blue-400'}`}>
+                {auditScore}%
+              </p>
+              <p className="text-sm mt-2 font-black text-white relative z-10 font-blocky">Expectancy: {expectancy}R</p>
+            </div>
+          </header>
+
+          <AuditorExtras metrics={metrics} rollingExpectancy={rollingExpectancy} />
+
+        </div>
+      </div>
+    </Layout>
+  );
+};
+
+export default Auditor;

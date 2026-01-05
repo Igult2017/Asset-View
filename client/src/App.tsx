@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/hooks/use-theme";
 import NotFound from "@/pages/not-found";
 import Dashboard from "@/pages/home";
 import Overview from "@/pages/overview";
+import Auditor from "@/pages/auditor";
 import DrawdownAnalysis from "@/pages/drawdown-analysis";
 
 function Router() {
@@ -14,6 +15,7 @@ function Router() {
     <Switch>
       <Route path="/" component={Dashboard} />
       <Route path="/overview" component={Overview} />
+      <Route path="/auditor" component={Auditor} />
       <Route path="/drawdown-analysis" component={DrawdownAnalysis} />
       <Route component={NotFound} />
     </Switch>
