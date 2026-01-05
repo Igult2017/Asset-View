@@ -419,6 +419,33 @@ const Auditor = () => {
                   ))}
                 </div>
               </div>
+
+              {/* FINAL AUDIT VERDICT */}
+              <div className="bg-slate-900/40 p-8 rounded-[40px] border border-white/5 relative overflow-hidden group mt-8">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative z-10">
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 text-emerald-400 text-[10px] font-black uppercase tracking-widest">
+                      <ShieldCheck size={14}/> Final Audit Verdict
+                    </div>
+                    <h2 className="text-4xl font-blocky text-white tracking-tight">
+                      SYSTEM DE-AUTHORIZED
+                    </h2>
+                    <p className="text-sm font-bold text-slate-500">
+                      Structural check passed. Max DD of {metrics.maxDrawdown}% within 12% tolerance.
+                    </p>
+                  </div>
+                  
+                  <div className="flex flex-col items-end gap-2">
+                    <div className="bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-sm min-w-[200px] text-center">
+                      <p className="text-[10px] font-black uppercase text-slate-500 tracking-widest mb-1">Next Phase</p>
+                      <p className="text-lg font-blocky text-white">Walk-Forward 30D</p>
+                    </div>
+                    <p className="text-[10px] font-black uppercase text-slate-800 tracking-[0.3em] mr-4">
+                      AUDIT: ALPHA-4.0
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
