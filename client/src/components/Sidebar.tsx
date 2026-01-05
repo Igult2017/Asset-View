@@ -61,30 +61,6 @@ export function Sidebar({ currentFilter, onFilterChange }: SidebarProps) {
         </nav>
       </div>
 
-      <div className="px-4 py-2 mt-4">
-        <p className="px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-          Journals
-        </p>
-        <nav className="space-y-1">
-          <Link href="/overview">
-            <button
-              className={`
-                w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200
-                ${
-                  location === "/overview"
-                    ? "bg-accent text-accent-foreground shadow-sm"
-                    : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground"
-                }
-              `}
-              data-testid="button-nav-overview"
-            >
-              <BarChart3 className="w-4 h-4" />
-              Overview
-            </button>
-          </Link>
-        </nav>
-      </div>
-
       <div className="px-4 py-6 mt-auto border-t border-border">
         <p className="px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
           System

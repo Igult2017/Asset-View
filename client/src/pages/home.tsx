@@ -57,6 +57,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
               <Button 
                 variant="ghost" 
                 size="sm" 
+                className={cn("text-[10px] font-bold uppercase tracking-wider h-8 rounded-lg", window.location.pathname === "/overview" && "bg-background shadow-sm text-primary")}
+                onClick={() => navigate("/overview")}
+              >
+                Performance
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="sm" 
                 className={cn("text-[10px] font-bold uppercase tracking-wider h-8 rounded-lg", window.location.pathname === "/" && "bg-background shadow-sm text-primary")}
                 onClick={() => navigate("/")}
               >
