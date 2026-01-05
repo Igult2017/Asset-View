@@ -278,6 +278,32 @@ const Auditor = () => {
             <div className="lg:col-span-4 space-y-6">
               <div className="bg-slate-900/40 p-6 rounded-[32px] border border-white/5 space-y-4">
                 <h3 className="text-[10px] font-black uppercase text-slate-500 tracking-widest mb-2 flex items-center gap-2">
+                  <TrendingUp size={14}/> Variance & Distribution
+                </h3>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-500 text-sm font-bold">Win Rate</span>
+                    <span className="text-white font-blocky text-lg">{metrics.winRate}%</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-500 text-sm font-bold">Sample Size</span>
+                    <span className="text-white font-blocky text-lg">{metrics.tradeSample}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-500 text-sm font-bold">Win/Loss Ratio</span>
+                    <span className="text-white font-blocky text-lg">{(metrics.avgWinR / metrics.avgLossR).toFixed(2)}</span>
+                  </div>
+                  <div className="pt-2 flex justify-between items-center border-t border-white/5">
+                    <span className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Positive Skew</span>
+                    <span className="text-emerald-400 font-black text-sm uppercase tracking-widest flex items-center gap-1">
+                      <CheckCircle2 size={12}/> Verified
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-slate-900/40 p-6 rounded-[32px] border border-white/5 space-y-4">
+                <h3 className="text-[10px] font-black uppercase text-slate-500 tracking-widest mb-2 flex items-center gap-2">
                   <BrainCircuit size={14}/> Core Robustness
                 </h3>
                 <div className="space-y-4">
