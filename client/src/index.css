@@ -42,7 +42,7 @@
   --background: 210 20% 98%;
   --foreground: 220 25% 10%;
   
-  --primary: 220 25% 10%;
+  --primary: 221.2 83.2% 53.3%; /* Modern Blue */
   --primary-foreground: 210 20% 98%;
 
   --card: 0 0% 100%;
@@ -59,15 +59,15 @@
   --muted: 220 15% 94%;
   --muted-foreground: 220 10% 45%;
   
-  --accent: 220 15% 94%;
-  --accent-foreground: 220 25% 10%;
+  --accent: 142.1 76.2% 36.3%; /* Modern Green */
+  --accent-foreground: 210 20% 98%;
   
-  --destructive: 0 84% 60%;
+  --destructive: 0 84.2% 60.2%; /* Modern Red */
   --destructive-foreground: 210 20% 98%;
 
   --border: 220 15% 90%;
   --input: 220 15% 90%;
-  --ring: 220 25% 10%;
+  --ring: 221.2 83.2% 53.3%;
 }
 
 .theme-blue {
