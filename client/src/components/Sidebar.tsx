@@ -1,4 +1,4 @@
-import { LayoutGrid, Image, FileText, Clock, Cloud, Settings, PieChart, Palette } from "lucide-react";
+import { LayoutGrid, Image, FileText, Clock, Cloud, Settings, PieChart, Palette, BarChart3 } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { useTheme } from "@/hooks/use-theme";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,8 @@ interface SidebarProps {
 
 export function Sidebar({ currentFilter, onFilterChange }: SidebarProps) {
   const { theme, setTheme } = useTheme();
+  const [location] = useLocation();
+
   const navItems = [
     { id: "all", icon: LayoutGrid, label: "All Assets" },
     { id: "image", icon: Image, label: "Images" },
@@ -20,10 +22,14 @@ export function Sidebar({ currentFilter, onFilterChange }: SidebarProps) {
   return (
     <div className="w-64 h-screen bg-card border-r border-border flex flex-col sticky top-0">
       <div className="p-6 flex items-center gap-3">
-        <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-primary-foreground">
-          <Cloud className="w-5 h-5" />
-        </div>
-        <span className="font-display font-bold text-lg">AssetView</span>
+        <Link href="/">
+          <div className="flex items-center gap-3 cursor-pointer">
+            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-primary-foreground">
+              <Cloud className="w-5 h-5" />
+            </div>
+            <span className="font-display font-bold text-lg">AssetView</span>
+          </div>
+        </Link>
       </div>
 
       <div className="px-4 py-2">
@@ -34,11 +40,14 @@ export function Sidebar({ currentFilter, onFilterChange }: SidebarProps) {
           {navItems.map((item) => (
             <button
               key={item.id}
-              onClick={() => onFilterChange(item.id)}
+              onClick={() => {
+                onFilterChange(item.id);
+                if (location !== "/") window.location.href = "/";
+              }}
               className={`
                 w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200
                 ${
-                  currentFilter === item.id
+                  currentFilter === item.id && location === "/"
                     ? "bg-accent text-accent-foreground shadow-sm"
                     : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground"
                 }
@@ -49,6 +58,30 @@ export function Sidebar({ currentFilter, onFilterChange }: SidebarProps) {
               {item.label}
             </button>
           ))}
+        </nav>
+      </div>
+
+      <div className="px-4 py-2 mt-4">
+        <p className="px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+          Journals
+        </p>
+        <nav className="space-y-1">
+          <Link href="/overview">
+            <button
+              className={`
+                w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200
+                ${
+                  location === "/overview"
+                    ? "bg-accent text-accent-foreground shadow-sm"
+                    : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground"
+                }
+              `}
+              data-testid="button-nav-overview"
+            >
+              <BarChart3 className="w-4 h-4" />
+              Overview
+            </button>
+          </Link>
         </nav>
       </div>
 

@@ -6,12 +6,14 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/hooks/use-theme";
 import NotFound from "@/pages/not-found";
 import Dashboard from "@/pages/home";
+import Overview from "@/pages/overview";
 import DrawdownAnalysis from "@/pages/drawdown-analysis";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Dashboard} />
+      <Route path="/overview" component={Overview} />
       <Route path="/drawdown-analysis" component={DrawdownAnalysis} />
       <Route component={NotFound} />
     </Switch>
