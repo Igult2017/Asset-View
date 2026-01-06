@@ -1086,14 +1086,6 @@ export default function Dashboard() {
           
           <div className="flex items-center gap-10">
             <div className="hidden md:flex gap-8">
-              <Button
-                variant="ghost"
-                className="text-xs font-black tracking-widest uppercase transition-all flex items-center gap-2 h-auto py-2 text-muted-foreground hover:text-foreground"
-                onClick={() => setTheme(theme === "white" ? "blue" : "white")}
-                data-testid="button-theme-toggle"
-              >
-                <Palette className="w-4 h-4" /> Theme: {theme === "white" ? "White" : "Blue"}
-              </Button>
               <button 
                 onClick={() => setActiveTab('dashboard')}
                 className={cn(
