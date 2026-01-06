@@ -1096,7 +1096,7 @@ export default function Dashboard() {
                   activeTab === 'dashboard' ? "text-primary relative" : "text-muted-foreground hover:text-foreground"
                 )}
               >
-                <BarChart2 className="w-4 h-4" /> Performance
+                <BarChart2 className="w-4 h-4" /> Analytics
                 {activeTab === 'dashboard' && (
                   <motion.div layoutId="underline" className="absolute -bottom-7 left-0 right-0 h-0.5 bg-primary shadow-[0_0_8px_hsl(var(--primary))]" />
                 )}
