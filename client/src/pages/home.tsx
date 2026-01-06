@@ -48,8 +48,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <Activity className="w-5 h-5" />
               </div>
               <div className="flex flex-col">
-                <span className="text-sm font-black tracking-tighter text-foreground uppercase italic group-hover:text-primary transition-colors">FSD Zones</span>
-                <span className="text-[9px] font-bold text-muted-foreground/60 uppercase tracking-[0.2em] -mt-1">Terminal v2.0</span>
+                <span className="text-sm font-black tracking-tighter text-foreground uppercase italic group-hover:text-primary transition-colors">FSDZONES</span>
               </div>
             </div>
 
