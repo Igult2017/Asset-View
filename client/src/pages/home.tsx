@@ -1081,9 +1081,6 @@ export default function Dashboard() {
               <h1 className="text-xl font-black tracking-tighter uppercase leading-none text-foreground">
                 FSDZONESJOURNAL
               </h1>
-              <p className="text-[9px] font-bold text-muted-foreground tracking-[0.2em] mt-1 uppercase">
-                FREE SMART JOURNAL
-              </p>
             </div>
           </div>
           
