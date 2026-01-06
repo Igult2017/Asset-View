@@ -85,6 +85,22 @@ export function Layout({ children }: { children: React.ReactNode }) {
               >
                 Drawdown
               </Button>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className={cn("text-[10px] font-bold uppercase tracking-wider h-8 rounded-lg", window.location.pathname === "/analytics" && "bg-background shadow-sm text-primary")}
+                onClick={() => navigate("/analytics")}
+              >
+                Analytics
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className={cn("text-[10px] font-bold uppercase tracking-wider h-8 rounded-lg", window.location.pathname === "/trade-vault" && "bg-background shadow-sm text-primary")}
+                onClick={() => navigate("/trade-vault")}
+              >
+                Trade Vault
+              </Button>
             </div>
           </div>
 
