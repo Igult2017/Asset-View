@@ -13,10 +13,10 @@ import DrawdownAnalysis from "@/pages/drawdown-analysis";
 function Router() {
   return (
     <Switch>
-      <Route path="/" component={Dashboard} />
-      <Route path="/overview" component={Overview} />
+      <Route path="/" component={Overview} />
       <Route path="/auditor" component={Auditor} />
-      <Route path="/drawdown-analysis" component={DrawdownAnalysis} />
+      <Route path="/journal" component={Dashboard} />
+      <Route path="/drawdown" component={DrawdownAnalysis} />
       <Route component={NotFound} />
     </Switch>
   );

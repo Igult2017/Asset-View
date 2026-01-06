@@ -56,8 +56,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className={cn("text-[10px] font-bold uppercase tracking-wider h-8 rounded-lg", window.location.pathname === "/overview" && "bg-background shadow-sm text-primary")}
-                onClick={() => navigate("/overview")}
+                className={cn("text-[10px] font-bold uppercase tracking-wider h-8 rounded-lg", window.location.pathname === "/" && "bg-background shadow-sm text-primary")}
+                onClick={() => navigate("/")}
               >
                 Overview
               </Button>
@@ -72,16 +72,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className={cn("text-[10px] font-bold uppercase tracking-wider h-8 rounded-lg", window.location.pathname === "/" && "bg-background shadow-sm text-primary")}
-                onClick={() => navigate("/")}
+                className={cn("text-[10px] font-bold uppercase tracking-wider h-8 rounded-lg", window.location.pathname === "/journal" && "bg-background shadow-sm text-primary")}
+                onClick={() => navigate("/journal")}
               >
                 Journal
               </Button>
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className={cn("text-[10px] font-bold uppercase tracking-wider h-8 rounded-lg", window.location.pathname === "/drawdown-analysis" && "bg-background shadow-sm text-primary")}
-                onClick={() => navigate("/drawdown-analysis")}
+                className={cn("text-[10px] font-bold uppercase tracking-wider h-8 rounded-lg", window.location.pathname === "/drawdown" && "bg-background shadow-sm text-primary")}
+                onClick={() => navigate("/drawdown")}
               >
                 Drawdown
               </Button>
