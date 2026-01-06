@@ -59,7 +59,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 className={cn("text-[10px] font-bold uppercase tracking-wider h-8 rounded-lg", window.location.pathname === "/overview" && "bg-background shadow-sm text-primary")}
                 onClick={() => navigate("/overview")}
               >
-                Performance
+                Analytics
               </Button>
               <Button 
                 variant="ghost" 
