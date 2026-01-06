@@ -9,6 +9,7 @@ import Dashboard from "@/pages/home";
 import Overview from "@/pages/overview";
 import Auditor from "@/pages/auditor";
 import DrawdownAnalysis from "@/pages/drawdown-analysis";
+import TradeVault from "@/pages/trade-vault";
 
 function Router() {
   return (
@@ -17,7 +18,7 @@ function Router() {
       <Route path="/auditor" component={Auditor} />
       <Route path="/analytics" component={Dashboard} />
       <Route path="/drawdown" component={DrawdownAnalysis} />
-      <Route path="/trade-vault" component={Dashboard} />
+      <Route path="/trade-vault" component={TradeVault} />
       <Route component={NotFound} />
     </Switch>
   );
