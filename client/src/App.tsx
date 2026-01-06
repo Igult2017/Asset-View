@@ -15,9 +15,8 @@ function Router() {
     <Switch>
       <Route path="/" component={Overview} />
       <Route path="/auditor" component={Auditor} />
-      <Route path="/journal" component={Dashboard} />
+      <Route path="/analytics" component={Dashboard} />
       <Route path="/drawdown" component={DrawdownAnalysis} />
-      <Route path="/analytics" component={Overview} />
       <Route path="/trade-vault" component={Dashboard} />
       <Route component={NotFound} />
     </Switch>

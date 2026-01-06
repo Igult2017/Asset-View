@@ -72,10 +72,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className={cn("text-[10px] font-bold uppercase tracking-wider h-8 rounded-lg", window.location.pathname === "/journal" && "bg-background shadow-sm text-primary")}
-                onClick={() => navigate("/journal")}
+                className={cn("text-[10px] font-bold uppercase tracking-wider h-8 rounded-lg", window.location.pathname === "/analytics" && "bg-background shadow-sm text-primary")}
+                onClick={() => navigate("/analytics")}
               >
-                Journal
+                Analytics
               </Button>
               <Button 
                 variant="ghost" 
@@ -84,14 +84,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 onClick={() => navigate("/drawdown")}
               >
                 Drawdown
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className={cn("text-[10px] font-bold uppercase tracking-wider h-8 rounded-lg", window.location.pathname === "/analytics" && "bg-background shadow-sm text-primary")}
-                onClick={() => navigate("/analytics")}
-              >
-                Analytics
               </Button>
               <Button 
                 variant="ghost" 
