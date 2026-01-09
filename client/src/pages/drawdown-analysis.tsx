@@ -2,9 +2,10 @@ import { useTrades } from "@/hooks/use-trades";
 import { Trade } from "@shared/schema";
 import { Card } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { ArrowLeft, Target, ShieldAlert, Zap, TrendingDown, Layers } from "lucide-react";
+import { ArrowLeft, Target, ShieldAlert, Zap, TrendingDown, Layers, Calendar } from "lucide-react";
 import { Layout } from "./home";
 import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 
 const FontStyle = () => (
   <style dangerouslySetInnerHTML={{ __html: `
@@ -19,6 +20,48 @@ const FontStyle = () => (
     }
   `}} />
 );
+
+function calculateMonthlyDrawdown(trades: Trade[]) {
+  const groupedByMonth = trades.reduce((acc: any, t) => {
+    const date = new Date(t.date || new Date());
+    const monthKey = format(date, "MMM yyyy");
+    if (!acc[monthKey]) acc[monthKey] = [];
+    acc[monthKey].push(t);
+    return acc;
+  }, {});
+
+  const baseBalance = 100000;
+  
+  return Object.entries(groupedByMonth).map(([month, monthTrades]: [string, any]) => {
+    let peak = baseBalance;
+    let balance = baseBalance;
+    let maxDD = 0;
+    let totalPL = 0;
+    let wins = 0;
+
+    const sortedTrades = monthTrades.sort((a: Trade, b: Trade) => 
+      new Date(a.date || 0).getTime() - new Date(b.date || 0).getTime()
+    );
+
+    sortedTrades.forEach((t: Trade) => {
+      const pl = Number(t.plAmt);
+      balance += pl;
+      totalPL += pl;
+      if (t.outcome === 'Win') wins++;
+      if (balance > peak) peak = balance;
+      const dd = peak - balance;
+      if (dd > maxDD) maxDD = dd;
+    });
+
+    return {
+      dimension: month,
+      maxDrawdown: maxDD,
+      totalPL,
+      winRate: monthTrades.length ? Math.round((wins / monthTrades.length) * 100) : 0,
+      trades: monthTrades.length
+    };
+  }).sort((a, b) => new Date(b.dimension).getTime() - new Date(a.dimension).getTime());
+}
 
 function calculateDrawdownByDimension(trades: Trade[], dimension: 'session' | 'strategy' | 'entryTF' | 'condition' | 'asset') {
   const baseBalance = 100000;
@@ -145,8 +188,10 @@ export default function DrawdownAnalysis() {
   const byEntry = calculateDrawdownByDimension(trades, 'entryTF');
   const byCondition = calculateDrawdownByDimension(trades, 'condition');
   const byAsset = calculateDrawdownByDimension(trades, 'asset');
+  const byMonth = calculateMonthlyDrawdown(trades);
 
   const chartData = [
+    ...byMonth.map(d => ({ category: `${d.dimension} (Monthly)`, drawdown: d.maxDrawdown })),
     ...byAsset.map(d => ({ category: `${d.dimension} (Instrument)`, drawdown: d.maxDrawdown })),
     ...bySession.map(d => ({ category: `${d.dimension} (Session)`, drawdown: d.maxDrawdown })),
     ...byStrategy.map(d => ({ category: `${d.dimension} (Strategy)`, drawdown: d.maxDrawdown })),
@@ -241,7 +286,13 @@ export default function DrawdownAnalysis() {
           </Card>
 
           {/* Grid Layout */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
+            <BreakdownCard 
+              title="Monthly" 
+              data={byMonth} 
+              icon={Calendar}
+              colorClass="text-purple-400"
+            />
             <BreakdownCard 
               title="Instruments" 
               data={byAsset} 
