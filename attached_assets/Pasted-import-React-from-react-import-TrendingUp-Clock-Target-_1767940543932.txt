@@ -1,0 +1,160 @@
+import React from 'react';
+import { TrendingUp, Clock, Target, BarChart3, Activity, Compass } from 'lucide-react';
+
+const App = () => {
+  // Data structure for the journal
+  const journalData = {
+    month: "Jan 2026",
+    summary: { maxDD: "-$300", netPL: "$2,100", edge: "67%" },
+    instruments: [
+      { name: "NAS100", maxDD: "-$300", netPL: "$1,200", edge: "50%" },
+      { name: "EURUSD", maxDD: "-$0", netPL: "$900", edge: "100%" },
+    ],
+    sessions: [
+      { name: "New York", maxDD: "-$300", netPL: "$1,200", edge: "50%" },
+      { name: "London", maxDD: "-$0", netPL: "$900", edge: "100%" },
+    ],
+    strategies: [
+      { name: "Silver Bullet", maxDD: "-$300", netPL: "$1,200", edge: "50%", color: "bg-blue-500" },
+      { name: "SMC Breaker", maxDD: "-$0", netPL: "$900", edge: "100%", color: "bg-purple-500" },
+    ],
+    timeframes: [
+      { name: "M1", maxDD: "-$300", netPL: "$1,200", edge: "50%" },
+      { name: "M5", maxDD: "-$0", netPL: "$900", edge: "100%" },
+    ],
+    conditions: [
+      { name: "Trending", maxDD: "-$300", netPL: "$2,100", winRate: "67%" },
+      { name: "Bullish", maxDD: "-$150", netPL: "$1,400", winRate: "70%" },
+      { name: "Bearish", maxDD: "-$100", netPL: "$700", winRate: "60%" },
+      { name: "Ranging", maxDD: "-$50", netPL: "-$200", winRate: "40%" },
+    ]
+  };
+
+  const SectionHeader = ({ icon: Icon, title }) => (
+    <div className="flex items-center gap-3 mb-4 border-b border-zinc-800 pb-3">
+      <Icon size={20} className="text-zinc-500" />
+      <h2 className="font-black text-xl uppercase text-zinc-200 tracking-widest" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+        {title}
+      </h2>
+    </div>
+  );
+
+  const DataRow = ({ label, pl, dd, edge, colorTag }) => (
+    <div className="grid grid-cols-12 items-center p-4 hover:bg-zinc-900/40 transition-colors border-b border-zinc-800/50 last:border-0">
+      <div className="col-span-5 flex items-center gap-3">
+        {colorTag && <div className={`w-1.5 h-6 rounded-full ${colorTag}`} />}
+        <span className="font-black text-base uppercase tracking-tight text-zinc-100" style={{ fontFamily: "'Montserrat', sans-serif" }}>{label}</span>
+      </div>
+      <div className="col-span-2 text-right">
+        <p className="text-[9px] font-bold text-zinc-500 uppercase mb-0.5">Edge</p>
+        <p className="font-black text-sm text-blue-500" style={{ fontFamily: "'Montserrat', sans-serif" }}>{edge}</p>
+      </div>
+      <div className="col-span-2 text-right">
+        <p className="text-[9px] font-bold text-zinc-500 uppercase mb-0.5">Max DD</p>
+        <p className={`font-black text-sm ${dd === "-$0" ? 'text-zinc-600' : 'text-red-500'}`} style={{ fontFamily: "'Montserrat', sans-serif" }}>{dd}</p>
+      </div>
+      <div className="col-span-3 text-right">
+        <p className="text-[9px] font-bold text-zinc-500 uppercase mb-0.5">Net P/L</p>
+        <p className={`font-black text-sm ${pl.startsWith('-$') ? 'text-red-400' : 'text-green-500'}`} style={{ fontFamily: "'Montserrat', sans-serif" }}>{pl}</p>
+      </div>
+    </div>
+  );
+
+  const ContentBlock = ({ icon, title, data, showColor = false }) => (
+    <div className="bg-[#141417] border border-zinc-800 rounded-2xl p-6 shadow-xl">
+      <SectionHeader icon={icon} title={title} />
+      <div className="flex flex-col">
+        {data.map((item) => (
+          <DataRow 
+            key={item.name} 
+            label={item.name} 
+            pl={item.netPL} 
+            dd={item.maxDD} 
+            edge={item.edge} 
+            colorTag={showColor ? item.color : null} 
+          />
+        ))}
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-[#0a0a0b] text-zinc-100 p-4 md:p-10 font-sans">
+      <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap" rel="stylesheet" />
+      
+      <div className="max-w-5xl mx-auto space-y-10">
+        {/* Top Navigation / Summary Bar */}
+        <header className="flex flex-col md:flex-row justify-between items-center bg-[#141417] border border-zinc-800 p-6 rounded-3xl gap-6">
+          <div className="flex items-center gap-5">
+            <div className="bg-zinc-800 p-4 rounded-2xl shadow-inner">
+              <Activity className="text-white" size={32} />
+            </div>
+            <div>
+              <h1 className="font-black text-4xl leading-none uppercase tracking-tighter" style={{ fontFamily: "'Montserrat', sans-serif" }}>Monthly</h1>
+              <p className="font-black text-zinc-500 text-lg uppercase tracking-widest">{journalData.month}</p>
+            </div>
+          </div>
+          
+          <div className="flex gap-6 md:gap-10 bg-black/40 px-8 py-4 rounded-2xl border border-zinc-800/50">
+            <div className="text-center">
+              <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1">Max DD</p>
+              <p className="font-black text-2xl text-red-500" style={{ fontFamily: "'Montserrat', sans-serif" }}>{journalData.summary.maxDD}</p>
+            </div>
+            <div className="text-center border-x border-zinc-800 px-10">
+              <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1">Net P/L</p>
+              <p className="font-black text-2xl text-green-500" style={{ fontFamily: "'Montserrat', sans-serif" }}>{journalData.summary.netPL}</p>
+            </div>
+            <div className="text-center">
+              <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1">Global Edge</p>
+              <p className="font-black text-2xl text-blue-500" style={{ fontFamily: "'Montserrat', sans-serif" }}>{journalData.summary.edge}</p>
+            </div>
+          </div>
+        </header>
+
+        <main className="space-y-8">
+          {/* Categorical Data - Full Width Stack */}
+          <ContentBlock icon={Activity} title="Instruments" data={journalData.instruments} />
+          <ContentBlock icon={Target} title="Strategies" data={journalData.strategies} showColor={true} />
+          
+          <div className="grid md:grid-cols-2 gap-8">
+            <ContentBlock icon={Clock} title="Sessions" data={journalData.sessions} />
+            <ContentBlock icon={BarChart3} title="Timeframes" data={journalData.timeframes} />
+          </div>
+
+          {/* Market Conditions Section */}
+          <div className="bg-[#141417] border border-zinc-800 rounded-2xl p-6">
+            <SectionHeader icon={Compass} title="Market Conditions" />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+              {journalData.conditions.map((condition) => (
+                <div key={condition.name} className="bg-black/30 border border-zinc-800/50 rounded-2xl p-5 hover:border-zinc-700 transition-all">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="font-black text-xl uppercase italic tracking-tighter text-zinc-100" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                      {condition.name}
+                    </h3>
+                    <div className="bg-blue-500/10 px-3 py-1 rounded-lg">
+                      <p className="text-[8px] font-bold text-zinc-500 uppercase mb-0.5 text-center">Edge</p>
+                      <p className="font-black text-blue-500 text-sm" style={{ fontFamily: "'Montserrat', sans-serif" }}>{condition.winRate}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-between border-t border-zinc-800 pt-4">
+                    <div>
+                      <p className="text-[9px] font-bold text-zinc-500 uppercase mb-0.5">Max DD</p>
+                      <p className="font-black text-red-500 text-lg" style={{ fontFamily: "'Montserrat', sans-serif" }}>{condition.maxDD}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[9px] font-bold text-zinc-500 uppercase mb-0.5">Net Profit</p>
+                      <p className={`font-black text-lg ${condition.netPL.startsWith('-$') ? 'text-red-400' : 'text-green-500'}`} style={{ fontFamily: "'Montserrat', sans-serif" }}>{condition.netPL}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+};
+
+export default App;
