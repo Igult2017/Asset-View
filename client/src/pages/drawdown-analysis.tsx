@@ -127,46 +127,45 @@ function calculateDrawdownByDimension(trades: Trade[], dimension: 'session' | 's
 
 function BreakdownCard({ title, data, icon: Icon, colorClass }: { title: string; data: any[]; icon: any; colorClass: string }) {
   return (
-    <Card className="p-6 space-y-5 bg-slate-900/40 backdrop-blur-xl border-white/5 hover:border-white/10 transition-all duration-500 group relative overflow-hidden rounded-[32px]">
-      <div className={cn("absolute top-0 left-0 w-1 h-full opacity-0 group-hover:opacity-100 transition-all duration-500", colorClass.replace('text-', 'bg-'))} />
-      <div className="flex items-center gap-3">
-        <div className={cn("p-2 rounded-xl bg-white/5", colorClass)}>
-          <Icon size={16} />
+    <div className="flex-1 min-w-[280px] p-6 space-y-6 bg-[#0f1117] border border-white/[0.03] rounded-[40px] shadow-2xl relative overflow-hidden group">
+      <div className="flex items-center gap-4">
+        <div className={cn("p-3 rounded-2xl bg-[#161922] border border-white/[0.05] shadow-inner", colorClass)}>
+          <Icon size={20} />
         </div>
-        <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 group-hover:text-white transition-colors duration-300 font-blocky">{title}</h3>
+        <h3 className="text-[12px] font-black uppercase tracking-[0.25em] text-slate-400 group-hover:text-white transition-colors duration-300 font-blocky">{title}</h3>
       </div>
-      <div className="space-y-3 max-h-96 overflow-y-auto pr-2 custom-scrollbar">
+      <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
         {data.length === 0 ? (
-          <p className="text-[10px] text-slate-600 font-black uppercase tracking-widest font-blocky">No data</p>
+          <p className="text-[10px] text-slate-700 font-black uppercase tracking-widest font-blocky">No data</p>
         ) : (
           data.map((item, idx) => (
-            <div key={idx} className="p-4 rounded-2xl bg-white/5 border border-white/5 space-y-3 group/item hover:bg-white/[0.07] transition-all duration-300">
+            <div key={idx} className="p-6 rounded-[32px] bg-[#1a1d26] border border-white/[0.05] space-y-5 transition-all duration-300 hover:bg-[#1e222d] hover:border-white/10 group/item">
               <div className="flex items-start justify-between gap-2">
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-black text-white uppercase italic font-blocky truncate">{item.dimension}</p>
+                  <p className="text-sm font-black text-white uppercase italic font-blocky tracking-tight truncate">{item.dimension}</p>
                   <div className="flex items-center gap-2 mt-2">
-                    <span className="text-[10px] font-black text-rose-500 uppercase italic font-blocky">-${item.maxDrawdown.toLocaleString()}</span>
-                    <span className="text-[8px] font-bold text-slate-600 uppercase tracking-widest">MAX DD</span>
+                    <span className="text-xs font-black text-rose-500 font-blocky tracking-tighter">-${item.maxDrawdown.toLocaleString()}</span>
+                    <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest font-blocky opacity-50">MAX DD</span>
                   </div>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4 pt-3 border-t border-white/5">
+              <div className="grid grid-cols-2 gap-6 pt-5 border-t border-white/[0.05]">
                 <div>
-                  <span className="text-[8px] text-slate-500 font-black uppercase tracking-widest block font-blocky">Net P/L</span>
-                  <span className={cn("block text-xs font-black italic font-blocky mt-0.5", item.totalPL >= 0 ? 'text-emerald-500' : 'text-rose-500')}>
+                  <span className="text-[9px] text-slate-500 font-black uppercase tracking-widest block font-blocky opacity-50 mb-1">NET P/L</span>
+                  <span className={cn("block text-sm font-black italic font-blocky tracking-tight", item.totalPL >= 0 ? 'text-emerald-400' : 'text-rose-500')}>
                     ${item.totalPL.toLocaleString()}
                   </span>
                 </div>
                 <div>
-                  <span className="text-[8px] text-slate-500 font-black uppercase tracking-widest block font-blocky">Edge</span>
-                  <span className="block text-xs font-black italic text-blue-400 font-blocky mt-0.5">{item.winRate}%</span>
+                  <span className="text-[9px] text-slate-500 font-black uppercase tracking-widest block font-blocky opacity-50 mb-1">EDGE</span>
+                  <span className="block text-sm font-black italic text-blue-400 font-blocky tracking-tight">{item.winRate}%</span>
                 </div>
               </div>
             </div>
           ))
         )}
       </div>
-    </Card>
+    </div>
   );
 }
 
@@ -286,7 +285,7 @@ export default function DrawdownAnalysis() {
           </Card>
 
           {/* Grid Layout */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
+          <div className="flex gap-6 overflow-x-auto pb-8 custom-scrollbar scroll-smooth">
             <BreakdownCard 
               title="Monthly" 
               data={byMonth} 
