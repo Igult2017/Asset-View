@@ -1055,7 +1055,6 @@ export default function Dashboard() {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'history'>('dashboard');
   const [selectedStrat, setSelectedStrat] = useState<string>("All");
   const [, navigate] = useLocation();
-  const { theme, setTheme } = useTheme();
 
   if (isLoading || !trades) {
     return (
@@ -1069,60 +1068,7 @@ export default function Dashboard() {
   const filteredTrades = selectedStrat === "All" ? trades : trades.filter(t => t.strategy === selectedStrat);
 
   return (
-    <div className="min-h-screen pb-12 bg-background">
-      {/* Navbar */}
-      <nav className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
-        <div className="max-w-[1600px] mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center shadow-lg shadow-primary/20">
-              <Activity className="w-6 h-6 text-primary-foreground" />
-            </div>
-            <div>
-              <h1 className="text-xl font-black tracking-tighter uppercase leading-none text-foreground">
-                FSDZONESJOURNAL
-              </h1>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-10">
-            <div className="hidden md:flex gap-8">
-              <button 
-                onClick={() => setActiveTab('dashboard')}
-                className={cn(
-                  "text-xs font-black tracking-widest uppercase transition-all flex items-center gap-2",
-                  activeTab === 'dashboard' ? "text-primary relative" : "text-muted-foreground hover:text-foreground"
-                )}
-              >
-                <BarChart2 className="w-4 h-4" /> Analytics
-                {activeTab === 'dashboard' && (
-                  <motion.div layoutId="underline" className="absolute -bottom-7 left-0 right-0 h-0.5 bg-primary shadow-[0_0_8px_hsl(var(--primary))]" />
-                )}
-              </button>
-              <button 
-                onClick={() => setActiveTab('history')}
-                className={cn(
-                  "text-xs font-black tracking-widest uppercase transition-all flex items-center gap-2",
-                  activeTab === 'history' ? "text-primary relative" : "text-muted-foreground hover:text-foreground"
-                )}
-              >
-                <History className="w-4 h-4" /> Trade Vault
-                {activeTab === 'history' && (
-                  <motion.div layoutId="underline" className="absolute -bottom-7 left-0 right-0 h-0.5 bg-primary shadow-[0_0_8px_hsl(var(--primary))]" />
-                )}
-              </button>
-              <button 
-                onClick={() => navigate('/drawdown-analysis')}
-                className="text-xs font-black tracking-widest uppercase transition-all flex items-center gap-2 text-muted-foreground hover:text-foreground"
-              >
-                <LineChart className="w-4 h-4" /> Drawdown Analysis
-              </button>
-            </div>
-            <LogEntryModal />
-          </div>
-        </div>
-      </nav>
-
-      {/* Main Content */}
+    <Layout>
       <main className="max-w-[1600px] mx-auto px-6 pt-8">
         <AnimatePresence mode="wait">
           {activeTab === 'dashboard' ? (
@@ -1765,6 +1711,6 @@ export default function Dashboard() {
           )}
         </AnimatePresence>
       </main>
-    </div>
+    </Layout>
   );
 }
