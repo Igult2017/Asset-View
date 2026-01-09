@@ -68,6 +68,24 @@ export async function registerRoutes(
     res.status(204).send();
   });
 
+  // PATCH /api/trades/:id
+  app.patch(api.trades.update.path, async (req, res) => {
+    try {
+      const id = Number(req.params.id);
+      const input = api.trades.update.input.parse(req.body);
+      const trade = await storage.updateTrade(id, input);
+      res.json(trade);
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        return res.status(400).json({
+          message: err.errors[0].message,
+          field: err.errors[0].path.join('.'),
+        });
+      }
+      res.status(404).json({ message: "Trade not found" });
+    }
+  });
+
   // Seed Data
   const existingTrades = await storage.getTrades();
   if (existingTrades.length === 0) {

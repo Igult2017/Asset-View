@@ -55,3 +55,29 @@ export function useDeleteTrade() {
     },
   });
 }
+
+export function useUpdateTrade() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, data }: { id: number; data: Partial<InsertTrade> }) => {
+      const url = buildUrl(api.trades.update.path, { id });
+      const res = await fetch(url, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (!res.ok) {
+        if (res.status === 400) {
+          const error = await res.json();
+          throw new Error(error.message || "Validation failed");
+        }
+        throw new Error("Failed to update trade");
+      }
+      return api.trades.update.responses[200].parse(await res.json());
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [api.trades.list.path] });
+    },
+  });
+}

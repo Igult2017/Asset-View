@@ -39,6 +39,16 @@ export const api = {
         204: z.void(),
         404: errorSchemas.notFound,
       },
+    },
+    update: {
+      method: 'PATCH' as const,
+      path: '/api/trades/:id',
+      input: insertTradeSchema.partial(),
+      responses: {
+        200: z.custom<typeof trades.$inferSelect>(),
+        400: errorSchemas.validation,
+        404: errorSchemas.notFound,
+      },
     }
   },
   assets: {

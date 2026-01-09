@@ -5,6 +5,7 @@ import { eq } from "drizzle-orm";
 export interface IStorage {
   getTrades(): Promise<Trade[]>;
   createTrade(trade: InsertTrade): Promise<Trade>;
+  updateTrade(id: number, trade: Partial<InsertTrade>): Promise<Trade>;
   deleteTrade(id: number): Promise<void>;
   seedTrades(trades: InsertTrade[]): Promise<void>;
 }
@@ -19,6 +20,16 @@ export class DatabaseStorage implements IStorage {
       .insert(trades)
       .values(insertTrade)
       .returning();
+    return trade;
+  }
+
+  async updateTrade(id: number, updateData: Partial<InsertTrade>): Promise<Trade> {
+    const [trade] = await db
+      .update(trades)
+      .set(updateData)
+      .where(eq(trades.id, id))
+      .returning();
+    if (!trade) throw new Error("Trade not found");
     return trade;
   }
 

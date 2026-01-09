@@ -1,9 +1,9 @@
-import { useTrades } from "@/hooks/use-trades";
-import { Trade } from "@shared/schema";
+import { useTrades, useUpdateTrade } from "@/hooks/use-trades";
+import { Trade, insertTradeSchema } from "@shared/schema";
 import { Card } from "@/components/ui/card";
 import { Layout } from "./home";
 import { format } from "date-fns";
-import { Filter, ArrowRight, ArrowLeft } from "lucide-react";
+import { Filter, ArrowRight, ArrowLeft, Edit2, Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -13,7 +13,140 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useToast } from "@/hooks/use-toast";
+
+function EditTradeDialog({ trade }: { trade: Trade }) {
+  const [open, setOpen] = useState(false);
+  const updateTrade = useUpdateTrade();
+  const { toast } = useToast();
+
+  const form = useForm({
+    resolver: zodResolver(insertTradeSchema.partial()),
+    defaultValues: {
+      ...trade,
+      plAmt: Number(trade.plAmt),
+      rAchieved: Number(trade.rAchieved),
+      marketAlignmentScore: Number(trade.marketAlignmentScore),
+      setupClarityScore: Number(trade.setupClarityScore),
+      entryPrecisionScore: Number(trade.entryPrecisionScore),
+      confluenceScore: Number(trade.confluenceScore),
+      timingQualityScore: Number(trade.timingQualityScore),
+      confidenceLevel: Number(trade.confidenceLevel),
+      focusLevel: Number(trade.focusLevel),
+      stressLevel: Number(trade.stressLevel),
+      rulesFollowedPercent: Number(trade.rulesFollowedPercent),
+      minimumSetupScore: Number(trade.minimumSetupScore),
+    },
+  });
+
+  const onSubmit = (data: any) => {
+    updateTrade.mutate(
+      { id: trade.id, data },
+      {
+        onSuccess: () => {
+          setOpen(false);
+          toast({ title: "Trade updated successfully" });
+        },
+        onError: (error) => {
+          toast({
+            title: "Update failed",
+            description: error.message,
+            variant: "destructive",
+          });
+        },
+      }
+    );
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-primary">
+          <Edit2 className="h-3.5 w-3.5" />
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-card/95 backdrop-blur-xl border-border/40">
+        <DialogHeader>
+          <DialogTitle className="text-xl font-black uppercase italic tracking-tighter">Edit Trade Entry</DialogTitle>
+        </DialogHeader>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 py-4">
+            <div className="grid grid-cols-2 gap-4">
+              <FormField control={form.control} name="asset" render={({ field }) => (
+                <FormItem><FormLabel className="text-[10px] font-bold uppercase">Asset</FormLabel>
+                <FormControl><Input {...field} value={field.value || ""} /></FormControl><FormMessage /></FormItem>
+              )} />
+              <FormField control={form.control} name="strategy" render={({ field }) => (
+                <FormItem><FormLabel className="text-[10px] font-bold uppercase">Strategy</FormLabel>
+                <FormControl><Input {...field} value={field.value || ""} /></FormControl><FormMessage /></FormItem>
+              )} />
+              <FormField control={form.control} name="outcome" render={({ field }) => (
+                <FormItem><FormLabel className="text-[10px] font-bold uppercase">Outcome</FormLabel>
+                <Select onValueChange={field.onChange} value={field.value || "Win"}>
+                <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
+                <SelectContent><SelectItem value="Win">Win</SelectItem><SelectItem value="Loss">Loss</SelectItem><SelectItem value="BE">BE</SelectItem></SelectContent></Select></FormItem>
+              )} />
+              <FormField control={form.control} name="plAmt" render={({ field }) => (
+                <FormItem><FormLabel className="text-[10px] font-bold uppercase">P/L ($)</FormLabel>
+                <FormControl><Input type="number" step="any" {...field} onChange={e => field.onChange(Number(e.target.value))} /></FormControl></FormItem>
+              )} />
+            </div>
+            
+            <div className="space-y-4">
+              <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Detailed Analysis</h4>
+              <div className="grid grid-cols-2 gap-4">
+                <FormField control={form.control} name="whatWorked" render={({ field }) => (
+                  <FormItem><FormLabel className="text-[10px] font-bold uppercase">What Worked</FormLabel>
+                  <FormControl><Textarea {...field} value={field.value || ""} className="resize-none" rows={2} /></FormControl></FormItem>
+                )} />
+                <FormField control={form.control} name="whatFailed" render={({ field }) => (
+                  <FormItem><FormLabel className="text-[10px] font-bold uppercase">What Failed</FormLabel>
+                  <FormControl><Textarea {...field} value={field.value || ""} className="resize-none" rows={2} /></FormControl></FormItem>
+                )} />
+              </div>
+            </div>
+
+            <DialogFooter>
+              <Button type="submit" disabled={updateTrade.isPending} className="w-full font-black uppercase tracking-widest italic">
+                {updateTrade.isPending ? "Updating..." : "Save Changes"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  );
+}
 
 export default function TradeVault() {
   const { data: trades = [], isLoading } = useTrades();
@@ -54,9 +187,9 @@ export default function TradeVault() {
                 <TableHead className="text-[10px] font-black uppercase tracking-widest py-6">Asset</TableHead>
                 <TableHead className="text-[10px] font-black uppercase tracking-widest py-6">Strategy</TableHead>
                 <TableHead className="text-[10px] font-black uppercase tracking-widest py-6">Session</TableHead>
-                <TableHead className="text-[10px] font-black uppercase tracking-widest py-6">R</TableHead>
                 <TableHead className="text-[10px] font-black uppercase tracking-widest py-6 text-center">Outcome</TableHead>
                 <TableHead className="text-[10px] font-black uppercase tracking-widest py-6 text-right px-6">P/L</TableHead>
+                <TableHead className="text-[10px] font-black uppercase tracking-widest py-6 text-center">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -76,9 +209,6 @@ export default function TradeVault() {
                       {trade.session}
                     </span>
                   </TableCell>
-                  <TableCell className="text-[11px] font-black text-foreground py-6">
-                    {trade.rAchieved}R
-                  </TableCell>
                   <TableCell className="py-6 text-center">
                     <span className={cn(
                       "px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest border",
@@ -96,6 +226,9 @@ export default function TradeVault() {
                     Number(trade.plAmt) >= 0 ? "text-emerald-500" : "text-red-500"
                   )}>
                     {Number(trade.plAmt) >= 0 ? '+' : ''}${Math.abs(Number(trade.plAmt)).toLocaleString()}
+                  </TableCell>
+                  <TableCell className="py-6 text-center">
+                    <EditTradeDialog trade={trade} />
                   </TableCell>
                 </TableRow>
               ))}
