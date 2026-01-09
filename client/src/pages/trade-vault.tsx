@@ -3,7 +3,7 @@ import { Trade, insertTradeSchema } from "@shared/schema";
 import { Card } from "@/components/ui/card";
 import { Layout } from "./home";
 import { format } from "date-fns";
-import { Filter, ArrowRight, ArrowLeft, Edit2, Check, X } from "lucide-react";
+import { Filter, ArrowRight, ArrowLeft, Edit2, Check, X, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -29,6 +29,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -40,7 +45,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/hooks/use-toast";
@@ -150,6 +155,24 @@ function EditTradeDialog({ trade }: { trade: Trade }) {
 
 export default function TradeVault() {
   const { data: trades = [], isLoading } = useTrades();
+  const [assetFilter, setAssetFilter] = useState<string>("All");
+  const [strategyFilter, setStrategyFilter] = useState<string>("All");
+  const [sessionFilter, setSessionFilter] = useState<string>("All");
+
+  const filteredTrades = useMemo(() => {
+    return trades.filter((trade) => {
+      const matchAsset = assetFilter === "All" || trade.asset === assetFilter;
+      const matchStrategy = strategyFilter === "All" || trade.strategy === strategyFilter;
+      const matchSession = sessionFilter === "All" || trade.session === sessionFilter;
+      return matchAsset && matchStrategy && matchSession;
+    }).sort((a, b) => 
+      new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime()
+    );
+  }, [trades, assetFilter, strategyFilter, sessionFilter]);
+
+  const uniqueAssets = useMemo(() => ["All", ...new Set(trades.map(t => t.asset))], [trades]);
+  const uniqueStrategies = useMemo(() => ["All", ...new Set(trades.map(t => t.strategy))], [trades]);
+  const uniqueSessions = useMemo(() => ["All", ...new Set(trades.map(t => t.session))], [trades]);
 
   if (isLoading) {
     return (
@@ -161,11 +184,6 @@ export default function TradeVault() {
     );
   }
 
-  // Sort trades by date descending
-  const sortedTrades = [...trades].sort((a, b) => 
-    new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime()
-  );
-
   return (
     <Layout>
       <div className="max-w-[1600px] mx-auto px-6 pt-8 space-y-8">
@@ -174,9 +192,63 @@ export default function TradeVault() {
             <div className="h-8 w-1.5 bg-primary rounded-full shadow-lg shadow-primary/20" />
             <h1 className="text-4xl font-black tracking-tighter text-foreground uppercase italic italic-heavy">Vault Data</h1>
           </div>
-          <Button variant="outline" size="sm" className="gap-2 border-border/40 hover:border-primary/30 uppercase text-[10px] font-bold tracking-widest">
-            <Filter className="w-3 h-3" /> Filter
-          </Button>
+          
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="sm" className="gap-2 border-border/40 hover:border-primary/30 uppercase text-[10px] font-bold tracking-widest">
+                <Filter className="w-3 h-3" /> Filter {(assetFilter !== "All" || strategyFilter !== "All" || sessionFilter !== "All") && "(Active)"}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80 bg-card/95 backdrop-blur-xl border-border/40 p-4" align="end">
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase text-muted-foreground">Asset</label>
+                  <Select value={assetFilter} onValueChange={setAssetFilter}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      {uniqueAssets.map(asset => (
+                        <SelectItem key={asset} value={asset}>{asset}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase text-muted-foreground">Strategy</label>
+                  <Select value={strategyFilter} onValueChange={setStrategyFilter}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      {uniqueStrategies.map(strat => (
+                        <SelectItem key={strat} value={strat}>{strat}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase text-muted-foreground">Session</label>
+                  <Select value={sessionFilter} onValueChange={setSessionFilter}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      {uniqueSessions.map(session => (
+                        <SelectItem key={session} value={session}>{session}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="w-full text-[10px] font-bold uppercase"
+                  onClick={() => {
+                    setAssetFilter("All");
+                    setStrategyFilter("All");
+                    setSessionFilter("All");
+                  }}
+                >
+                  Reset Filters
+                </Button>
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
 
         <Card className="bg-card/40 backdrop-blur-xl border-border/40 shadow-2xl rounded-3xl overflow-hidden">
@@ -193,7 +265,7 @@ export default function TradeVault() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {sortedTrades.map((trade) => (
+              {filteredTrades.map((trade) => (
                 <TableRow key={trade.id} className="group hover:bg-primary/5 transition-colors border-border/20">
                   <TableCell className="text-[10px] font-bold text-muted-foreground py-6 px-6">
                     {format(new Date(trade.date || new Date()), "yyyy-MM-dd HH:mm")}
@@ -232,10 +304,10 @@ export default function TradeVault() {
                   </TableCell>
                 </TableRow>
               ))}
-              {sortedTrades.length === 0 && (
+              {filteredTrades.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={7} className="h-24 text-center text-muted-foreground uppercase text-[10px] font-bold tracking-widest">
-                    No trade entries found in the vault.
+                    No trade entries found matching the current filters.
                   </TableCell>
                 </TableRow>
               )}
