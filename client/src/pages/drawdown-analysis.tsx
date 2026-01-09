@@ -156,7 +156,20 @@ export default function DrawdownAnalysis() {
   const sessions = calculateDrawdownByDimension(trades, 'session');
   const strategies = calculateDrawdownByDimension(trades, 'strategy');
   const timeframes = calculateDrawdownByDimension(trades, 'entryTF');
-  const conditions = calculateDrawdownByDimension(trades, 'condition');
+  const calculatedConditions = calculateDrawdownByDimension(trades, 'condition');
+  
+  // Ensure Bullish, Bearish, Ranging, and Trending are always present
+  const requiredConditions = ["Trending", "Bullish", "Bearish", "Ranging"];
+  const conditions = requiredConditions.map(name => {
+    const existing = calculatedConditions.find(c => c.name.toLowerCase() === name.toLowerCase());
+    return existing || {
+      name,
+      maxDD: "-$0",
+      netPL: "$0",
+      edge: "0%",
+      winRate: "0%"
+    };
+  });
 
   return (
     <Layout>
