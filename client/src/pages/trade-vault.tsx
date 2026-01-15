@@ -232,9 +232,9 @@ export default function TradeVault() {
     );
   }, [trades, assetFilter, strategyFilter, sessionFilter]);
 
-  const uniqueAssets = useMemo(() => ["All", ...new Set(trades.map(t => t.asset))], [trades]);
-  const uniqueStrategies = useMemo(() => ["All", ...new Set(trades.map(t => t.strategy))], [trades]);
-  const uniqueSessions = useMemo(() => ["All", ...new Set(trades.map(t => t.session))], [trades]);
+  const uniqueAssets = useMemo(() => ["All", ...Array.from(new Set(trades.map(t => t.asset)))], [trades]);
+  const uniqueStrategies = useMemo(() => ["All", ...Array.from(new Set(trades.map(t => t.strategy)))], [trades]);
+  const uniqueSessions = useMemo(() => ["All", ...Array.from(new Set(trades.map(t => t.session)))], [trades]);
 
   if (isLoading) {
     return (
