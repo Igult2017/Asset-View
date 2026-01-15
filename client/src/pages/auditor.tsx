@@ -244,33 +244,6 @@ const Auditor = () => {
       <div className="min-h-screen bg-[#0a0c10] text-slate-300 p-6 md:p-10 font-sans selection:bg-blue-500/30">
         <FontStyle />
         <div className="max-w-7xl mx-auto space-y-12">
-
-          {/* HEADER */}
-          <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
-            <div>
-              <div className="flex items-center gap-3 text-blue-400 text-xs font-black uppercase tracking-[0.2em]">
-                <Cpu size={18}/> Automated Intelligence Auditor
-              </div>
-              <h1 className="text-4xl md:text-5xl font-blocky text-white mt-2 tracking-tight">
-                {systemName}
-              </h1>
-              <div className="flex gap-6 text-[10px] mt-4 text-slate-500 font-black uppercase tracking-widest">
-                <span className="flex items-center gap-2"><Database size={12}/> Journal Sync</span>
-                <span className="flex items-center gap-2"><Layers size={12}/> Quant Model</span>
-                <span className="flex items-center gap-2 text-emerald-400"><ShieldCheck size={12}/> Verified Logic</span>
-              </div>
-            </div>
-
-            <div className="w-full md:w-auto bg-slate-900/60 border border-white/10 rounded-[32px] p-8 text-center backdrop-blur-md relative overflow-hidden group">
-              <div className={`absolute inset-0 opacity-5 blur-2xl transition-colors ${authorized ? 'bg-emerald-500' : 'bg-blue-500'}`}></div>
-              <p className="text-[10px] font-black uppercase text-slate-500 tracking-widest relative z-10">Reliability Index</p>
-              <p className={`text-6xl font-blocky relative z-10 ${authorized ? 'text-emerald-400' : 'text-blue-400'}`}>
-                {auditScore}%
-              </p>
-              <p className="text-sm mt-2 font-black text-white relative z-10 font-blocky">Expectancy: {expectancy}R</p>
-            </div>
-          </header>
-
           {/* GRID */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 

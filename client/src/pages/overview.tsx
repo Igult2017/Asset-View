@@ -51,27 +51,6 @@ export default function Overview() {
         </style>
 
         <main className="flex-1 p-6 md:p-10 space-y-10 overflow-y-auto max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 border-b-[4px] border-slate-900 pb-6">
-            <h2 className="text-xl font-900 uppercase tracking-widest italic">
-              PERFORMANCE <span className="text-blue-600 not-italic ml-2">OVERVIEW</span>
-            </h2>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setDateRange("DEFAULT")}
-                className={`px-6 py-2 text-[8px] font-900 uppercase tracking-[0.4em] border-2 transition-all active:translate-y-1 ${dateRange === "DEFAULT" ? "bg-blue-600 border-blue-400" : "bg-slate-900 border-slate-700 hover:bg-slate-800"}`}
-              >
-                DEFAULT
-              </button>
-              <button
-                onClick={() => setDateRange("CUSTOM")}
-                className={`px-6 py-2 text-[8px] font-900 uppercase tracking-[0.4em] border-2 transition-all active:translate-y-1 ${dateRange === "CUSTOM" ? "bg-blue-600 border-blue-400" : "bg-slate-900 border-slate-700 hover:bg-slate-800"}`}
-              >
-                DATE RANGE
-              </button>
-            </div>
-          </div>
-
           {/* KPI Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
             <MetricCard title="Daily Win Rate" value="69.67%" />

@@ -178,33 +178,6 @@ export default function DrawdownAnalysis() {
         <style>{`.font-blocky { font-family: 'Montserrat', sans-serif; font-weight: 900; }`}</style>
         
         <div className="max-w-5xl mx-auto space-y-10">
-          <header className="flex flex-col md:flex-row justify-between items-center bg-[#141417] border border-zinc-800 p-6 rounded-3xl gap-6">
-            <div className="flex items-center gap-5">
-              <div className="bg-zinc-800 p-4 rounded-2xl shadow-inner">
-                <Activity className="text-white" size={32} />
-              </div>
-              <div>
-                <h1 className="font-black text-4xl leading-none uppercase tracking-tighter font-blocky">Monthly</h1>
-                <p className="font-black text-zinc-500 text-lg uppercase tracking-widest">{latestMonth.name}</p>
-              </div>
-            </div>
-            
-            <div className="flex gap-6 md:gap-10 bg-black/40 px-8 py-4 rounded-2xl border border-zinc-800/50">
-              <div className="text-center">
-                <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1">Max DD</p>
-                <p className="font-black text-2xl text-red-500 font-blocky">{latestMonth.maxDD}</p>
-              </div>
-              <div className="text-center border-x border-zinc-800 px-10">
-                <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1">Net P/L</p>
-                <p className="font-black text-2xl text-green-500 font-blocky">{latestMonth.netPL}</p>
-              </div>
-              <div className="text-center">
-                <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1">Global Edge</p>
-                <p className="font-black text-2xl text-blue-500 font-blocky">{latestMonth.edge}</p>
-              </div>
-            </div>
-          </header>
-
           <main className="space-y-8">
             <ContentBlock icon={Activity} title="Instruments" data={instruments} />
             <ContentBlock icon={Target} title="Strategies" data={strategies} showColor={true} />
