@@ -99,6 +99,10 @@ export const trades = pgTable("trades", {
   tradeDuration: text("trade_duration"),
   lotSize: text("lot_size"),
   pipsGainedLost: numeric("pips_gained_lost"),
+  hotTimestamp: timestamp("hot_timestamp"),
+  direction: text("direction"),
+  slPips: numeric("sl_pips"),
+  tpPips: numeric("tp_pips"),
 });
 
 export const insertTradeSchema = createInsertSchema(trades).omit({ 
@@ -121,6 +125,8 @@ export const insertTradeSchema = createInsertSchema(trades).omit({
   riskPercentPerTrade: z.number().optional().or(z.string().transform(v => v ? Number(v) : undefined)),
   openRiskAtEntry: z.number().optional().or(z.string().transform(v => v ? Number(v) : undefined)),
   drawdownAtEntry: z.number().optional().or(z.string().transform(v => v ? Number(v) : undefined)),
+  slPips: z.number().optional().or(z.string().transform(v => v ? Number(v) : undefined)),
+  tpPips: z.number().optional().or(z.string().transform(v => v ? Number(v) : undefined)),
   confidenceLevel: z.number().optional(),
   focusLevel: z.number().optional(),
   stressLevel: z.number().optional(),
