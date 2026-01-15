@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useCreateTrade } from '@/hooks/use-trades';
+import { useToast } from '@/hooks/use-toast';
 import { 
   Camera, 
   TrendingUp, 
@@ -33,77 +35,44 @@ const INITIAL_FORM_STATE = {
   screenshot: null,
   screenshotTimestamp: '',
   hotTimestamp: '',
-  instrument: '',
+  asset: '',
   direction: 'Long',
   lotSize: '',
-  entryPrice: '',
-  stopLoss: '',
-  stopLossDistancePips: '',
-  takeProfit: '',
-  takeProfitDistancePips: '',
-  entryTime: '',
+  actualEntry: '',
+  actualStopLoss: '',
+  slPips: '',
+  actualTakeProfit: '',
+  tpPips: '',
+  pipsGainedLost: '',
+  riskPercentPerTrade: '',
+  entryTimeUtc: '',
   exitTime: '',
   tradeDuration: '',
   dayOfWeek: 'Monday',
   outcome: 'Win',
-  profitLoss: '',
-  accountBalance: '',
-  orderType: 'Market',
-  riskPercent: '',
+  plAmt: '',
+  rAchieved: '',
+  entryMethod: 'Market',
   entryTF: '5M',
-  analysisTF: '1HR',
+  analysisTF: '1H',
   contextTF: '1D',
   marketRegime: 'Trending',
-  trendDirection: 'Bullish',
   volatilityState: 'Normal',
-  liquidity: 'High',
+  liquidityConditions: 'High',
   newsEnvironment: 'Clear',
-  entryTimeUTC: '',
-  sessionPhase: 'Open',
   sessionName: 'London',
+  sessionPhase: 'Open',
   timingContext: 'Impulse',
-  candlePattern: '',
-  indicatorState: '',
-  marketAlignment: 3,
-  setupClarity: 3,
-  entryPrecision: 3,
-  confluence: 3,
-  timingQuality: 3,
-  primarySignals: '',
-  secondarySignals: '',
-  keyLevelRespect: 'Yes',
-  keyLevelType: 'Support',
-  momentumValidity: 'Strong',
-  targetLogicClarity: 'High',
-  plannedEntry: '',
-  plannedSL: '',
-  plannedTP: '',
-  actualEntry: '',
-  actualSL: '',
-  actualTP: '',
-  pipsGainedLost: '',
-  slPips: '',
-  tpPips: '',
-  mae: '',
-  mfe: '',
-  monetaryRisk: '',
-  potentialReward: '',
-  plannedRR: '',
-  achievedRR: '',
-  riskHeat: 'Low',
-  entryMethod: 'Market',
-  exitStrategy: '',
-  breakEvenApplied: false,
-  managementType: 'Rule-based',
+  setupClarityScore: 3,
+  marketAlignmentScore: 3,
+  entryPrecisionScore: 3,
   confidenceLevel: 3,
-  emotionalState: 'Calm',
-  focusStressLevel: 'Low',
-  rulesFollowed: 100,
-  worthRepeating: true,
   whatWorked: '',
   whatFailed: '',
-  adjustments: '',
-  notes: ''
+  notes: '',
+  strategy: 'SMC Breaker', // Default strategy
+  condition: 'Trending',
+  bias: 'Bullish'
 };
 
 export function LogEntry() {
@@ -111,6 +80,8 @@ export function LogEntry() {
   const [formData, setFormData] = useState(INITIAL_FORM_STATE);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const createTrade = useCreateTrade();
+  const { toast } = useToast();
 
   useEffect(() => {
     const link = document.createElement('link');
@@ -141,6 +112,30 @@ export function LogEntry() {
     setFormData(INITIAL_FORM_STATE);
     setStep(1);
     setShowResetConfirm(false);
+  };
+
+  const handleCommit = () => {
+    const submissionData = {
+      ...formData,
+      rAchieved: formData.rAchieved || "0",
+      plAmt: formData.plAmt || "0",
+      actualEntry: formData.actualEntry || "0",
+      actualStopLoss: formData.actualStopLoss || "0",
+      actualTakeProfit: formData.actualTakeProfit || "0",
+    };
+
+    createTrade.mutate(submissionData as any, {
+      onSuccess: () => {
+        setShowSuccessModal(true);
+      },
+      onError: (error) => {
+        toast({
+          title: "Commit Failed",
+          description: error.message,
+          variant: "destructive",
+        });
+      }
+    });
   };
 
   const nextStep = () => setStep(s => Math.min(3, s + 1));
@@ -318,9 +313,9 @@ export function LogEntry() {
                   <div className="col-span-1 sm:col-span-2 lg:col-span-3">
                     <SectionHeader icon={Zap} title="Primary Parameters" color="blue" />
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                      <InputField label="Instrument" field="instrument" placeholder="e.g. NAS100, EURUSD" />
+                      <InputField label="Instrument" field="asset" placeholder="e.g. NAS100, EURUSD" />
                       <SelectField label="Direction" field="direction" options={['Long', 'Short']} />
-                      <SelectField label="Order Type" field="orderType" options={['Market', 'Limit', 'Stop']} />
+                      <SelectField label="Order Type" field="entryMethod" options={['Market', 'Limit', 'Stop']} />
                       <InputField label="Lot Size / Units" field="lotSize" placeholder="0.01" type="number" />
                     </div>
                   </div>
@@ -328,20 +323,23 @@ export function LogEntry() {
                   <div className="col-span-1 sm:col-span-2 lg:col-span-3">
                     <SectionHeader icon={Activity} title="Execution Pricing" color="indigo" />
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                      <InputField label="Entry Price" field="entryPrice" placeholder="0.00000" type="number" />
-                      <InputField label="Stop Loss" field="stopLoss" placeholder="0.00000" type="number" />
+                      <InputField label="Entry Price" field="actualEntry" placeholder="0.00000" type="number" />
+                      <InputField label="Stop Loss" field="actualStopLoss" placeholder="0.00000" type="number" />
                       <InputField label="SL (Pips)" field="slPips" placeholder="0.0" type="number" />
-                      <InputField label="Take Profit" field="takeProfit" placeholder="0.00000" type="number" />
+                      <InputField label="Take Profit" field="actualTakeProfit" placeholder="0.00000" type="number" />
                       <InputField label="TP (Pips)" field="tpPips" placeholder="0.0" type="number" />
                       <InputField label="Pips G/L" field="pipsGainedLost" placeholder="0.0" type="number" />
-                      <InputField label="Risk %" field="riskPercent" placeholder="1.0" type="number" />
+                      <InputField label="Risk %" field="riskPercentPerTrade" placeholder="1.0" type="number" />
+                      <InputField label="P/L ($)" field="plAmt" placeholder="0.00" type="number" />
+                      <InputField label="Risk to Reward (R:R)" field="rAchieved" placeholder="0.00" type="number" />
+                      <SelectField label="Outcome" field="outcome" options={['Win', 'Loss', 'Break-even']} />
                     </div>
                   </div>
 
                   <div className="col-span-1 sm:col-span-2 lg:col-span-3">
                     <SectionHeader icon={Clock} title="Timing & Context" color="blue" />
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                      <InputField label="Entry Date/Time" field="entryTime" type="datetime-local" />
+                      <InputField label="Entry Date/Time" field="entryTimeUtc" type="datetime-local" />
                       <InputField label="Exit Date/Time" field="exitTime" type="datetime-local" />
                       <InputField label="Day of Week" field="dayOfWeek" />
                       <InputField label="Trade Duration" field="tradeDuration" placeholder="e.g. 2h 30m" />
@@ -395,9 +393,7 @@ export function LogEntry() {
                   <div className="col-span-1 sm:col-span-2 lg:col-span-3">
                     <SectionHeader icon={History} title="Performance Outcome" color="blue" />
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                      <SelectField label="Outcome" field="outcome" options={['Win', 'Loss', 'Breakeven']} />
-                      <InputField label="P/L ($)" field="profitLoss" placeholder="0.00" type="number" />
-                      <InputField label="Achieved R:R" field="achievedRR" placeholder="0.00" type="number" />
+                      <InputField label="Notes" field="notes" placeholder="Additional trade notes..." />
                     </div>
                   </div>
                 </div>
@@ -430,11 +426,12 @@ export function LogEntry() {
                 </button>
               ) : (
                 <button 
-                  onClick={() => setShowSuccessModal(true)}
-                  className="px-10 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl font-bold text-sm hover:from-emerald-500 hover:to-teal-500 shadow-xl shadow-emerald-600/20 transition-all flex items-center gap-2 group"
+                  onClick={handleCommit}
+                  disabled={createTrade.isPending}
+                  className="px-10 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl font-bold text-sm hover:from-emerald-500 hover:to-teal-500 shadow-xl shadow-emerald-600/20 transition-all flex items-center gap-2 group disabled:opacity-50"
                 >
                   <Save className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                  Commit to Vault
+                  {createTrade.isPending ? "Committing..." : "Commit to Vault"}
                 </button>
               )}
             </div>

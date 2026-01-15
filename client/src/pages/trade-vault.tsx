@@ -122,7 +122,7 @@ function EditTradeDialog({ trade }: { trade: Trade }) {
                 <FormItem><FormLabel className="text-[10px] font-bold uppercase">Outcome</FormLabel>
                 <Select onValueChange={field.onChange} value={field.value || "Win"}>
                 <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
-                <SelectContent><SelectItem value="Win">Win</SelectItem><SelectItem value="Loss">Loss</SelectItem><SelectItem value="BE">BE</SelectItem></SelectContent></Select></FormItem>
+                <SelectContent><SelectItem value="Win">Win</SelectItem><SelectItem value="Loss">Loss</SelectItem><SelectItem value="Break-even">Break-even</SelectItem></SelectContent></Select></FormItem>
               )} />
               <FormField control={form.control} name="plAmt" render={({ field }) => (
                 <FormItem><FormLabel className="text-[10px] font-bold uppercase">P/L ($)</FormLabel>
