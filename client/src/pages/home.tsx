@@ -1,4 +1,5 @@
-import { useTrades } from "@/hooks/use-trades";
+import { useState } from "react";
+import { useTrades, useCreateTrade } from "@/hooks/use-trades";
 import { useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,6 +24,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/hooks/use-theme";
 
