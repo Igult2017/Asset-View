@@ -734,7 +734,7 @@ function LogEntryModal() {
 
               <FormField
                 control={form.control}
-                name="pipsGainedLost"
+                name="plannedStopLoss"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">SL (Pips)</FormLabel>
@@ -760,7 +760,7 @@ function LogEntryModal() {
 
               <FormField
                 control={form.control}
-                name="rAchieved"
+                name="actualExit"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">TP (Pips)</FormLabel>
@@ -777,6 +777,19 @@ function LogEntryModal() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Risk %</FormLabel>
+                    <FormControl>
+                      <Input type="number" step="any" {...field} className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-900/50 text-slate-200 focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all text-sm font-bold" />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="pipsGainedLost"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Pips G/L</FormLabel>
                     <FormControl>
                       <Input type="number" step="any" {...field} className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-900/50 text-slate-200 focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all text-sm font-bold" />
                     </FormControl>
