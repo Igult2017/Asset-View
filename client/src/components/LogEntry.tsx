@@ -60,6 +60,7 @@ const INITIAL_FORM_STATE = {
   volatilityState: 'Normal',
   liquidityConditions: 'High',
   newsEnvironment: 'Clear',
+  newsImpact: 'no news',
   sessionName: 'London',
   sessionPhase: 'Open',
   timingContext: 'Impulse',
@@ -370,7 +371,8 @@ export function LogEntry() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                       <SelectField label="Session" field="sessionName" options={['London', 'New York', 'Asian', 'Overlap']} />
                       <SelectField label="Session Phase" field="sessionPhase" options={['Open', 'Mid', 'Close', 'Pre-Session']} />
-                      <SelectField label="Liquidity" field="liquidity" options={['High', 'Medium', 'Low']} />
+                      <SelectField label="Liquidity" field="liquidityConditions" options={['High', 'Medium', 'Low']} />
+                      <SelectField label="News" field="newsImpact" options={['before news', 'after news', 'no news']} />
                     </div>
                   </div>
                 </div>

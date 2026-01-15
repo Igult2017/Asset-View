@@ -22,6 +22,7 @@ export const trades = pgTable("trades", {
   volatilityState: text("volatility_state"), // Expanding, Contracting
   liquidityConditions: text("liquidity_conditions"), // High, Normal, Thin
   newsEnvironment: text("news_environment"), // None, Medium, High
+  newsImpact: text("news_impact"), // before news, after news, no news
 
   // Time-of-Day & Session Precision
   entryTimeUtc: text("entry_time_utc"),

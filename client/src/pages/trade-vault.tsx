@@ -152,6 +152,14 @@ function EditTradeDialog({ trade }: { trade: Trade }) {
                 <FormItem><FormLabel className="text-[10px] font-bold uppercase">TP (Pips)</FormLabel>
                 <FormControl><Input type="number" step="any" {...field} onChange={e => field.onChange(Number(e.target.value))} /></FormControl></FormItem>
               )} />
+              <FormField control={form.control} name="newsImpact" render={({ field }) => (
+                <FormItem><FormLabel className="text-[10px] font-bold uppercase">News</FormLabel>
+                <Select onValueChange={field.onChange} value={field.value || "no news"}>
+                <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
+                <SelectContent>
+                  {['before news', 'after news', 'no news'].map(n => <SelectItem key={n} value={n}>{n}</SelectItem>)}
+                </SelectContent></Select></FormItem>
+              )} />
             </div>
             
             <div className="grid grid-cols-3 gap-4">
