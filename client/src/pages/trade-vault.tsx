@@ -73,6 +73,7 @@ function EditTradeDialog({ trade }: { trade: Trade }) {
       minimumSetupScore: Number(trade.minimumSetupScore),
       slPips: Number(trade.slPips || 0),
       tpPips: Number(trade.tpPips || 0),
+      pipsGainedLost: Number(trade.pipsGainedLost || 0),
     },
   });
 
@@ -127,11 +128,21 @@ function EditTradeDialog({ trade }: { trade: Trade }) {
                 <FormItem><FormLabel className="text-[10px] font-bold uppercase">P/L ($)</FormLabel>
                 <FormControl><Input type="number" step="any" {...field} onChange={e => field.onChange(Number(e.target.value))} /></FormControl></FormItem>
               )} />
+              <FormField control={form.control} name="pipsGainedLost" render={({ field }) => (
+                <FormItem><FormLabel className="text-[10px] font-bold uppercase">Pips G/L</FormLabel>
+                <FormControl><Input type="number" step="any" {...field} onChange={e => field.onChange(Number(e.target.value))} /></FormControl></FormItem>
+              )} />
               <FormField control={form.control} name="direction" render={({ field }) => (
                 <FormItem><FormLabel className="text-[10px] font-bold uppercase">Direction</FormLabel>
                 <Select onValueChange={field.onChange} value={field.value || "Long"}>
                 <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
                 <SelectContent><SelectItem value="Long">Long</SelectItem><SelectItem value="Short">Short</SelectItem></SelectContent></Select></FormItem>
+              )} />
+              <FormField control={form.control} name="entryMethod" render={({ field }) => (
+                <FormItem><FormLabel className="text-[10px] font-bold uppercase">Order Type</FormLabel>
+                <Select onValueChange={field.onChange} value={field.value || "Market"}>
+                <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
+                <SelectContent><SelectItem value="Market">Market</SelectItem><SelectItem value="Limit">Limit</SelectItem><SelectItem value="Stop">Stop</SelectItem></SelectContent></Select></FormItem>
               )} />
               <FormField control={form.control} name="slPips" render={({ field }) => (
                 <FormItem><FormLabel className="text-[10px] font-bold uppercase">SL (Pips)</FormLabel>
@@ -140,6 +151,33 @@ function EditTradeDialog({ trade }: { trade: Trade }) {
               <FormField control={form.control} name="tpPips" render={({ field }) => (
                 <FormItem><FormLabel className="text-[10px] font-bold uppercase">TP (Pips)</FormLabel>
                 <FormControl><Input type="number" step="any" {...field} onChange={e => field.onChange(Number(e.target.value))} /></FormControl></FormItem>
+              )} />
+            </div>
+            
+            <div className="grid grid-cols-3 gap-4">
+              <FormField control={form.control} name="entryTF" render={({ field }) => (
+                <FormItem><FormLabel className="text-[10px] font-bold uppercase">Entry TF</FormLabel>
+                <Select onValueChange={field.onChange} value={field.value || "5M"}>
+                <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
+                <SelectContent>
+                  {['1M', '5M', '15M', '30M', '1H', '4H', '1D', '1W'].map(tf => <SelectItem key={tf} value={tf}>{tf}</SelectItem>)}
+                </SelectContent></Select></FormItem>
+              )} />
+              <FormField control={form.control} name="analysisTF" render={({ field }) => (
+                <FormItem><FormLabel className="text-[10px] font-bold uppercase">Analysis TF</FormLabel>
+                <Select onValueChange={field.onChange} value={field.value || "1H"}>
+                <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
+                <SelectContent>
+                  {['1M', '5M', '15M', '30M', '1H', '4H', '1D', '1W'].map(tf => <SelectItem key={tf} value={tf}>{tf}</SelectItem>)}
+                </SelectContent></Select></FormItem>
+              )} />
+              <FormField control={form.control} name="contextTF" render={({ field }) => (
+                <FormItem><FormLabel className="text-[10px] font-bold uppercase">Context TF</FormLabel>
+                <Select onValueChange={field.onChange} value={field.value || "1D"}>
+                <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
+                <SelectContent>
+                  {['1M', '5M', '15M', '30M', '1H', '4H', '1D', '1W'].map(tf => <SelectItem key={tf} value={tf}>{tf}</SelectItem>)}
+                </SelectContent></Select></FormItem>
               )} />
             </div>
             
