@@ -119,12 +119,12 @@ const LogEntry = () => {
     };
   }, []);
 
-  const updateField = (field, value) => {
+  const updateField = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleFileUpload = (e) => {
-    const file = e.target.files[0];
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -143,7 +143,7 @@ const LogEntry = () => {
   const nextStep = () => setStep(s => Math.min(3, s + 1));
   const prevStep = () => setStep(s => Math.max(1, s - 1));
 
-  const SectionHeader = ({ icon: Icon, title, color = "blue" }) => (
+  const SectionHeader = ({ icon: Icon, title, color = "blue" }: { icon: any, title: string, color?: string }) => (
     <div className="flex items-center gap-3 mb-6">
       <div className={`p-2 rounded-lg ${color === 'blue' ? 'bg-blue-500/10' : color === 'indigo' ? 'bg-indigo-500/10' : 'bg-purple-500/10'}`}>
         <Icon className={`w-5 h-5 ${color === 'blue' ? 'text-blue-400' : color === 'indigo' ? 'text-indigo-400' : 'text-purple-400'}`} />
@@ -155,26 +155,26 @@ const LogEntry = () => {
     </div>
   );
 
-  const InputField = ({ label, field, type = "text", placeholder = "" }) => (
+  const InputField = ({ label, field, type = "text", placeholder = "" }: { label: string, field: string, type?: string, placeholder?: string }) => (
     <div className="flex flex-col gap-2">
       <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">{label}</label>
       <input
         type={type}
         className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-900/50 text-slate-200 focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all text-sm font-bold placeholder:text-slate-700"
         placeholder={placeholder}
-        value={formData[field]}
+        value={(formData as any)[field]}
         onChange={(e) => updateField(field, e.target.value)}
       />
     </div>
   );
 
-  const SelectField = ({ label, field, options }) => (
+  const SelectField = ({ label, field, options }: { label: string, field: string, options: string[] }) => (
     <div className="flex flex-col gap-2">
       <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">{label}</label>
       <div className="relative">
         <select
           className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-900/50 text-slate-200 focus:border-blue-500/50 outline-none transition-all text-sm font-bold appearance-none cursor-pointer"
-          value={formData[field]}
+          value={(formData as any)[field]}
           onChange={(e) => updateField(field, e.target.value)}
         >
           {options.map(opt => <option key={opt} value={opt} className="bg-slate-900">{opt}</option>)}
@@ -186,18 +186,18 @@ const LogEntry = () => {
     </div>
   );
 
-  const ScoreSlider = ({ label, field }) => (
+  const ScoreSlider = ({ label, field }: { label: string, field: string }) => (
     <div className="space-y-3">
       <div className="flex justify-between items-center">
         <label className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">{label}</label>
-        <span className="text-[10px] font-bold px-2 py-1 bg-blue-500/10 text-blue-400 rounded-md border border-blue-500/20">{formData[field]} / 5</span>
+        <span className="text-[10px] font-bold px-2 py-1 bg-blue-500/10 text-blue-400 rounded-md border border-blue-500/20">{(formData as any)[field]} / 5</span>
       </div>
       <input
         type="range"
         min="1"
         max="5"
         className="w-full h-1.5 bg-slate-800 rounded-full appearance-none cursor-pointer accent-blue-500"
-        value={formData[field]}
+        value={(formData as any)[field]}
         onChange={(e) => updateField(field, parseInt(e.target.value))}
       />
     </div>
@@ -290,7 +290,7 @@ const LogEntry = () => {
                       <input type="file" className="hidden" id="chart-upload" onChange={handleFileUpload} accept="image/*" />
                       {formData.screenshot ? (
                         <div className="relative group">
-                          <img src={formData.screenshot} alt="Trade Evidence" className="w-full h-auto max-h-[400px] object-contain rounded-2xl" />
+                          <img src={formData.screenshot as string} alt="Trade Evidence" className="w-full h-auto max-h-[400px] object-contain rounded-2xl" />
                           <div className="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
                             <label htmlFor="chart-upload" className="p-3 bg-blue-600 rounded-xl cursor-pointer hover:bg-blue-500 transition-colors">
                               <RefreshCcw className="w-5 h-5 text-white" />
