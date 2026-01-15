@@ -103,7 +103,7 @@ const INITIAL_FORM_STATE = {
   notes: ''
 };
 
-const LogEntry = () => {
+export function LogEntry() {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState(INITIAL_FORM_STATE);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
