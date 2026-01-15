@@ -10,6 +10,7 @@ import NotFound from "@/pages/not-found";
 import Dashboard from "@/pages/home";
 import Overview from "@/pages/overview";
 import Auditor from "@/pages/auditor";
+import LogEntryPage from "@/pages/log-entry";
 import DrawdownAnalysis from "@/pages/drawdown-analysis";
 import TradeVault from "@/pages/trade-vault";
 
@@ -19,6 +20,7 @@ function Router() {
       <Route path="/" component={Overview} />
       <Route path="/auditor" component={Auditor} />
       <Route path="/analytics" component={Dashboard} />
+      <Route path="/log-entry" component={LogEntryPage} />
       <Route path="/drawdown" component={DrawdownAnalysis} />
       <Route path="/trade-vault" component={TradeVault} />
       <Route component={NotFound} />

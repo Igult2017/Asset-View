@@ -10,6 +10,7 @@ export function Header() {
     { name: 'OVERVIEW', path: '/' },
     { name: 'AUDITOR', path: '/auditor' },
     { name: 'ANALYTICS', path: '/analytics' },
+    { name: 'LOG ENTRY', path: '/log-entry' },
     { name: 'DRAWDOWN', path: '/drawdown' },
     { name: 'TRADE VAULT', path: '/trade-vault' }
   ];
@@ -71,11 +72,13 @@ export function Header() {
 
         {/* Right Section: Button & Mobile Toggle */}
         <div className="flex items-center gap-3 sm:gap-4">
-          <button className="relative overflow-hidden group bg-gradient-to-br from-[#3b82f6] to-[#2563eb] text-white px-4 sm:px-7 py-2.5 sm:py-3 text-[11px] sm:text-[13px] font-[900] tracking-tighter flex items-center gap-2 shadow-[0_8px_20px_rgba(37,99,235,0.2)] hover:shadow-[0_8px_25px_rgba(37,99,235,0.4)] transition-all active:scale-95">
-            <span className="absolute inset-0 bg-white/10 group-hover:translate-x-full transition-transform duration-500 -translate-x-full" />
-            <Plus className="hidden sm:block w-3.5 h-3.5" strokeWidth={3} />
-            LOG ENTRY
-          </button>
+          <Link href="/log-entry">
+            <button className="relative overflow-hidden group bg-gradient-to-br from-[#3b82f6] to-[#2563eb] text-white px-4 sm:px-7 py-2.5 sm:py-3 text-[11px] sm:text-[13px] font-[900] tracking-tighter flex items-center gap-2 shadow-[0_8px_20px_rgba(37,99,235,0.2)] hover:shadow-[0_8px_25px_rgba(37,99,235,0.4)] transition-all active:scale-95">
+              <span className="absolute inset-0 bg-white/10 group-hover:translate-x-full transition-transform duration-500 -translate-x-full" />
+              <Plus className="hidden sm:block w-3.5 h-3.5" strokeWidth={3} />
+              LOG ENTRY
+            </button>
+          </Link>
 
           {/* Mobile Menu Toggle */}
           <button 
