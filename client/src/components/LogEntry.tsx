@@ -32,6 +32,7 @@ import {
 const INITIAL_FORM_STATE = {
   screenshot: null,
   screenshotTimestamp: '',
+  hotTimestamp: '',
   instrument: '',
   direction: 'Long',
   lotSize: '',
@@ -81,6 +82,8 @@ const INITIAL_FORM_STATE = {
   actualSL: '',
   actualTP: '',
   pipsGainedLost: '',
+  slPips: '',
+  tpPips: '',
   mae: '',
   mfe: '',
   monetaryRisk: '',
@@ -317,7 +320,7 @@ export function LogEntry() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                       <InputField label="Instrument" field="instrument" placeholder="e.g. NAS100, EURUSD" />
                       <SelectField label="Direction" field="direction" options={['Long', 'Short']} />
-                      <InputField label="Lot Size / Units" field="lotSize" placeholder="0.00" type="number" />
+                      <InputField label="Lot Size / Units" field="lotSize" placeholder="0.01" type="number" />
                     </div>
                   </div>
 
@@ -326,7 +329,21 @@ export function LogEntry() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                       <InputField label="Entry Price" field="entryPrice" placeholder="0.00000" type="number" />
                       <InputField label="Stop Loss" field="stopLoss" placeholder="0.00000" type="number" />
+                      <InputField label="SL (Pips)" field="slPips" placeholder="0.0" type="number" />
                       <InputField label="Take Profit" field="takeProfit" placeholder="0.00000" type="number" />
+                      <InputField label="TP (Pips)" field="tpPips" placeholder="0.0" type="number" />
+                      <InputField label="Risk %" field="riskPercent" placeholder="1.0" type="number" />
+                    </div>
+                  </div>
+
+                  <div className="col-span-1 sm:col-span-2 lg:col-span-3">
+                    <SectionHeader icon={Clock} title="Timing & Context" color="blue" />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                      <InputField label="Entry Date/Time" field="entryTime" type="datetime-local" />
+                      <InputField label="Exit Date/Time" field="exitTime" type="datetime-local" />
+                      <InputField label="Day of Week" field="dayOfWeek" />
+                      <InputField label="Trade Duration" field="tradeDuration" placeholder="e.g. 2h 30m" />
+                      <InputField label="Hot Timestamp" field="hotTimestamp" type="datetime-local" />
                     </div>
                   </div>
                 </div>

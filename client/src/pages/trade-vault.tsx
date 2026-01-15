@@ -71,6 +71,8 @@ function EditTradeDialog({ trade }: { trade: Trade }) {
       stressLevel: Number(trade.stressLevel),
       rulesFollowedPercent: Number(trade.rulesFollowedPercent),
       minimumSetupScore: Number(trade.minimumSetupScore),
+      slPips: Number(trade.slPips || 0),
+      tpPips: Number(trade.tpPips || 0),
     },
   });
 
@@ -123,6 +125,20 @@ function EditTradeDialog({ trade }: { trade: Trade }) {
               )} />
               <FormField control={form.control} name="plAmt" render={({ field }) => (
                 <FormItem><FormLabel className="text-[10px] font-bold uppercase">P/L ($)</FormLabel>
+                <FormControl><Input type="number" step="any" {...field} onChange={e => field.onChange(Number(e.target.value))} /></FormControl></FormItem>
+              )} />
+              <FormField control={form.control} name="direction" render={({ field }) => (
+                <FormItem><FormLabel className="text-[10px] font-bold uppercase">Direction</FormLabel>
+                <Select onValueChange={field.onChange} value={field.value || "Long"}>
+                <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
+                <SelectContent><SelectItem value="Long">Long</SelectItem><SelectItem value="Short">Short</SelectItem></SelectContent></Select></FormItem>
+              )} />
+              <FormField control={form.control} name="slPips" render={({ field }) => (
+                <FormItem><FormLabel className="text-[10px] font-bold uppercase">SL (Pips)</FormLabel>
+                <FormControl><Input type="number" step="any" {...field} onChange={e => field.onChange(Number(e.target.value))} /></FormControl></FormItem>
+              )} />
+              <FormField control={form.control} name="tpPips" render={({ field }) => (
+                <FormItem><FormLabel className="text-[10px] font-bold uppercase">TP (Pips)</FormLabel>
                 <FormControl><Input type="number" step="any" {...field} onChange={e => field.onChange(Number(e.target.value))} /></FormControl></FormItem>
               )} />
             </div>
