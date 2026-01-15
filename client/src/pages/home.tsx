@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { insertTradeSchema, type InsertTrade, type Trade } from "@shared/schema";
 import { motion, AnimatePresence } from "framer-motion";
 import { format } from "date-fns";
-import { Activity, Plus, BarChart2, History, TrendingUp, Filter, Palette, ChevronDown, ArrowRight, ArrowLeft, Settings, LineChart, Sparkles, Upload, ImageIcon, X } from "lucide-react";
+import { Activity, Plus, BarChart2, History, TrendingUp, Filter, Palette, ChevronDown, ArrowRight, ArrowLeft, Settings, LineChart, Sparkles, Upload, ImageIcon, X, Camera, RefreshCcw, Trash2 } from "lucide-react";
 import { useLocation } from "wouter";
 import { StatsCard } from "@/components/stats-card";
 import { Button } from "@/components/ui/button";
@@ -307,6 +307,11 @@ function LogEntryModal() {
       rAchieved: 0,
       plAmt: 0,
       imageUrl: "",
+      exitTime: "",
+      dayOfWeek: "Monday",
+      tradeDuration: "",
+      lotSize: "",
+      pipsGainedLost: 0,
       contextTF: "D1",
       analysisTF: "H1",
       entryTF: "M5",
@@ -410,6 +415,11 @@ function LogEntryModal() {
       rAchieved: data.rAchieved,
       plAmt: data.plAmt,
       imageUrl: data.imageUrl,
+      exitTime: data.exitTime,
+      dayOfWeek: data.dayOfWeek,
+      tradeDuration: data.tradeDuration,
+      lotSize: data.lotSize,
+      pipsGainedLost: data.pipsGainedLost,
       contextTF: data.contextTF,
       analysisTF: data.analysisTF,
       entryTF: data.entryTF,
@@ -513,114 +523,368 @@ function LogEntryModal() {
     return (
       <div className="space-y-4">
         {currentStep === 0 && (
-          <div className="grid grid-cols-2 gap-4">
-            <div className="col-span-2 space-y-2">
-              <FormLabel className="text-[10px] font-bold uppercase">Trade Screenshot</FormLabel>
-              <div className="flex items-center gap-4">
-                <FormControl>
-                  <div className="relative w-full">
-                    <Input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleFileUpload}
-                      className="hidden"
-                      id="trade-image-upload"
-                      disabled={isUploading}
-                    />
-                    <label
-                      htmlFor="trade-image-upload"
-                      className={cn(
-                        "flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-xl cursor-pointer hover:border-primary/50 transition-colors",
-                        form.watch('imageUrl') ? "bg-muted/10 border-primary/30" : "bg-background border-border"
-                      )}
-                    >
-                      {form.watch('imageUrl') ? (
-                        <div className="relative w-full h-full p-2">
-                          <img 
-                            src={form.watch('imageUrl')} 
-                            alt="Trade Preview" 
-                            className="w-full h-full object-contain rounded-lg"
-                          />
-                          <Button
-                            type="button"
-                            variant="destructive"
-                            size="icon"
-                            className="absolute -top-2 -right-2 h-6 w-6 rounded-full"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              form.setValue('imageUrl', "");
-                            }}
-                          >
-                            <X className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      ) : (
-                        <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                          {isUploading ? (
-                            <Activity className="h-6 w-6 animate-spin" />
+          <div className="space-y-8 md:space-y-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="col-span-1 sm:col-span-2 lg:col-span-3">
+                <FormField
+                  control={form.control}
+                  name="imageUrl"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Trade Evidence</FormLabel>
+                      <FormControl>
+                        <div className={`relative group overflow-hidden rounded-3xl border-2 transition-all cursor-pointer ${field.value ? 'border-blue-500/50 bg-slate-900' : 'border-dashed border-slate-800 bg-slate-950/40 hover:border-blue-500/50'}`}>
+                          <input type="file" className="hidden" id="trade-image-upload" onChange={handleFileUpload} accept="image/*" disabled={isUploading} />
+                          {field.value ? (
+                            <div className="relative group">
+                              <img src={field.value} alt="Trade Evidence" className="w-full h-auto max-h-[400px] object-contain rounded-2xl" />
+                              <div className="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
+                                <label htmlFor="trade-image-upload" className="p-3 bg-blue-600 rounded-xl cursor-pointer hover:bg-blue-500 transition-colors">
+                                  <RefreshCcw className={cn("w-5 h-5 text-white", isUploading && "animate-spin")} />
+                                </label>
+                                <button type="button" onClick={() => field.onChange("")} className="p-3 bg-rose-600 rounded-xl hover:bg-rose-500 transition-colors">
+                                  <Trash2 className="w-5 h-5 text-white" />
+                                </button>
+                              </div>
+                            </div>
                           ) : (
-                            <Upload className="h-6 w-6" />
+                            <label htmlFor="trade-image-upload" className="flex flex-col items-center justify-center p-8 md:p-12 cursor-pointer">
+                              <div className="w-14 h-14 bg-slate-900 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-blue-600/10 transition-all border border-slate-800">
+                                {isUploading ? <Activity className="w-6 h-6 text-blue-500 animate-spin" /> : <Camera className="w-6 h-6 text-slate-500 group-hover:text-blue-500" />}
+                              </div>
+                              <span className="text-sm font-bold text-slate-300">Evidence Required</span>
+                              <span className="text-[9px] text-slate-600 font-bold uppercase tracking-widest mt-1">Attach Final Position Chart</span>
+                            </label>
                           )}
-                          <span className="text-[10px] font-medium">{isUploading ? "Uploading..." : "Upload Chart"}</span>
                         </div>
-                      )}
-                    </label>
-                  </div>
-                </FormControl>
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
               </div>
+
+              <FormField
+                control={form.control}
+                name="entryTimeUtc"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Shot Timestamp</FormLabel>
+                    <FormControl>
+                      <Input type="time" {...field} className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-900/50 text-slate-200 focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all text-sm font-bold" />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="asset"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Instrument / Pair</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g. BTCUSD, XAUUSD" {...field} className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-900/50 text-slate-200 focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all text-sm font-bold" />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="bias"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Direction</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-900/50 text-slate-200 focus:border-blue-500/50 outline-none transition-all text-sm font-bold">
+                          <SelectValue />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent className="bg-slate-900 border-slate-800">
+                        <SelectItem value="Bullish">Long</SelectItem>
+                        <SelectItem value="Bearish">Short</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="date"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Entry Date/Time</FormLabel>
+                    <FormControl>
+                      <Input type="datetime-local" value={field.value ? new Date(field.value).toISOString().slice(0, 16) : ""} onChange={(e) => field.onChange(new Date(e.target.value))} className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-900/50 text-slate-200 focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all text-sm font-bold" />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="exitTime"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Exit Date/Time</FormLabel>
+                    <FormControl>
+                      <Input type="datetime-local" {...field} className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-900/50 text-slate-200 focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all text-sm font-bold" />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="dayOfWeek"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Day of Week</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-900/50 text-slate-200 focus:border-blue-500/50 outline-none transition-all text-sm font-bold">
+                          <SelectValue />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent className="bg-slate-900 border-slate-800">
+                        {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map(day => (
+                          <SelectItem key={day} value={day}>{day}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="tradeDuration"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Trade Duration</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g. 2h 30m" {...field} className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-900/50 text-slate-200 focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all text-sm font-bold" />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="lotSize"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Lot Size / Units</FormLabel>
+                    <FormControl>
+                      <Input placeholder="0.01" {...field} className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-900/50 text-slate-200 focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all text-sm font-bold" />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="entryMethod"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Order Type</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-900/50 text-slate-200 focus:border-blue-500/50 outline-none transition-all text-sm font-bold">
+                          <SelectValue />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent className="bg-slate-900 border-slate-800">
+                        {['Market', 'Limit', 'Stop', 'Stop-Limit'].map(type => (
+                          <SelectItem key={type} value={type}>{type}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="actualEntry"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Entry Price</FormLabel>
+                    <FormControl>
+                      <Input type="number" step="any" placeholder="0.00" {...field} className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-900/50 text-slate-200 focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all text-sm font-bold" />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="actualStopLoss"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Stop-Loss</FormLabel>
+                    <FormControl>
+                      <Input type="number" step="any" {...field} className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-900/50 text-slate-200 focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all text-sm font-bold" />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="pipsGainedLost"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">SL (Pips)</FormLabel>
+                    <FormControl>
+                      <Input type="number" step="any" {...field} className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-900/50 text-slate-200 focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all text-sm font-bold" />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="plannedTakeProfit"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Take-Profit</FormLabel>
+                    <FormControl>
+                      <Input type="number" step="any" {...field} className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-900/50 text-slate-200 focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all text-sm font-bold" />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="rAchieved"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">TP (Pips)</FormLabel>
+                    <FormControl>
+                      <Input type="number" step="any" {...field} className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-900/50 text-slate-200 focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all text-sm font-bold" />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="riskPercentPerTrade"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Risk %</FormLabel>
+                    <FormControl>
+                      <Input type="number" step="any" {...field} className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-900/50 text-slate-200 focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all text-sm font-bold" />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="plAmt"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">P/L ($)</FormLabel>
+                    <FormControl>
+                      <Input type="number" step="any" {...field} className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-900/50 text-slate-200 focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all text-sm font-bold" />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="outcome"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Outcome</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-900/50 text-slate-200 focus:border-blue-500/50 outline-none transition-all text-sm font-bold">
+                          <SelectValue />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent className="bg-slate-900 border-slate-800">
+                        {['Win', 'Loss', 'BE'].map(res => (
+                          <SelectItem key={res} value={res}>{res}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="entryTF"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Entry TF</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-900/50 text-slate-200 focus:border-blue-500/50 outline-none transition-all text-sm font-bold">
+                          <SelectValue />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent className="bg-slate-900 border-slate-800">
+                        {['1M', '3M', '5M'].map(tf => (
+                          <SelectItem key={tf} value={tf}>{tf}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="analysisTF"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Analysis TF</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-900/50 text-slate-200 focus:border-blue-500/50 outline-none transition-all text-sm font-bold">
+                          <SelectValue />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent className="bg-slate-900 border-slate-800">
+                        {['15M', '30MIN', '1HR', '2HR', '4HR'].map(tf => (
+                          <SelectItem key={tf} value={tf}>{tf}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="contextTF"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Context TF</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-900/50 text-slate-200 focus:border-blue-500/50 outline-none transition-all text-sm font-bold">
+                          <SelectValue />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent className="bg-slate-900 border-slate-800">
+                        {['1W', '1D', '4HR'].map(tf => (
+                          <SelectItem key={tf} value={tf}>{tf}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+              />
             </div>
-            <FormField control={form.control} name="asset" render={({ field }) => (
-              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Asset</FormLabel>
-              <FormControl><Input placeholder="EURUSD" {...field} className="bg-background border-border" /></FormControl><FormMessage /></FormItem>
-            )} />
-            <FormField control={form.control} name="strategy" render={({ field }) => (
-              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Strategy</FormLabel>
-              <FormControl><Input placeholder="SMC Breaker" {...field} className="bg-background border-border" /></FormControl><FormMessage /></FormItem>
-            )} />
-            <FormField control={form.control} name="session" render={({ field }) => (
-              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Session</FormLabel>
-              <Select onValueChange={field.onChange} value={field.value || "New York"}>
-              <FormControl><SelectTrigger className="bg-background border-border"><SelectValue /></SelectTrigger></FormControl>
-              <SelectContent><SelectItem value="London">London</SelectItem><SelectItem value="New York">New York</SelectItem><SelectItem value="Asian">Asian</SelectItem></SelectContent></Select></FormItem>
-            )} />
-            <FormField control={form.control} name="condition" render={({ field }) => (
-              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Condition</FormLabel>
-              <Select onValueChange={field.onChange} value={field.value || "Trending"}>
-              <FormControl><SelectTrigger className="bg-background border-border"><SelectValue /></SelectTrigger></FormControl>
-              <SelectContent><SelectItem value="Trending">Trending</SelectItem><SelectItem value="Ranging">Ranging</SelectItem></SelectContent></Select></FormItem>
-            )} />
-            <FormField control={form.control} name="bias" render={({ field }) => (
-              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Bias</FormLabel>
-              <Select onValueChange={field.onChange} value={field.value || "Bullish"}>
-              <FormControl><SelectTrigger className="bg-background border-border"><SelectValue /></SelectTrigger></FormControl>
-              <SelectContent><SelectItem value="Bullish">Bullish</SelectItem><SelectItem value="Bearish">Bearish</SelectItem></SelectContent></Select></FormItem>
-            )} />
-            <FormField control={form.control} name="outcome" render={({ field }) => (
-              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Outcome</FormLabel>
-              <Select onValueChange={field.onChange} value={field.value || "Win"}>
-              <FormControl><SelectTrigger className="bg-background border-border"><SelectValue /></SelectTrigger></FormControl>
-              <SelectContent><SelectItem value="Win">Win</SelectItem><SelectItem value="Loss">Loss</SelectItem><SelectItem value="BE">BE</SelectItem></SelectContent></Select></FormItem>
-            )} />
-            <FormField control={form.control} name="contextTF" render={({ field }) => (
-              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Context TF (HTF)</FormLabel>
-              <FormControl><Input placeholder="D1" {...field} className="bg-background border-border" /></FormControl><FormMessage /></FormItem>
-            )} />
-            <FormField control={form.control} name="analysisTF" render={({ field }) => (
-              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Analysis TF (ATF)</FormLabel>
-              <FormControl><Input placeholder="H1" {...field} className="bg-background border-border" /></FormControl><FormMessage /></FormItem>
-            )} />
-            <FormField control={form.control} name="entryTF" render={({ field }) => (
-              <FormItem><FormLabel className="text-[10px] font-bold uppercase">Entry TF (LTF)</FormLabel>
-              <FormControl><Input placeholder="M5" {...field} className="bg-background border-border" /></FormControl><FormMessage /></FormItem>
-            )} />
-            <FormField control={form.control} name="rAchieved" render={({ field }) => (
-              <FormItem><FormLabel className="text-[10px] font-bold uppercase">R-Value</FormLabel>
-              <FormControl><Input type="number" step="any" {...field} className="bg-background border-border" /></FormControl></FormItem>
-            )} />
-            <FormField control={form.control} name="plAmt" render={({ field }) => (
-              <FormItem><FormLabel className="text-[10px] font-bold uppercase">P/L ($)</FormLabel>
-              <FormControl><Input type="number" step="any" {...field} className="bg-background border-border" /></FormControl></FormItem>
-            )} />
           </div>
         )}
         {currentStep === 1 && (

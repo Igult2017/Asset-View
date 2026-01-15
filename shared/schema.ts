@@ -94,6 +94,11 @@ export const trades = pgTable("trades", {
   disallowedVolatility: text("disallowed_volatility"),
   blacklistedConditions: text("blacklisted_conditions"),
   imageUrl: text("image_url"),
+  exitTime: text("exit_time"),
+  dayOfWeek: text("day_of_week"),
+  tradeDuration: text("trade_duration"),
+  lotSize: text("lot_size"),
+  pipsGainedLost: numeric("pips_gained_lost"),
 });
 
 export const insertTradeSchema = createInsertSchema(trades).omit({ 
