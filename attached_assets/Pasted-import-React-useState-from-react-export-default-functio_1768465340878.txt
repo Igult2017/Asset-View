@@ -1,0 +1,135 @@
+import React, { useState } from 'react';
+
+export default function App() {
+  const [activeTab, setActiveTab] = useState('ANALYTICS');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const navItems = ['OVERVIEW', 'AUDITOR', 'ANALYTICS', 'DRAWDOWN', 'TRADE VAULT'];
+
+  return (
+    <div className="min-h-screen bg-[#0a0e27]">
+      {/* Import Montserrat with heavy weights */}
+      <style>
+        {`@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap');`}
+      </style>
+      
+      <header 
+        className="w-full bg-gradient-to-br from-[#1a1f3a] via-[#111827] to-[#0f1629] relative z-50 border-b-[1px] border-white/10 overflow-hidden"
+        style={{ fontFamily: "'Montserrat', sans-serif" }}
+      >
+        {/* Animated Top accent line */}
+        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#3b82f6] via-[#8b5cf6] to-transparent opacity-80" />
+        
+        {/* Background Ambient Glow */}
+        <div className="absolute -top-24 -left-24 w-48 h-48 bg-blue-600/10 blur-[100px] pointer-events-none" />
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 py-4 flex items-center justify-between relative z-10">
+          
+          {/* Left: Logo & Desktop Nav */}
+          <div className="flex items-center gap-8 lg:gap-12">
+            {/* Logo Section */}
+            <div className="flex items-center gap-3 group cursor-pointer">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center transition-transform duration-500 group-hover:scale-110">
+                <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+                  <polyline 
+                    points="0,16 8,16 10,8 14,24 18,12 22,20 26,16 32,16" 
+                    fill="none" 
+                    stroke="#3b82f6" 
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="drop-shadow-[0_0_10px_rgba(59,130,246,0.8)]"
+                  />
+                </svg>
+              </div>
+              <div className="text-white text-lg sm:text-xl font-[900] tracking-tighter italic group-hover:text-blue-400 transition-colors uppercase">FSDZONES</div>
+            </div>
+
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center gap-1">
+              {navItems.map((item) => (
+                <button
+                  key={item}
+                  onClick={() => setActiveTab(item)}
+                  className={`px-4 py-2 text-[11px] lg:text-[12px] font-[900] tracking-tight transition-all duration-300 relative cursor-pointer bg-transparent border-none outline-none ${
+                    activeTab === item 
+                      ? 'text-white after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[3px] after:bg-blue-500' 
+                      : 'text-[#8b92b0] hover:text-white'
+                  }`}
+                >
+                  {item}
+                </button>
+              ))}
+            </nav>
+          </div>
+
+          {/* Right Section: Button & Mobile Toggle */}
+          <div className="flex items-center gap-3 sm:gap-4">
+            <button className="relative overflow-hidden group bg-gradient-to-br from-[#3b82f6] to-[#2563eb] text-white px-4 sm:px-7 py-2.5 sm:py-3 text-[11px] sm:text-[13px] font-[900] tracking-tighter flex items-center gap-2 shadow-[0_8px_20px_rgba(37,99,235,0.2)] hover:shadow-[0_8px_25px_rgba(37,99,235,0.4)] transition-all active:scale-95">
+              <span className="absolute inset-0 bg-white/10 group-hover:translate-x-full transition-transform duration-500 -translate-x-full" />
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="3" className="hidden sm:block">
+                <line x1="8" y1="3" x2="8" y2="13" strokeLinecap="square"/>
+                <line x1="3" y1="8" x2="13" y2="8" strokeLinecap="square"/>
+              </svg>
+              LOG ENTRY
+            </button>
+
+            {/* Mobile Menu Toggle */}
+            <button 
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="md:hidden w-10 h-10 bg-white/5 border border-white/10 flex items-center justify-center text-[#8b92b0] hover:text-white transition-all"
+            >
+              {isMenuOpen ? (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              ) : (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                  <line x1="4" y1="6" x2="20" y2="6" />
+                  <line x1="4" y1="12" x2="20" y2="12" />
+                  <line x1="4" y1="18" x2="20" y2="18" />
+                </svg>
+              )}
+            </button>
+
+            {/* Redesigned Theme/Settings Button (Desktop) */}
+            <button className="hidden md:flex w-11 h-11 bg-white/5 border border-white/10 items-center justify-center group hover:bg-white/10 hover:border-blue-500/50 transition-all duration-300 relative overflow-hidden">
+              <div className="absolute inset-0 bg-blue-500/0 group-hover:bg-blue-500/5 transition-colors duration-300" />
+              <svg 
+                className="w-6 h-6 fill-[#8b92b0] group-hover:fill-blue-400 group-hover:rotate-90 transition-all duration-500 ease-out relative z-10" 
+                viewBox="0 0 24 24" 
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M12 15a3 3 0 100-6 3 3 0 000 6z" />
+                <path fillRule="evenodd" d="M11.323 3.946c.123-.393.454-.646.827-.646.374 0 .704.253.827.646l.512 1.637a6.953 6.953 0 011.191.494l1.528-.813c.34-.18.756-.098 1.01.205l1.011 1.205c.253.303.264.74.027 1.053l-1.041 1.365c.101.393.16.802.176 1.222l1.705.426c.404.102.668.455.668.835v1.566c0 .38-.264.733-.668.835l-1.705.426a6.942 6.942 0 01-.176 1.222l1.041 1.365c.237.313.226.75-.027 1.053l-1.01 1.205c-.255.303-.671.385-1.011.205l-1.528-.813a6.953 6.953 0 01-1.19.494l-.513 1.637c-.123.393-.453.646-.827.646-.373 0-.704-.253-.827-.646l-.513-1.637a6.953 6.953 0 01-1.19-.494l-1.528.813c-.34.18-.756.098-1.011-.205l-1.01-1.205c-.254-.303-.265-.74-.028-1.053l1.041-1.365a6.942 6.942 0 01-.176-1.222l-1.705-.426c-.404-.102-.668-.455-.668-.835v-1.566c0-.38.264-.733.668-.835l1.705-.426c.016-.42.075-.829.176-1.222l-1.041-1.365c-.237-.313-.226-.75.028-1.053l1.01-1.205c.255-.303.671-.385 1.011-.205l1.528.813a6.953 6.953 0 011.19-.494l.513-1.637z" clipRule="evenodd" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Navigation Menu */}
+        <div className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${isMenuOpen ? 'max-h-96 border-t border-white/10' : 'max-h-0'}`}>
+          <div className="flex flex-col p-4 gap-2 bg-[#0f1629]">
+            {navItems.map((item) => (
+              <button
+                key={item}
+                onClick={() => {
+                  setActiveTab(item);
+                  setIsMenuOpen(false);
+                }}
+                className={`w-full text-left px-4 py-3 text-[12px] font-[900] tracking-tight transition-all duration-300 ${
+                  activeTab === item 
+                    ? 'text-white bg-blue-600/20 border-l-4 border-blue-500' 
+                    : 'text-[#8b92b0] hover:text-white hover:bg-white/5'
+                }`}
+              >
+                {item}
+              </button>
+            ))}
+          </div>
+        </div>
+      </header>
+    </div>
+  );
+}
