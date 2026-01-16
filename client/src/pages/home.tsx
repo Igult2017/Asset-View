@@ -281,8 +281,8 @@ function PanelSection({ title, description, children, icon: Icon }: { title: str
           <Icon className="w-4 h-4" />
         </div>
         <div className="space-y-1.5 min-w-0">
-          <h3 className="text-[11px] font-black uppercase tracking-[0.15em] text-foreground/90 group-hover:text-primary transition-colors duration-300 truncate">{title}</h3>
-          <p className="text-[10px] font-medium text-muted-foreground/80 dark:text-muted-foreground leading-relaxed line-clamp-2 group-hover:text-muted-foreground transition-colors">{description}</p>
+          <h3 className="text-[11px] font-black uppercase tracking-[0.15em] text-white group-hover:text-primary transition-colors duration-300 truncate">{title}</h3>
+          <p className="text-[10px] font-medium text-white leading-relaxed line-clamp-2 group-hover:text-white transition-colors">{description}</p>
         </div>
       </div>
       {children && <div className="relative z-10">{children}</div>}
@@ -1303,7 +1303,7 @@ export default function Dashboard() {
                       return (
                         <div key={condition} className="space-y-1">
                           <div className="flex justify-between text-[10px] font-black uppercase">
-                            <span className="text-muted-foreground">{condition}</span>
+                            <span className="text-white">{condition}</span>
                             <span className="text-primary">{wr}% WR</span>
                           </div>
                           <div className="h-1 bg-muted/20 rounded-full overflow-hidden">
@@ -1333,11 +1333,11 @@ export default function Dashboard() {
                 >
                   <div className="space-y-3">
                     <div className="flex items-center justify-between text-[10px]">
-                      <span className="text-muted-foreground uppercase">Entry Precision</span>
+                      <span className="text-white uppercase">Entry Precision</span>
                       <span className="font-mono text-emerald-500 font-bold">{(stats as any).setupQualityMetrics?.precision}/5.0</span>
                     </div>
                     <div className="flex items-center justify-between text-[10px]">
-                      <span className="text-muted-foreground uppercase">Timing Quality</span>
+                      <span className="text-white uppercase">Timing Quality</span>
                       <span className="font-mono text-primary font-bold">{(stats as any).setupQualityMetrics?.clarity}/5.0</span>
                     </div>
                     <div className="pt-2 border-t border-border/40">
@@ -1359,11 +1359,11 @@ export default function Dashboard() {
                   <div className="space-y-3">
                     <div className="grid grid-cols-2 gap-3">
                       <div className="space-y-1">
-                        <div className="text-[8px] text-muted-foreground uppercase">Clarity</div>
+                        <div className="text-[8px] text-white uppercase">Clarity</div>
                         <div className="text-xs font-black">{(stats as any).setupQualityMetrics?.clarity}</div>
                       </div>
                       <div className="space-y-1">
-                        <div className="text-[8px] text-muted-foreground uppercase">Confluence</div>
+                        <div className="text-[8px] text-white uppercase">Confluence</div>
                         <div className="text-xs font-black">{(stats as any).setupQualityMetrics?.confluence}</div>
                       </div>
                     </div>
@@ -1382,11 +1382,11 @@ export default function Dashboard() {
                     </div>
                     <div className="grid grid-cols-2 gap-2">
                       <div className="p-1.5 rounded bg-muted/30">
-                        <div className="text-[8px] text-muted-foreground uppercase">Confidence</div>
+                        <div className="text-[8px] text-white uppercase">Confidence</div>
                         <div className="text-[10px] font-bold">{(stats as any).avgConfidence}/5.0</div>
                       </div>
                       <div className="p-1.5 rounded bg-muted/30">
-                        <div className="text-[8px] text-muted-foreground uppercase">Emotional Edge</div>
+                        <div className="text-[8px] text-white uppercase">Emotional Edge</div>
                         <div className="text-[10px] font-bold text-emerald-500">
                           {Object.entries((stats as any).emotionalStatePerformance).length > 0 ? (
                             Object.entries((stats as any).emotionalStatePerformance).sort((a: any, b: any) => b[1].wins - a[1].wins)[0][0]
