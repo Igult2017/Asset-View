@@ -106,7 +106,7 @@
 @layer base {
   body {
     @apply bg-background text-foreground/90 antialiased min-h-screen selection:bg-primary/30;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
     font-weight: 500;
     letter-spacing: -0.01em;
   }
