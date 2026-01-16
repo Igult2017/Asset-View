@@ -104,15 +104,15 @@ const DataRow = ({ label, pl, dd, edge, colorTag }: { label: string, pl: string,
       <span className="font-black text-base uppercase tracking-tight text-zinc-100 font-blocky">{label}</span>
     </div>
     <div className="col-span-2 text-right">
-      <p className="text-[9px] font-bold text-zinc-500 uppercase mb-0.5">Edge</p>
+      <p className="text-[11px] font-bold text-zinc-400 uppercase mb-0.5">Edge</p>
       <p className="font-black text-sm text-blue-500 font-blocky">{edge}</p>
     </div>
     <div className="col-span-2 text-right">
-      <p className="text-[9px] font-bold text-zinc-500 uppercase mb-0.5">Max DD</p>
+      <p className="text-[11px] font-bold text-zinc-400 uppercase mb-0.5">Max DD</p>
       <p className={`font-black text-sm ${dd === "-$0" ? 'text-zinc-600' : 'text-red-500'} font-blocky`}>{dd}</p>
     </div>
     <div className="col-span-3 text-right">
-      <p className="text-[9px] font-bold text-zinc-500 uppercase mb-0.5">Net P/L</p>
+      <p className="text-[11px] font-bold text-zinc-400 uppercase mb-0.5">Net P/L</p>
       <p className={`font-black text-sm ${pl.startsWith('-$') ? 'text-red-400' : 'text-green-500'} font-blocky`}>{pl}</p>
     </div>
   </div>
@@ -197,18 +197,18 @@ export default function DrawdownAnalysis() {
                         {condition.name}
                       </h3>
                       <div className="bg-blue-500/10 px-3 py-1 rounded-lg">
-                        <p className="text-[8px] font-bold text-zinc-500 uppercase mb-0.5 text-center">Edge</p>
+                        <p className="text-[10px] font-bold text-zinc-400 uppercase mb-0.5 text-center">Edge</p>
                         <p className="font-black text-blue-500 text-sm font-blocky">{condition.winRate}</p>
                       </div>
                     </div>
                     
                     <div className="flex justify-between border-t border-zinc-800 pt-4">
                       <div>
-                        <p className="text-[9px] font-bold text-zinc-500 uppercase mb-0.5">Max DD</p>
+                        <p className="text-[11px] font-bold text-zinc-400 uppercase mb-0.5">Max DD</p>
                         <p className="font-black text-red-500 text-lg font-blocky">{condition.maxDD}</p>
                       </div>
                       <div className="text-right">
-                        <p className="text-[9px] font-bold text-zinc-500 uppercase mb-0.5">Net Profit</p>
+                        <p className="text-[11px] font-bold text-zinc-400 uppercase mb-0.5">Net Profit</p>
                         <p className={`font-black text-lg ${condition.netPL.startsWith('-$') ? 'text-red-400' : 'text-green-500'} font-blocky`}>{condition.netPL}</p>
                       </div>
                     </div>
