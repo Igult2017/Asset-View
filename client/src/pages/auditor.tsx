@@ -87,9 +87,9 @@ const AuditorExtras = ({ metrics, rollingExpectancy }: { metrics: any, rollingEx
           <ShieldCheck size={14}/> Kill-Switch Rules
         </h3>
         <div className="space-y-2 text-base">
-          <div className="flex justify-between font-bold"><span className="text-slate-400">Expectancy Fail</span><span className={killSwitch.expectancyFail ? 'text-rose-500' : 'text-emerald-500'}>{killSwitch.expectancyFail ? 'YES' : 'NO'}</span></div>
-          <div className="flex justify-between font-bold"><span className="text-slate-400">Drawdown Fail</span><span className={killSwitch.drawdownFail ? 'text-rose-500' : 'text-emerald-500'}>{killSwitch.drawdownFail ? 'YES' : 'NO'}</span></div>
-          <div className="flex justify-between font-bold"><span className="text-slate-400">Regime Fail</span><span className="text-emerald-500">NO</span></div>
+          <div className="flex justify-between font-bold"><span className="text-white">Expectancy Fail</span><span className={killSwitch.expectancyFail ? 'text-rose-500' : 'text-emerald-500'}>{killSwitch.expectancyFail ? 'YES' : 'NO'}</span></div>
+          <div className="flex justify-between font-bold"><span className="text-white">Drawdown Fail</span><span className={killSwitch.drawdownFail ? 'text-rose-500' : 'text-emerald-500'}>{killSwitch.drawdownFail ? 'YES' : 'NO'}</span></div>
+          <div className="flex justify-between font-bold"><span className="text-white">Regime Fail</span><span className="text-emerald-500">NO</span></div>
         </div>
       </div>
 
@@ -250,24 +250,24 @@ const Auditor = () => {
             {/* LEFT COLUMN */}
             <div className="lg:col-span-4 space-y-6">
               <div className="bg-slate-900/40 p-6 rounded-[32px] border border-white/5 space-y-4">
-                <h3 className="text-[12px] font-black uppercase text-slate-400 tracking-widest mb-2 flex items-center gap-2">
+                <h3 className="text-[12px] font-black uppercase text-white tracking-widest mb-2 flex items-center gap-2">
                   <TrendingUp size={14}/> Variance & Distribution
                 </h3>
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-400 text-base font-bold">Win Rate</span>
+                    <span className="text-white text-base font-bold">Win Rate</span>
                     <span className="text-white font-blocky text-lg">{metrics.winRate}%</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-400 text-base font-bold">Sample Size</span>
+                    <span className="text-white text-base font-bold">Sample Size</span>
                     <span className="text-white font-blocky text-lg">{metrics.tradeSample}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-400 text-base font-bold">Win/Loss Ratio</span>
+                    <span className="text-white text-base font-bold">Win/Loss Ratio</span>
                     <span className="text-white font-blocky text-lg">{(metrics.avgWinR / metrics.avgLossR).toFixed(2)}</span>
                   </div>
                   <div className="pt-2 flex justify-between items-center border-t border-white/5">
-                    <span className="text-[11px] font-black uppercase text-slate-400 tracking-widest">Positive Skew</span>
+                    <span className="text-[11px] font-black uppercase text-white tracking-widest">Positive Skew</span>
                     <span className="text-emerald-400 font-black text-sm uppercase tracking-widest flex items-center gap-1">
                       <CheckCircle2 size={12}/> Verified
                     </span>
@@ -386,7 +386,7 @@ const Auditor = () => {
                 <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
                   {Object.entries(auditElements).map(([key, value]) => (
                     <div key={key} className="space-y-2">
-                      <p className="text-[11px] font-black uppercase text-slate-400 tracking-widest">{key.replace(/([A-Z])/g, ' $1')}</p>
+                      <p className="text-[11px] font-black uppercase text-white tracking-widest">{key.replace(/([A-Z])/g, ' $1')}</p>
                       <p className="text-base font-bold text-white leading-relaxed">{value}</p>
                     </div>
                   ))}
