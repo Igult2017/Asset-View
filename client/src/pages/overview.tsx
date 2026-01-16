@@ -35,15 +35,15 @@ export default function Overview() {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-black text-slate-100 flex font-['Montserrat',sans-serif] selection:bg-blue-500/30">
+      <div className="min-h-screen bg-black text-slate-100 flex selection:bg-blue-500/30">
         <style>
           {`@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
+            * {
+              font-family: 'Montserrat', sans-serif !important;
+            }
             .scanline { 
               background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.5) 50%); 
               background-size: 100% 4px; 
-            }
-            .font-montserrat {
-              font-family: 'Montserrat', sans-serif;
             }
           `}
         </style>
