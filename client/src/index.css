@@ -105,10 +105,12 @@
 
 @layer base {
   body {
-    @apply bg-background text-foreground/90 antialiased min-h-screen selection:bg-primary/30;
+    @apply bg-background text-foreground antialiased min-h-screen selection:bg-primary/30;
     font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
-    font-weight: 500;
+    font-weight: 400;
     letter-spacing: -0.01em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   h1, h2, h3, h4, h5, h6 {

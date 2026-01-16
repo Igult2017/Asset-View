@@ -7,15 +7,15 @@ import {
 } from 'lucide-react';
 import { Layout } from "./home";
 
-// Using Google Fonts to inject Montserrat for the "Blocky" premium feel
+// Using Google Fonts to inject Outfit for the premium feel
 const FontStyle = () => (
   <style dangerouslySetInnerHTML={{ __html: `
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&display=swap');
     :root {
-      font-family: 'Montserrat', sans-serif;
+      font-family: 'Outfit', sans-serif;
     }
     .font-blocky {
-      font-family: 'Montserrat', sans-serif;
+      font-family: 'Outfit', sans-serif;
       font-weight: 900;
       letter-spacing: -0.02em;
     }

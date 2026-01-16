@@ -101,19 +101,19 @@ const DataRow = ({ label, pl, dd, edge, colorTag }: { label: string, pl: string,
   <div className="grid grid-cols-12 items-center p-4 hover:bg-zinc-900/40 transition-colors border-b border-zinc-800/50 last:border-0">
     <div className="col-span-5 flex items-center gap-3">
       {colorTag && <div className={`w-1.5 h-6 rounded-full ${colorTag}`} />}
-      <span className="font-black text-base uppercase tracking-tight text-zinc-100 font-blocky">{label}</span>
+      <span className="font-bold text-base uppercase tracking-tight text-zinc-100">{label}</span>
     </div>
     <div className="col-span-2 text-right">
       <p className="text-[11px] font-bold text-zinc-400 uppercase mb-0.5">Edge</p>
-      <p className="font-black text-sm text-blue-500 font-blocky">{edge}</p>
+      <p className="font-bold text-sm text-blue-500">{edge}</p>
     </div>
     <div className="col-span-2 text-right">
       <p className="text-[11px] font-bold text-zinc-400 uppercase mb-0.5">Max DD</p>
-      <p className={`font-black text-sm ${dd === "-$0" ? 'text-zinc-600' : 'text-red-500'} font-blocky`}>{dd}</p>
+      <p className={`font-bold text-sm ${dd === "-$0" ? 'text-zinc-600' : 'text-red-500'}`}>{dd}</p>
     </div>
     <div className="col-span-3 text-right">
       <p className="text-[11px] font-bold text-zinc-400 uppercase mb-0.5">Net P/L</p>
-      <p className={`font-black text-sm ${pl.startsWith('-$') ? 'text-red-400' : 'text-green-500'} font-blocky`}>{pl}</p>
+      <p className={`font-bold text-sm ${pl.startsWith('-$') ? 'text-red-400' : 'text-green-500'}`}>{pl}</p>
     </div>
   </div>
 );
@@ -173,9 +173,9 @@ export default function DrawdownAnalysis() {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-[#0a0a0b] text-zinc-100 p-4 md:p-10 font-sans">
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap" rel="stylesheet" />
-        <style>{`.font-blocky { font-family: 'Montserrat', sans-serif; font-weight: 900; }`}</style>
+      <div className="min-h-screen bg-[#0a0a0b] text-zinc-100 p-4 md:p-10">
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@900&display=swap" rel="stylesheet" />
+        <style>{`.font-blocky { font-family: 'Outfit', sans-serif; font-weight: 900; }`}</style>
         
         <div className="max-w-5xl mx-auto space-y-10">
           <main className="space-y-8">
