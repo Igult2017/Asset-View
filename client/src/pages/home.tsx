@@ -282,7 +282,7 @@ function PanelSection({ title, description, children, icon: Icon }: { title: str
         </div>
         <div className="space-y-1.5 min-w-0">
           <h3 className="text-[11px] font-black uppercase tracking-[0.15em] text-white group-hover:text-primary transition-colors duration-300 truncate">{title}</h3>
-          <p className="text-[10px] font-bold text-white leading-relaxed line-clamp-2 group-hover:text-white transition-colors">{description}</p>
+          <p className="text-[10px] font-bold text-white leading-relaxed line-clamp-2 group-hover:text-white transition-colors" style={{ textShadow: '0 0 1px rgba(255,255,255,0.1)' }}>{description}</p>
         </div>
       </div>
       {children && <div className="relative z-10">{children}</div>}
@@ -1192,7 +1192,7 @@ function AIAnalysisSection() {
           </div>
           <div>
             <h3 className="text-sm font-black uppercase tracking-widest text-white">AI Performance Intelligence</h3>
-            <p className="text-xs font-bold text-white/90">Neural breakdown of edge clarity and actionable growth steps.</p>
+            <p className="text-xs font-bold text-white/90" style={{ textShadow: '0 0 1px rgba(255,255,255,0.1)' }}>Neural breakdown of edge clarity and actionable growth steps.</p>
           </div>
         </div>
         <Button 
@@ -1563,11 +1563,11 @@ export default function Dashboard() {
                     <div className="grid grid-cols-2 gap-4">
                       <div className="p-3 rounded-xl bg-emerald-500/5 border border-emerald-500/10">
                         <div className="text-[8px] text-emerald-500 font-bold uppercase mb-1">What Worked</div>
-                        <p className="text-[9px] text-white font-bold italic">"Patience during London open consolidation resulted in high-quality breakout."</p>
+                        <p className="text-[9px] text-white font-bold italic" style={{ textShadow: '0 0 1px rgba(255,255,255,0.1)' }}>"Patience during London open consolidation resulted in high-quality breakout."</p>
                       </div>
                       <div className="p-3 rounded-xl bg-rose-500/5 border border-rose-500/10">
                         <div className="text-[8px] text-rose-500 font-bold uppercase mb-1">Rule Adjustment</div>
-                        <p className="text-[9px] text-white font-bold italic">"Avoid entering before 8:30 AM EST news release to reduce slippage."</p>
+                        <p className="text-[9px] text-white font-bold italic" style={{ textShadow: '0 0 1px rgba(255,255,255,0.1)' }}>"Avoid entering before 8:30 AM EST news release to reduce slippage."</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 p-2 rounded bg-primary/5 border border-primary/10">
