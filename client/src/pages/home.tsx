@@ -1304,7 +1304,7 @@ export default function Dashboard() {
                         <div key={condition} className="space-y-1">
                           <div className="flex justify-between text-[10px] font-black uppercase">
                             <span className="text-white font-bold">{condition}</span>
-                            <span className="text-primary font-bold">{wr}% WR</span>
+                            <span className="text-white font-bold">{wr}% WR</span>
                           </div>
                           <div className="h-1 bg-muted/20 rounded-full overflow-hidden">
                             <div className="h-full bg-primary" style={{ width: `${wr}%` }} />
@@ -1473,10 +1473,10 @@ export default function Dashboard() {
                       <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
                       <span className="text-[11px] font-bold text-blue-500 uppercase">Avg Discipline: {stats.avgDiscipline}%</span>
                     </div>
-                    <div className="flex justify-between text-[10px] px-1">
-                      <span className="text-muted-foreground">Edge per 100% Rules:</span>
-                      <span className="text-emerald-500 font-bold">2.4R</span>
-                    </div>
+                      <div className="flex justify-between text-[10px] px-1">
+                        <span className="text-white font-bold">Edge per 100% Rules:</span>
+                        <span className="text-emerald-500 font-bold">2.4R</span>
+                      </div>
                   </div>
                 </PanelSection>
 
@@ -1487,11 +1487,11 @@ export default function Dashboard() {
                 >
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-[10px]">
-                      <span className="text-muted-foreground">Fill Slippage (Avg)</span>
-                      <span className="font-mono text-emerald-500">-0.15 pips</span>
+                      <span className="text-white font-bold">Fill Slippage (Avg)</span>
+                      <span className="font-mono text-emerald-500 font-bold">-0.15 pips</span>
                     </div>
                     <div className="flex items-center justify-between text-[10px]">
-                      <span className="text-muted-foreground">TFS Alignment (Avg)</span>
+                      <span className="text-white font-bold">TFS Alignment (Avg)</span>
                       <span className="font-mono text-primary font-bold">1.4R</span>
                     </div>
                   </div>
@@ -1604,7 +1604,7 @@ export default function Dashboard() {
                 <div className="p-4 flex flex-col md:flex-row justify-between items-center gap-4">
                   <div className="flex items-center gap-3">
                     <div className="w-2 h-8 bg-primary rounded-full shadow-lg shadow-primary/50"></div>
-                    <h3 className="text-sm font-black uppercase tracking-widest text-foreground">Strategy Drill-Down</h3>
+                    <h3 className="text-sm font-black uppercase tracking-widest text-white">Strategy Drill-Down</h3>
                   </div>
                   <Select value={selectedStrat} onValueChange={setSelectedStrat}>
                     <SelectTrigger className="w-[200px] bg-card border-border">
@@ -1623,7 +1623,7 @@ export default function Dashboard() {
               {/* Metrics Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-card/40 p-5 rounded-xl border border-border/50">
-                  <h4 className="text-[9px] font-black text-muted-foreground uppercase mb-4 tracking-tighter">Bias & Momentum</h4>
+                  <h4 className="text-[9px] font-black text-white uppercase mb-4 tracking-tighter">Bias & Momentum</h4>
                   <div className="space-y-3">
                     {['Bullish', 'Bearish'].map(b => {
                       const bTrades = filteredTrades.filter(t => t.bias === b);
@@ -1633,14 +1633,14 @@ export default function Dashboard() {
                         <div key={b} className="p-2 bg-card/30 rounded-lg border border-border/30">
                           <div className="flex justify-between items-center mb-2">
                             <span className={cn("text-[9px] font-black uppercase", b === 'Bullish' ? 'text-emerald-500' : 'text-rose-500')}>{b}</span>
-                            <span className="text-xs font-black text-foreground">{perc}%</span>
+                            <span className="text-xs font-black text-white">{perc}%</span>
                           </div>
-                          <div className="text-[8px] text-muted-foreground">{bTrades.length} trades</div>
+                          <div className="text-[8px] text-white font-bold">{bTrades.length} trades</div>
                         </div>
                       );
                     })}
                     <div className="pt-2 mt-2 border-t border-border/30">
-                      <div className="text-[8px] text-muted-foreground font-bold mb-1">CURRENT STREAK</div>
+                      <div className="text-[8px] text-white font-black mb-1">CURRENT STREAK</div>
                       <div className="text-lg font-black">
                         {filteredTrades.length > 0 ? (
                           <span className={filteredTrades[filteredTrades.length - 1].outcome === 'Win' ? 'text-emerald-500' : 'text-rose-500'}>
@@ -1653,13 +1653,13 @@ export default function Dashboard() {
                 </div>
 
                 <div className="bg-card/40 p-5 rounded-xl border border-border/50">
-                  <h4 className="text-[9px] font-black text-muted-foreground uppercase mb-4 tracking-tighter">Top Performers</h4>
+                  <h4 className="text-[9px] font-black text-white uppercase mb-4 tracking-tighter">Top Performers</h4>
                   <div className="space-y-4">
                     {calculateBestStrategy(stats.strategyPerformance) && (
                       <div className="flex justify-between items-center p-3 bg-primary/5 rounded-lg border border-primary/10">
                         <div>
-                          <div className="text-[8px] text-muted-foreground uppercase font-bold">Best Strategy</div>
-                          <div className="text-xs font-black uppercase tracking-tight">{calculateBestStrategy(stats.strategyPerformance)?.name}</div>
+                          <div className="text-[8px] text-white font-bold uppercase font-bold">Best Strategy</div>
+                          <div className="text-xs font-black uppercase tracking-tight text-white">{calculateBestStrategy(stats.strategyPerformance)?.name}</div>
                         </div>
                         <div className="text-right">
                           <div className="text-xs font-black text-emerald-500">{calculateBestStrategy(stats.strategyPerformance)?.wr}% WR</div>
@@ -1668,12 +1668,12 @@ export default function Dashboard() {
                       </div>
                     )}
                     <div className="grid grid-cols-2 gap-2">
-                      <div className="p-2 bg-card/30 rounded-lg border border-border/30 text-center">
-                        <div className="text-[8px] text-white font-bold uppercase">Management</div>
-                        <div className="text-xs font-black text-red-400">-0.52R Loss</div>
+                      <div className="p-3 bg-card/30 rounded-lg border border-border/30 text-center">
+                        <div className="text-[8px] text-white font-bold uppercase mb-1">Management</div>
+                        <div className="text-xl font-black text-white">{(stats as any).avgManagementQuality}/5.0</div>
                       </div>
                       <div className="p-2 bg-card/30 rounded-lg border border-border/30 text-center">
-                        <div className="text-[8px] text-muted-foreground uppercase">Heat</div>
+                        <div className="text-[8px] text-white font-bold uppercase">Heat</div>
                         <div className="text-xs font-black text-primary">LOW</div>
                       </div>
                     </div>
@@ -1685,7 +1685,7 @@ export default function Dashboard() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Context Timeframe Performance */}
                 <div className="bg-card/40 p-5 rounded-xl border border-border/50">
-                  <h4 className="text-[9px] font-black text-muted-foreground uppercase mb-4 tracking-tighter">Context TF Performance</h4>
+                  <h4 className="text-[9px] font-black text-white uppercase mb-4 tracking-tighter">Context TF Performance</h4>
                   <div className="space-y-2">
                     {Array.from(new Set(filteredTrades.map(t => t.contextTF))).sort().map(tf => {
                       const tfTrades = filteredTrades.filter(t => t.contextTF === tf);
@@ -1694,10 +1694,10 @@ export default function Dashboard() {
                       const avgR = (tfTrades.reduce((a, b) => a + Number(b.rAchieved), 0) / tfTrades.length).toFixed(2);
                       return (
                         <div key={tf} className="flex items-center justify-between p-2 bg-card/30 rounded-lg border border-border/30">
-                          <span className="text-[9px] font-black uppercase text-foreground">{tf}</span>
+                          <span className="text-[9px] font-black uppercase text-white">{tf}</span>
                           <div className="flex items-center gap-3">
                             <span className="text-xs font-bold text-primary">{perc}%</span>
-                            <span className="text-[8px] text-muted-foreground">{avgR}R</span>
+                            <span className="text-[8px] text-white font-bold">{avgR}R</span>
                           </div>
                         </div>
                       );
@@ -1707,7 +1707,7 @@ export default function Dashboard() {
 
                 {/* Entry Timeframe Performance */}
                 <div className="bg-card/40 p-5 rounded-xl border border-border/50">
-                  <h4 className="text-[9px] font-black text-muted-foreground uppercase mb-4 tracking-tighter">Entry TF Performance</h4>
+                  <h4 className="text-[9px] font-black text-white uppercase mb-4 tracking-tighter">Entry TF Performance</h4>
                   <div className="space-y-2">
                     {Array.from(new Set(filteredTrades.map(t => t.entryTF))).sort().map(tf => {
                       const tfTrades = filteredTrades.filter(t => t.entryTF === tf);
@@ -1716,10 +1716,10 @@ export default function Dashboard() {
                       const avgR = (tfTrades.reduce((a, b) => a + Number(b.rAchieved), 0) / tfTrades.length).toFixed(2);
                       return (
                         <div key={tf} className="flex items-center justify-between p-2 bg-card/30 rounded-lg border border-border/30">
-                          <span className="text-[9px] font-black uppercase text-foreground">{tf}</span>
+                          <span className="text-[9px] font-black uppercase text-white">{tf}</span>
                           <div className="flex items-center gap-3">
                             <span className="text-xs font-bold text-primary">{perc}%</span>
-                            <span className="text-[8px] text-muted-foreground">{avgR}R</span>
+                            <span className="text-[8px] text-white font-bold">{avgR}R</span>
                           </div>
                         </div>
                       );
@@ -1732,18 +1732,18 @@ export default function Dashboard() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Drawdown Per Month */}
                 <div className="bg-card/40 p-5 rounded-xl border border-border/50">
-                  <h4 className="text-[9px] font-black text-muted-foreground uppercase mb-4 tracking-tighter">Monthly Drawdown (Last 6 Months)</h4>
+                  <h4 className="text-[9px] font-black text-white uppercase mb-4 tracking-tighter">Monthly Drawdown (Last 6 Months)</h4>
                   <div className="space-y-3">
                     {calculateDrawdownPerMonth(filteredTrades).length > 0 ? (
                       calculateDrawdownPerMonth(filteredTrades).map((month) => (
                         <div key={month.month} className="p-3 bg-card/30 rounded-lg border border-border/30">
                           <div className="flex justify-between items-center mb-2">
-                            <span className="text-[9px] font-black uppercase text-foreground">{month.month}</span>
+                            <span className="text-[9px] font-black uppercase text-white">{month.month}</span>
                             <span className={cn("text-xs font-black", month.drawdown > 500 ? "text-rose-500" : month.drawdown > 200 ? "text-amber-500" : "text-emerald-500")}>
                               {month.drawdownPercent}% (-${month.drawdown.toLocaleString()})
                             </span>
                           </div>
-                          <div className="flex justify-between text-[8px] text-muted-foreground">
+                          <div className="flex justify-between text-[8px] text-white font-bold">
                             <span>Cumulative: ${(month.cumulative || 0).toLocaleString()}</span>
                           </div>
                           <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden mt-2">
@@ -1763,29 +1763,29 @@ export default function Dashboard() {
 
                 {/* Performance After Loss */}
                 <div className="bg-card/40 p-5 rounded-xl border border-border/50">
-                  <h4 className="text-[9px] font-black text-muted-foreground uppercase mb-4 tracking-tighter">Recovery Performance</h4>
+                  <h4 className="text-[9px] font-black text-white uppercase mb-4 tracking-tighter">Recovery Performance</h4>
                   {(() => {
                     const recoveryData = calculatePerformanceAfterLoss(filteredTrades);
                     return (
                       <div className="space-y-4">
                         <div className="p-4 bg-card/30 rounded-lg border border-border/30">
-                          <div className="text-[8px] text-muted-foreground font-bold uppercase mb-2">Win Rate After Loss</div>
+                          <div className="text-[8px] text-white font-bold uppercase mb-2">Win Rate After Loss</div>
                           <div className="text-3xl font-black text-primary">{recoveryData.winRate}%</div>
-                          <div className="text-[9px] text-muted-foreground mt-2">
+                          <div className="text-[9px] text-white font-bold mt-2">
                             {recoveryData.winsAfterLoss} wins out of {recoveryData.totalAfterLoss} trades
                           </div>
                         </div>
                         <div className="grid grid-cols-2 gap-3">
                           <div className="p-3 bg-card/30 rounded-lg border border-border/30 text-center">
-                            <div className="text-[8px] text-muted-foreground font-bold uppercase mb-1">Trades After Loss</div>
-                            <div className="text-xl font-black text-foreground">{recoveryData.totalAfterLoss}</div>
+                            <div className="text-[8px] text-white font-bold uppercase mb-1">Trades After Loss</div>
+                            <div className="text-xl font-black text-white">{recoveryData.totalAfterLoss}</div>
                           </div>
                           <div className="p-3 bg-card/30 rounded-lg border border-border/30 text-center">
-                            <div className="text-[8px] text-muted-foreground font-bold uppercase mb-1">Wins</div>
+                            <div className="text-[8px] text-white font-bold uppercase mb-1">Wins</div>
                             <div className="text-xl font-black text-emerald-500">{recoveryData.winsAfterLoss}</div>
                           </div>
                         </div>
-                        <div className="text-[8px] text-muted-foreground italic">
+                        <div className="text-[8px] text-white font-bold italic">
                           Tracks your ability to bounce back after losses
                         </div>
                       </div>
