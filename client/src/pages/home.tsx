@@ -282,7 +282,7 @@ function PanelSection({ title, description, children, icon: Icon }: { title: str
         </div>
         <div className="space-y-1.5 min-w-0">
           <h3 className="text-[11px] font-black uppercase tracking-[0.15em] text-white group-hover:text-primary transition-colors duration-300 truncate">{title}</h3>
-          <p className="text-[10px] font-bold text-white leading-relaxed line-clamp-2 group-hover:text-white transition-colors" style={{ textShadow: '0 0 1px rgba(255,255,255,0.1)' }}>{description}</p>
+          <p className="text-[12px] font-black text-white leading-relaxed line-clamp-2 group-hover:text-white transition-colors">{description}</p>
         </div>
       </div>
       {children && <div className="relative z-10">{children}</div>}
@@ -1192,7 +1192,7 @@ function AIAnalysisSection() {
           </div>
           <div>
             <h3 className="text-sm font-black uppercase tracking-widest text-white">AI Performance Intelligence</h3>
-            <p className="text-xs font-bold text-white/90" style={{ textShadow: '0 0 1px rgba(255,255,255,0.1)' }}>Neural breakdown of edge clarity and actionable growth steps.</p>
+            <p className="text-sm font-black text-white">Neural breakdown of edge clarity and actionable growth steps.</p>
           </div>
         </div>
         <Button 
@@ -1215,13 +1215,13 @@ function AIAnalysisSection() {
         <div className="space-y-4">
           <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/80">Performance Breakdown</h4>
           {analysis ? (
-            <div className="text-[11px] leading-relaxed text-white font-bold space-y-2">
+            <div className="text-[11px] leading-relaxed text-white font-black space-y-2">
               <div className="p-3 rounded bg-primary/5 border border-primary/10">
                 {analysis.analysis}
               </div>
             </div>
           ) : (
-            <div className="h-32 flex items-center justify-center rounded border border-dashed border-border/50 text-[10px] text-white font-bold uppercase tracking-widest">
+            <div className="h-32 flex items-center justify-center rounded border border-dashed border-border/50 text-[10px] text-white font-black uppercase tracking-widest">
               Awaiting data input...
             </div>
           )}
@@ -1234,12 +1234,12 @@ function AIAnalysisSection() {
               {Array.isArray(analysis.recommendations) ? analysis.recommendations.map((rec: string, i: number) => (
                 <div key={i} className="flex gap-3 p-3 rounded bg-emerald-500/5 border border-emerald-500/10">
                   <div className="mt-1 w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
-                  <p className="text-[11px] leading-snug text-white font-bold">{rec}</p>
+                  <p className="text-[11px] leading-snug text-white font-black">{rec}</p>
                 </div>
-              )) : <p className="text-[11px] font-bold text-white">{analysis.recommendations}</p>}
+              )) : <p className="text-[11px] font-black text-white">{analysis.recommendations}</p>}
             </div>
           ) : (
-            <div className="h-32 flex items-center justify-center rounded border border-dashed border-border/50 text-[10px] text-white font-bold uppercase tracking-widest">
+            <div className="h-32 flex items-center justify-center rounded border border-dashed border-border/50 text-[10px] text-white font-black uppercase tracking-widest">
               Intelligence engine ready...
             </div>
           )}
@@ -1303,8 +1303,8 @@ export default function Dashboard() {
                       return (
                         <div key={condition} className="space-y-1">
                           <div className="flex justify-between text-[10px] font-black uppercase">
-                            <span className="text-white font-bold">{condition}</span>
-                            <span className="text-white font-bold">{wr}% WR</span>
+                            <span className="text-white font-black">{condition}</span>
+                            <span className="text-white font-black">{wr}% WR</span>
                           </div>
                           <div className="h-1 bg-muted/20 rounded-full overflow-hidden">
                             <div className="h-full bg-primary" style={{ width: `${wr}%` }} />
@@ -1314,14 +1314,14 @@ export default function Dashboard() {
                     })}
                     <div className="pt-2 border-t border-border/40">
                       <div className="text-[9px] font-black text-white uppercase mb-2">Volatility Edge</div>
-                      <div className="grid grid-cols-2 gap-2">
-                        {Object.entries(stats.volatilityPerformance).slice(0, 2).map(([state, data]: [string, any]) => (
-                          <div key={state} className="p-1.5 rounded bg-primary/5 border border-primary/10">
-                            <div className="text-[8px] text-white/90 font-bold uppercase">{state}</div>
-                            <div className="text-[10px] font-bold text-white">{data.total ? Math.round((data.wins / data.total) * 100) : 0}% WR</div>
+                          <div className="grid grid-cols-2 gap-2">
+                            {Object.entries(stats.volatilityPerformance).slice(0, 2).map(([state, data]: [string, any]) => (
+                              <div key={state} className="p-1.5 rounded bg-primary/5 border border-primary/10">
+                                <div className="text-[10px] text-white font-black uppercase">{state}</div>
+                                <div className="text-[12px] font-black text-white">{data.total ? Math.round((data.wins / data.total) * 100) : 0}% WR</div>
+                              </div>
+                            ))}
                           </div>
-                        ))}
-                      </div>
                     </div>
                   </div>
                 </PanelSection>
@@ -1332,19 +1332,19 @@ export default function Dashboard() {
                   icon={ArrowRight}
                 >
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between text-[10px]">
-                      <span className="text-white font-bold uppercase">Entry Precision</span>
-                      <span className="font-mono text-emerald-500 font-bold">{(stats as any).setupQualityMetrics?.precision}/5.0</span>
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-white font-black uppercase">Entry Precision</span>
+                      <span className="font-mono text-emerald-500 font-black">{(stats as any).setupQualityMetrics?.precision}/5.0</span>
                     </div>
-                    <div className="flex items-center justify-between text-[10px]">
-                      <span className="text-white font-bold uppercase">Timing Quality</span>
-                      <span className="font-mono text-primary font-bold">{(stats as any).setupQualityMetrics?.clarity}/5.0</span>
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-white font-black uppercase">Timing Quality</span>
+                      <span className="font-mono text-primary font-black">{(stats as any).setupQualityMetrics?.clarity}/5.0</span>
                     </div>
                     <div className="pt-2 border-t border-border/40">
-                      <div className="text-[8px] font-bold text-muted-foreground uppercase mb-1">Signal Validation</div>
+                      <div className="text-[10px] font-black text-white uppercase mb-1">Signal Validation</div>
                       <div className="flex flex-wrap gap-1">
                         {['Primary', 'Confirmation', 'Levels'].map(tag => (
-                          <div key={tag} className="px-1.5 py-0.5 rounded-sm bg-muted text-[8px] font-bold uppercase">{tag}</div>
+                          <div key={tag} className="px-1.5 py-0.5 rounded-sm bg-muted text-[10px] font-black uppercase text-white">{tag}</div>
                         ))}
                       </div>
                     </div>
@@ -1359,12 +1359,12 @@ export default function Dashboard() {
                   <div className="space-y-3">
                     <div className="grid grid-cols-2 gap-3">
                       <div className="space-y-1">
-                        <div className="text-[8px] text-white font-bold uppercase">Clarity</div>
-                        <div className="text-xs font-black">{(stats as any).setupQualityMetrics?.clarity}</div>
+                        <div className="text-[10px] text-white font-black uppercase">Clarity</div>
+                        <div className="text-sm font-black text-white">{(stats as any).setupQualityMetrics?.clarity}</div>
                       </div>
                       <div className="space-y-1">
-                        <div className="text-[8px] text-white font-bold uppercase">Confluence</div>
-                        <div className="text-xs font-black">{(stats as any).setupQualityMetrics?.confluence}</div>
+                        <div className="text-[10px] text-white font-black uppercase">Confluence</div>
+                        <div className="text-sm font-black text-white">{(stats as any).setupQualityMetrics?.confluence}</div>
                       </div>
                     </div>
                   </div>
@@ -1378,20 +1378,16 @@ export default function Dashboard() {
                   <div className="space-y-3">
                     <div className="flex items-center gap-2 px-3 py-2 rounded bg-blue-500/10 border border-blue-500/20">
                       <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-                      <span className="text-[11px] font-bold text-blue-500 uppercase">Discipline: {stats.avgDiscipline}%</span>
+                      <span className="text-[12px] font-black text-white uppercase">Discipline: {stats.avgDiscipline}%</span>
                     </div>
                     <div className="grid grid-cols-2 gap-2">
                       <div className="p-1.5 rounded bg-muted/30">
-                        <div className="text-[8px] text-white font-bold uppercase">Confidence</div>
-                        <div className="text-[10px] font-bold">{(stats as any).avgConfidence}/5.0</div>
+                        <div className="text-[10px] text-white font-black uppercase">Confidence</div>
+                        <div className="text-[12px] font-black text-white">{(stats as any).avgConfidence}/5.0</div>
                       </div>
                       <div className="p-1.5 rounded bg-muted/30">
-                        <div className="text-[8px] text-white font-bold uppercase">Emotional Edge</div>
-                        <div className="text-[10px] font-bold text-emerald-500">
-                          {Object.entries((stats as any).emotionalStatePerformance).length > 0 ? (
-                            Object.entries((stats as any).emotionalStatePerformance).sort((a: any, b: any) => b[1].wins - a[1].wins)[0][0]
-                          ) : "Optimal"}
-                        </div>
+                        <div className="text-[10px] text-white font-black uppercase">Emotional Edge</div>
+                        <div className="text-[12px] font-black text-white">Optimal</div>
                       </div>
                     </div>
                     <div className="pt-2 border-t border-border/40">
@@ -1425,12 +1421,8 @@ export default function Dashboard() {
                       return (
                         <div key={impact} className="space-y-1.5">
                           <div className="flex justify-between text-[10px] font-black uppercase tracking-tighter">
-                            <span className={cn(
-                              impact === 'High' ? "text-red-500" : 
-                              impact === 'Medium' ? "text-amber-500" : 
-                              "text-muted-foreground"
-                            )}>{impact} Impact</span>
-                            <span className="text-foreground">{wr}% WR | {avgR}R</span>
+                            <span className="text-white font-black">{impact} Impact</span>
+                            <span className="text-white font-black">{wr}% WR | {avgR}R</span>
                           </div>
                           <div className="h-1 bg-muted/20 rounded-full overflow-hidden">
                             <div className={cn(
@@ -1454,8 +1446,8 @@ export default function Dashboard() {
                   <div className="space-y-2">
                     {Object.entries(stats.hyperGranularPerformance).slice(0, 3).map(([key, data]: [string, any]) => (
                       <div key={key} className="flex justify-between items-center p-1.5 rounded bg-primary/5 border border-primary/10">
-                        <span className="text-[10px] font-bold truncate max-w-[150px]">{key}</span>
-                        <span className="text-[10px] text-emerald-500 font-black">
+                        <span className="text-[10px] text-white font-black truncate max-w-[150px]">{key}</span>
+                        <span className="text-[10px] text-white font-black">
                           {data.total ? Math.round((data.wins / data.total) * 100) : 0}% WR
                         </span>
                       </div>
@@ -1471,11 +1463,11 @@ export default function Dashboard() {
                   <div className="space-y-3">
                     <div className="flex items-center gap-2 px-3 py-2 rounded bg-blue-500/10 border border-blue-500/20">
                       <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-                      <span className="text-[11px] font-bold text-blue-500 uppercase">Avg Discipline: {stats.avgDiscipline}%</span>
+                      <span className="text-[12px] font-black text-white uppercase">Avg Discipline: {stats.avgDiscipline}%</span>
                     </div>
                       <div className="flex justify-between text-[10px] px-1">
-                        <span className="text-white font-bold">Edge per 100% Rules:</span>
-                        <span className="text-emerald-500 font-bold">2.4R</span>
+                        <span className="text-white font-black">Edge per 100% Rules:</span>
+                        <span className="text-emerald-500 font-black">2.4R</span>
                       </div>
                   </div>
                 </PanelSection>
@@ -1487,12 +1479,12 @@ export default function Dashboard() {
                 >
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-[10px]">
-                      <span className="text-white font-bold">Fill Slippage (Avg)</span>
-                      <span className="font-mono text-emerald-500 font-bold">-0.15 pips</span>
+                      <span className="text-white font-black">Fill Slippage (Avg)</span>
+                      <span className="font-mono text-emerald-500 font-black">-0.15 pips</span>
                     </div>
                     <div className="flex items-center justify-between text-[10px]">
-                      <span className="text-white font-bold">TFS Alignment (Avg)</span>
-                      <span className="font-mono text-primary font-bold">1.4R</span>
+                      <span className="text-white font-black">TFS Alignment (Avg)</span>
+                      <span className="font-mono text-primary font-black">1.4R</span>
                     </div>
                   </div>
                 </PanelSection>
@@ -1562,12 +1554,12 @@ export default function Dashboard() {
                   <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div className="p-3 rounded-xl bg-emerald-500/5 border border-emerald-500/10">
-                        <div className="text-[8px] text-emerald-500 font-bold uppercase mb-1">What Worked</div>
-                        <p className="text-[9px] text-white font-bold italic" style={{ textShadow: '0 0 1px rgba(255,255,255,0.1)' }}>"Patience during London open consolidation resulted in high-quality breakout."</p>
+                        <div className="text-[8px] text-emerald-500 font-black uppercase mb-1">What Worked</div>
+                        <p className="text-[10px] font-black text-white italic">"Patience during London open consolidation resulted in high-quality breakout."</p>
                       </div>
                       <div className="p-3 rounded-xl bg-rose-500/5 border border-rose-500/10">
-                        <div className="text-[8px] text-rose-500 font-bold uppercase mb-1">Rule Adjustment</div>
-                        <p className="text-[9px] text-white font-bold italic" style={{ textShadow: '0 0 1px rgba(255,255,255,0.1)' }}>"Avoid entering before 8:30 AM EST news release to reduce slippage."</p>
+                        <div className="text-[8px] text-rose-500 font-black uppercase mb-1">Rule Adjustment</div>
+                        <p className="text-[10px] font-black text-white italic">"Avoid entering before 8:30 AM EST news release to reduce slippage."</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 p-2 rounded bg-primary/5 border border-primary/10">
@@ -1696,8 +1688,8 @@ export default function Dashboard() {
                         <div key={tf} className="flex items-center justify-between p-2 bg-card/30 rounded-lg border border-border/30">
                           <span className="text-[9px] font-black uppercase text-white">{tf}</span>
                           <div className="flex items-center gap-3">
-                            <span className="text-xs font-bold text-primary">{perc}%</span>
-                            <span className="text-[8px] text-white font-bold">{avgR}R</span>
+                            <span className="text-xs font-black text-primary">{perc}%</span>
+                            <span className="text-[8px] text-white font-black">{avgR}R</span>
                           </div>
                         </div>
                       );
@@ -1718,8 +1710,8 @@ export default function Dashboard() {
                         <div key={tf} className="flex items-center justify-between p-2 bg-card/30 rounded-lg border border-border/30">
                           <span className="text-[9px] font-black uppercase text-white">{tf}</span>
                           <div className="flex items-center gap-3">
-                            <span className="text-xs font-bold text-primary">{perc}%</span>
-                            <span className="text-[8px] text-white font-bold">{avgR}R</span>
+                            <span className="text-xs font-black text-primary">{perc}%</span>
+                            <span className="text-[8px] text-white font-black">{avgR}R</span>
                           </div>
                         </div>
                       );
@@ -1743,7 +1735,7 @@ export default function Dashboard() {
                               {month.drawdownPercent}% (-${month.drawdown.toLocaleString()})
                             </span>
                           </div>
-                          <div className="flex justify-between text-[8px] text-white font-bold">
+                          <div className="flex justify-between text-[8px] text-white font-black">
                             <span>Cumulative: ${(month.cumulative || 0).toLocaleString()}</span>
                           </div>
                           <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden mt-2">
