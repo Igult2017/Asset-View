@@ -282,7 +282,7 @@ function PanelSection({ title, description, children, icon: Icon }: { title: str
         </div>
         <div className="space-y-1.5 min-w-0">
           <h3 className="text-[11px] font-black uppercase tracking-[0.15em] text-white group-hover:text-primary transition-colors duration-300 truncate">{title}</h3>
-          <p className="text-[10px] font-medium text-white leading-relaxed line-clamp-2 group-hover:text-white transition-colors">{description}</p>
+          <p className="text-[10px] font-bold text-white leading-relaxed line-clamp-2 group-hover:text-white transition-colors">{description}</p>
         </div>
       </div>
       {children && <div className="relative z-10">{children}</div>}
@@ -1191,8 +1191,8 @@ function AIAnalysisSection() {
             <Sparkles className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-sm font-black uppercase tracking-widest">AI Performance Intelligence</h3>
-            <p className="text-xs text-muted-foreground">Neural breakdown of edge clarity and actionable growth steps.</p>
+            <h3 className="text-sm font-black uppercase tracking-widest text-white">AI Performance Intelligence</h3>
+            <p className="text-xs font-bold text-white/90">Neural breakdown of edge clarity and actionable growth steps.</p>
           </div>
         </div>
         <Button 
@@ -1215,13 +1215,13 @@ function AIAnalysisSection() {
         <div className="space-y-4">
           <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/80">Performance Breakdown</h4>
           {analysis ? (
-            <div className="text-[11px] leading-relaxed text-foreground/90 space-y-2">
+            <div className="text-[11px] leading-relaxed text-white font-bold space-y-2">
               <div className="p-3 rounded bg-primary/5 border border-primary/10">
                 {analysis.analysis}
               </div>
             </div>
           ) : (
-            <div className="h-32 flex items-center justify-center rounded border border-dashed border-border/50 text-[10px] text-muted-foreground uppercase tracking-widest">
+            <div className="h-32 flex items-center justify-center rounded border border-dashed border-border/50 text-[10px] text-white font-bold uppercase tracking-widest">
               Awaiting data input...
             </div>
           )}
@@ -1234,12 +1234,12 @@ function AIAnalysisSection() {
               {Array.isArray(analysis.recommendations) ? analysis.recommendations.map((rec: string, i: number) => (
                 <div key={i} className="flex gap-3 p-3 rounded bg-emerald-500/5 border border-emerald-500/10">
                   <div className="mt-1 w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
-                  <p className="text-[11px] leading-snug text-foreground/90">{rec}</p>
+                  <p className="text-[11px] leading-snug text-white font-bold">{rec}</p>
                 </div>
-              )) : <p className="text-[11px]">{analysis.recommendations}</p>}
+              )) : <p className="text-[11px] font-bold text-white">{analysis.recommendations}</p>}
             </div>
           ) : (
-            <div className="h-32 flex items-center justify-center rounded border border-dashed border-border/50 text-[10px] text-muted-foreground uppercase tracking-widest">
+            <div className="h-32 flex items-center justify-center rounded border border-dashed border-border/50 text-[10px] text-white font-bold uppercase tracking-widest">
               Intelligence engine ready...
             </div>
           )}
@@ -1303,8 +1303,8 @@ export default function Dashboard() {
                       return (
                         <div key={condition} className="space-y-1">
                           <div className="flex justify-between text-[10px] font-black uppercase">
-                            <span className="text-white">{condition}</span>
-                            <span className="text-primary">{wr}% WR</span>
+                            <span className="text-white font-bold">{condition}</span>
+                            <span className="text-primary font-bold">{wr}% WR</span>
                           </div>
                           <div className="h-1 bg-muted/20 rounded-full overflow-hidden">
                             <div className="h-full bg-primary" style={{ width: `${wr}%` }} />
@@ -1313,12 +1313,12 @@ export default function Dashboard() {
                       );
                     })}
                     <div className="pt-2 border-t border-border/40">
-                      <div className="text-[9px] font-bold text-muted-foreground uppercase mb-2">Volatility Edge</div>
+                      <div className="text-[9px] font-black text-white uppercase mb-2">Volatility Edge</div>
                       <div className="grid grid-cols-2 gap-2">
                         {Object.entries(stats.volatilityPerformance).slice(0, 2).map(([state, data]: [string, any]) => (
                           <div key={state} className="p-1.5 rounded bg-primary/5 border border-primary/10">
-                            <div className="text-[8px] text-muted-foreground uppercase">{state}</div>
-                            <div className="text-[10px] font-bold">{data.total ? Math.round((data.wins / data.total) * 100) : 0}% WR</div>
+                            <div className="text-[8px] text-white/90 font-bold uppercase">{state}</div>
+                            <div className="text-[10px] font-bold text-white">{data.total ? Math.round((data.wins / data.total) * 100) : 0}% WR</div>
                           </div>
                         ))}
                       </div>
@@ -1333,11 +1333,11 @@ export default function Dashboard() {
                 >
                   <div className="space-y-3">
                     <div className="flex items-center justify-between text-[10px]">
-                      <span className="text-white uppercase">Entry Precision</span>
+                      <span className="text-white font-bold uppercase">Entry Precision</span>
                       <span className="font-mono text-emerald-500 font-bold">{(stats as any).setupQualityMetrics?.precision}/5.0</span>
                     </div>
                     <div className="flex items-center justify-between text-[10px]">
-                      <span className="text-white uppercase">Timing Quality</span>
+                      <span className="text-white font-bold uppercase">Timing Quality</span>
                       <span className="font-mono text-primary font-bold">{(stats as any).setupQualityMetrics?.clarity}/5.0</span>
                     </div>
                     <div className="pt-2 border-t border-border/40">
@@ -1359,11 +1359,11 @@ export default function Dashboard() {
                   <div className="space-y-3">
                     <div className="grid grid-cols-2 gap-3">
                       <div className="space-y-1">
-                        <div className="text-[8px] text-white uppercase">Clarity</div>
+                        <div className="text-[8px] text-white font-bold uppercase">Clarity</div>
                         <div className="text-xs font-black">{(stats as any).setupQualityMetrics?.clarity}</div>
                       </div>
                       <div className="space-y-1">
-                        <div className="text-[8px] text-white uppercase">Confluence</div>
+                        <div className="text-[8px] text-white font-bold uppercase">Confluence</div>
                         <div className="text-xs font-black">{(stats as any).setupQualityMetrics?.confluence}</div>
                       </div>
                     </div>
@@ -1382,11 +1382,11 @@ export default function Dashboard() {
                     </div>
                     <div className="grid grid-cols-2 gap-2">
                       <div className="p-1.5 rounded bg-muted/30">
-                        <div className="text-[8px] text-white uppercase">Confidence</div>
+                        <div className="text-[8px] text-white font-bold uppercase">Confidence</div>
                         <div className="text-[10px] font-bold">{(stats as any).avgConfidence}/5.0</div>
                       </div>
                       <div className="p-1.5 rounded bg-muted/30">
-                        <div className="text-[8px] text-white uppercase">Emotional Edge</div>
+                        <div className="text-[8px] text-white font-bold uppercase">Emotional Edge</div>
                         <div className="text-[10px] font-bold text-emerald-500">
                           {Object.entries((stats as any).emotionalStatePerformance).length > 0 ? (
                             Object.entries((stats as any).emotionalStatePerformance).sort((a: any, b: any) => b[1].wins - a[1].wins)[0][0]
@@ -1563,11 +1563,11 @@ export default function Dashboard() {
                     <div className="grid grid-cols-2 gap-4">
                       <div className="p-3 rounded-xl bg-emerald-500/5 border border-emerald-500/10">
                         <div className="text-[8px] text-emerald-500 font-bold uppercase mb-1">What Worked</div>
-                        <p className="text-[9px] text-muted-foreground italic">"Patience during London open consolidation resulted in high-quality breakout."</p>
+                        <p className="text-[9px] text-white font-bold italic">"Patience during London open consolidation resulted in high-quality breakout."</p>
                       </div>
                       <div className="p-3 rounded-xl bg-rose-500/5 border border-rose-500/10">
                         <div className="text-[8px] text-rose-500 font-bold uppercase mb-1">Rule Adjustment</div>
-                        <p className="text-[9px] text-muted-foreground italic">"Avoid entering before 8:30 AM EST news release to reduce slippage."</p>
+                        <p className="text-[9px] text-white font-bold italic">"Avoid entering before 8:30 AM EST news release to reduce slippage."</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 p-2 rounded bg-primary/5 border border-primary/10">
@@ -1669,7 +1669,7 @@ export default function Dashboard() {
                     )}
                     <div className="grid grid-cols-2 gap-2">
                       <div className="p-2 bg-card/30 rounded-lg border border-border/30 text-center">
-                        <div className="text-[8px] text-muted-foreground uppercase">Management</div>
+                        <div className="text-[8px] text-white font-bold uppercase">Management</div>
                         <div className="text-xs font-black text-red-400">-0.52R Loss</div>
                       </div>
                       <div className="p-2 bg-card/30 rounded-lg border border-border/30 text-center">
