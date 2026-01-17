@@ -154,13 +154,13 @@ const AuditorExtras = ({ metrics, rollingExpectancy }: { metrics: any, rollingEx
       {/* Automation Risk */}
       <div className="bg-slate-900/40 p-6 rounded-[32px] border border-white/10">
         <h3 className="text-[10px] font-black uppercase text-slate-400 mb-4 tracking-widest">Automation Risk</h3>
-        <p className="text-sm font-bold text-white">{automationRisk.failureProbability}% chance of execution failure</p>
+          <p className="text-sm font-bold text-slate-300">{automationRisk.failureProbability}% chance of execution failure</p>
       </div>
 
       {/* Edge Transferability */}
       <div className="bg-slate-900/40 p-6 rounded-[32px] border border-white/10">
         <h3 className="text-[10px] font-black uppercase text-slate-400 mb-4 tracking-widest">Edge Transferability</h3>
-        <p className="text-sm font-bold text-white">Market Retention: {edgeTransfer.adjacentMarketRetention}%</p>
+          <p className="text-sm font-bold text-slate-300">Market Retention: {edgeTransfer.adjacentMarketRetention}%</p>
       </div>
 
     </div>
@@ -387,7 +387,7 @@ const Auditor = () => {
                   {Object.entries(auditElements).map(([key, value]) => (
                     <div key={key} className="space-y-2">
                       <p className="text-[11px] font-black uppercase text-white tracking-widest">{key.replace(/([A-Z])/g, ' $1')}</p>
-                      <p className="text-base font-bold text-white leading-relaxed">{value}</p>
+                      <p className="text-base font-bold text-slate-200 leading-relaxed">{value}</p>
                     </div>
                   ))}
                 </div>
@@ -403,9 +403,9 @@ const Auditor = () => {
                     <h2 className="text-4xl font-blocky text-white tracking-tight">
                       SYSTEM DE-AUTHORIZED
                     </h2>
-                    <p className="text-sm font-bold text-slate-500">
-                      Structural check passed. Max DD of {metrics.maxDrawdown}% within 12% tolerance.
-                    </p>
+          <p className="text-sm font-bold text-slate-400 leading-relaxed">
+            Structural check passed. Max DD of {metrics.maxDrawdown}% within 12% tolerance.
+          </p>
                   </div>
                   
                   <div className="flex flex-col items-end gap-2">

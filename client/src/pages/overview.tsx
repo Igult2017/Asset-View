@@ -7,9 +7,9 @@ import { Layout } from "./home";
  */
 function MetricCard({ title, value }) {
   return (
-    <div className="bg-slate-900 border-2 border-slate-800 rounded-none p-4 shadow-sm hover:border-blue-500 transition-colors group">
-      <p className="text-[11px] text-white mb-2 uppercase tracking-[0.3em] font-900 leading-none group-hover:text-blue-400 transition-colors">{title}</p>
-      <p className="text-2xl font-900 text-blue-500 tracking-tighter leading-none">{value}</p>
+    <div className="bg-slate-900 border-2 border-slate-800 rounded-md p-4 shadow-sm hover:border-blue-500 transition-colors group">
+      <p className="text-[11px] text-slate-300 mb-2 uppercase tracking-[0.3em] font-bold leading-none group-hover:text-blue-400 transition-colors">{title}</p>
+      <p className="text-2xl font-bold text-blue-500 tracking-tighter leading-none">{value}</p>
     </div>
   );
 }
@@ -20,8 +20,8 @@ function MetricCard({ title, value }) {
  */
 function Panel({ title, children }) {
   return (
-    <div className="bg-slate-900 border-2 border-slate-800 rounded-none p-5 shadow-sm">
-      <h3 className="text-xs font-900 mb-5 text-slate-200 uppercase tracking-[0.4em] border-b-2 border-slate-800 pb-1 inline-block">{title}</h3>
+    <div className="bg-slate-900 border-2 border-slate-800 rounded-md p-5 shadow-sm">
+      <h3 className="text-xs font-bold mb-5 text-slate-300 uppercase tracking-[0.4em] border-b-2 border-slate-800 pb-1 inline-block">{title}</h3>
       {children}
     </div>
   );
@@ -81,10 +81,10 @@ export default function Overview() {
 
                   return (
                     <div className="text-center">
-                      <div className="text-xs uppercase tracking-[0.4em] text-white mb-3">
+                      <div className="text-xs uppercase tracking-[0.4em] text-slate-300 mb-3">
                         Probability Based on Trades
                       </div>
-                      <div className="text-2xl font-900 tracking-widest">
+                      <div className="text-2xl font-bold tracking-widest">
                         <span className="text-green-500">WIN: {winProb}%</span>
                         <span className="text-slate-600 mx-3">|</span>
                         <span className="text-red-500">LOSS: {lossProb}%</span>
@@ -103,11 +103,11 @@ export default function Overview() {
               <div className="h-48 bg-black border-2 border-slate-800 flex items-center justify-center gap-6">
                 <div className="text-center">
                   <div className="text-3xl text-green-500">72%</div>
-                  <div className="text-[11px] tracking-widest text-white">WINS</div>
+                  <div className="text-[11px] tracking-widest text-slate-300">WINS</div>
                 </div>
                 <div className="text-center">
                   <div className="text-3xl text-red-500">28%</div>
-                  <div className="text-[11px] tracking-widest text-white">LOSSES</div>
+                  <div className="text-[11px] tracking-widest text-slate-300">LOSSES</div>
                 </div>
               </div>
             </Panel>
@@ -117,16 +117,16 @@ export default function Overview() {
           <Panel title={`Trading_Log - ${dateRange === "DEFAULT" ? "Feb_2024" : "Custom_Range"}`}>
             <div className="grid grid-cols-7 gap-1.5">
               {['SUN','MON','TUE','WED','THU','FRI','SAT'].map(d => (
-                <div key={d} className="text-center text-[10px] text-white tracking-[0.4em] mb-4">{d}</div>
+                <div key={d} className="text-center text-[10px] text-slate-400 tracking-[0.4em] mb-4">{d}</div>
               ))}
               {Array.from({ length: 28 }).map((_, i) => {
                 const win = i % 3 === 0;
                 const loss = i % 7 === 0;
                 return (
-                  <div key={i} className={`h-24 border-2 p-2 flex flex-col transition-all cursor-pointer ${win ? 'border-green-800 bg-green-600/5' : loss ? 'border-red-800 bg-red-600/5' : 'border-slate-800 bg-slate-950'}`}>
-                    <span className="text-xs text-white font-900">{i + 1}</span>
+                  <div key={i} className={`h-24 border-2 p-2 flex flex-col transition-all cursor-pointer rounded-md ${win ? 'border-green-800 bg-green-600/5' : loss ? 'border-red-800 bg-red-600/5' : 'border-slate-800 bg-slate-950'}`}>
+                    <span className="text-xs text-slate-300 font-bold">{i + 1}</span>
                     {(win || loss) && (
-                      <div className={`mt-auto text-[11px] font-900 ${win ? 'text-green-500' : 'text-red-500'}`}>
+                      <div className={`mt-auto text-[11px] font-bold ${win ? 'text-green-500' : 'text-red-500'}`}>
                         {win ? '+$120.40' : '-$45.00'}
                       </div>
                     )}

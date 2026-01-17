@@ -282,7 +282,7 @@ function PanelSection({ title, description, children, icon: Icon }: { title: str
         </div>
         <div className="space-y-1.5 min-w-0">
           <h3 className="text-[11px] font-black uppercase tracking-[0.15em] text-white group-hover:text-primary transition-colors duration-300 truncate">{title}</h3>
-          <p className="text-[12px] font-black text-white leading-relaxed line-clamp-2 group-hover:text-white transition-colors">{description}</p>
+          <p className="text-[12px] font-bold text-slate-200 leading-relaxed line-clamp-2 group-hover:text-white transition-colors">{description}</p>
         </div>
       </div>
       {children && <div className="relative z-10">{children}</div>}
@@ -1192,7 +1192,7 @@ function AIAnalysisSection() {
           </div>
           <div>
             <h3 className="text-sm font-black uppercase tracking-widest text-white">AI Performance Intelligence</h3>
-            <p className="text-sm font-black text-white">Neural breakdown of edge clarity and actionable growth steps.</p>
+            <p className="text-sm font-bold text-slate-200">Neural breakdown of edge clarity and actionable growth steps.</p>
           </div>
         </div>
         <Button 
