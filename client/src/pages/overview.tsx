@@ -9,7 +9,7 @@ function MetricCard({ title, value }) {
   return (
     <div className="bg-slate-900 border-2 border-slate-800 rounded-md p-4 shadow-sm hover:border-blue-500 transition-colors group">
       <p className="text-[11px] text-slate-300 mb-2 uppercase tracking-[0.3em] font-bold leading-none group-hover:text-blue-400 transition-colors">{title}</p>
-      <p className="text-2xl font-bold text-blue-500 tracking-tighter leading-none">{value}</p>
+      <p className="text-2xl font-bold text-green-500 tracking-tighter leading-none">{value}</p>
     </div>
   );
 }
