@@ -5,7 +5,7 @@ import { Layout } from "./home";
  * MetricCard Component
  * Displays a single KPI metric with a title and value.
  */
-function MetricCard({ title, value }) {
+function MetricCard({ title, value }: { title: string; value: string }) {
   return (
     <div className="bg-slate-900 border-2 border-slate-800 rounded-md p-4 shadow-sm hover:border-blue-500 transition-colors group">
       <p className="text-[11px] text-slate-300 mb-2 uppercase tracking-[0.3em] font-bold leading-none group-hover:text-blue-400 transition-colors">{title}</p>
@@ -18,7 +18,7 @@ function MetricCard({ title, value }) {
  * Panel Component
  * A wrapper for different sections of the dashboard.
  */
-function Panel({ title, children }) {
+function Panel({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="bg-slate-900 border-2 border-slate-800 rounded-md p-5 shadow-sm">
       <h3 className="text-xs font-bold mb-5 text-slate-300 uppercase tracking-[0.4em] border-b-2 border-slate-800 pb-1 inline-block">{title}</h3>

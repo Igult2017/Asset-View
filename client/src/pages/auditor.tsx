@@ -256,15 +256,15 @@ const Auditor = () => {
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
                     <span className="text-white text-base font-bold">Win Rate</span>
-                    <span className="text-white font-blocky text-lg">{metrics.winRate}%</span>
+                    <span className="text-blue-500 font-blocky text-lg">{metrics.winRate}%</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-white text-base font-bold">Sample Size</span>
-                    <span className="text-white font-blocky text-lg">{metrics.tradeSample}</span>
+                    <span className="text-blue-500 font-blocky text-lg">{metrics.tradeSample}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-white text-base font-bold">Win/Loss Ratio</span>
-                    <span className="text-white font-blocky text-lg">{(metrics.avgWinR / metrics.avgLossR).toFixed(2)}</span>
+                    <span className="text-blue-500 font-blocky text-lg">{(metrics.avgWinR / metrics.avgLossR).toFixed(2)}</span>
                   </div>
                   <div className="pt-2 flex justify-between items-center border-t border-white/5">
                     <span className="text-[11px] font-black uppercase text-white tracking-widest">Positive Skew</span>
@@ -310,7 +310,7 @@ const Auditor = () => {
                 <div className="relative aspect-square max-w-[200px] mx-auto">
                   <div className="absolute inset-0 border-[16px] border-white/5 rounded-full"></div>
                   <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                    <span className="text-4xl font-blocky text-white leading-none">{metrics.winRate}%</span>
+                    <span className="text-4xl font-blocky text-blue-500 leading-none">{metrics.winRate}%</span>
                     <span className="text-[10px] font-black uppercase text-slate-500 tracking-widest mt-1">Base Rate</span>
                   </div>
                 </div>
@@ -337,7 +337,7 @@ const Auditor = () => {
                     </div>
                     <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Drawdown Metrics</span>
                   </div>
-                  <p className="text-5xl font-blocky text-white group-hover:scale-105 transition-transform origin-left">{metrics.maxDrawdown}%</p>
+                  <p className="text-5xl font-blocky text-green-500 group-hover:scale-105 transition-transform origin-left">{metrics.maxDrawdown}%</p>
                   <p className="text-xs font-bold text-slate-500 mt-2 uppercase tracking-widest">Historical Max Peak-to-Valley</p>
                   <div className="mt-6 flex items-center gap-4 text-xs font-bold">
                     <div className="flex-1 bg-white/5 p-3 rounded-2xl">
@@ -358,7 +358,7 @@ const Auditor = () => {
                     </div>
                     <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Equity Variance</span>
                   </div>
-                  <p className="text-5xl font-blocky text-white group-hover:scale-105 transition-transform origin-left">{metrics.monteCarloStability}%</p>
+                  <p className="text-5xl font-blocky text-blue-500 group-hover:scale-105 transition-transform origin-left">{metrics.monteCarloStability}%</p>
                   <p className="text-xs font-bold text-slate-500 mt-2 uppercase tracking-widest">Simulation Confidence (n=10k)</p>
                   <div className="mt-6 flex items-center gap-4 text-xs font-bold">
                     <div className="flex-1 bg-white/5 p-3 rounded-2xl">
@@ -400,7 +400,7 @@ const Auditor = () => {
                     <div className="flex items-center gap-2 text-emerald-400 text-[10px] font-black uppercase tracking-widest">
                       <ShieldCheck size={14}/> Final Audit Verdict
                     </div>
-                    <h2 className="text-4xl font-blocky text-white tracking-tight">
+                    <h2 className="text-4xl font-blocky text-blue-500 tracking-tight">
                       SYSTEM DE-AUTHORIZED
                     </h2>
           <p className="text-sm font-bold text-slate-400 leading-relaxed">
