@@ -40,9 +40,13 @@ export function StatsCard({ label, value, variant = "white", highlight }: StatsC
           )}
         </div>
         
-        <p className="text-[11px] font-black uppercase tracking-[0.2em] text-white mb-1 relative z-10">{label}</p>
+        <p className="text-[11px] font-black uppercase tracking-[0.2em] text-blue-400 mb-1 relative z-10">{label}</p>
         <div className="flex items-end justify-between relative z-10">
-          <h2 className="text-3xl font-black tracking-tighter text-white leading-none">{value}</h2>
+          <h2 className={cn(
+            "text-3xl font-black tracking-tighter leading-none",
+            variant === "emerald" ? "text-green-500" : 
+            variant === "blue" ? "text-blue-500" : "text-white"
+          )}>{value}</h2>
           <div className={cn(
             "p-1.5 rounded-lg",
             variant === "emerald" ? "bg-emerald-500/10" : 

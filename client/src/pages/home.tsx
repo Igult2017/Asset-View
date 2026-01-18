@@ -281,7 +281,7 @@ function PanelSection({ title, description, children, icon: Icon }: { title: str
           <Icon className="w-4 h-4" />
         </div>
         <div className="space-y-1.5 min-w-0">
-          <h3 className="text-[11px] font-black uppercase tracking-[0.15em] text-white group-hover:text-primary transition-colors duration-300 truncate">{title}</h3>
+          <h3 className="text-[11px] font-black uppercase tracking-[0.15em] text-blue-400 group-hover:text-primary transition-colors duration-300 truncate">{title}</h3>
           <p className="text-[12px] font-bold text-slate-200 leading-relaxed line-clamp-2 group-hover:text-white transition-colors">{description}</p>
         </div>
       </div>
@@ -1303,22 +1303,22 @@ export default function Dashboard() {
                       return (
                         <div key={condition} className="space-y-1">
                           <div className="flex justify-between text-[10px] font-black uppercase">
-                            <span className="text-white font-black">{condition}</span>
-                            <span className="text-white font-black">{wr}% WR</span>
+                            <span className="text-blue-400 font-black">{condition}</span>
+                            <span className="text-blue-500 font-black">{wr}% WR</span>
                           </div>
                           <div className="h-1 bg-muted/20 rounded-full overflow-hidden">
-                            <div className="h-full bg-primary" style={{ width: `${wr}%` }} />
+                            <div className="h-full bg-blue-500" style={{ width: `${wr}%` }} />
                           </div>
                         </div>
                       );
                     })}
                     <div className="pt-2 border-t border-border/40">
-                      <div className="text-[9px] font-black text-white uppercase mb-2">Volatility Edge</div>
+                      <div className="text-[9px] font-black text-blue-400 uppercase mb-2">Volatility Edge</div>
                           <div className="grid grid-cols-2 gap-2">
                             {Object.entries(stats.volatilityPerformance).slice(0, 2).map(([state, data]: [string, any]) => (
                               <div key={state} className="p-1.5 rounded bg-primary/5 border border-primary/10">
                                 <div className="text-[10px] text-white font-black uppercase">{state}</div>
-                                <div className="text-[12px] font-black text-white">{data.total ? Math.round((data.wins / data.total) * 100) : 0}% WR</div>
+                                <div className="text-[12px] font-black text-blue-500">{data.total ? Math.round((data.wins / data.total) * 100) : 0}% WR</div>
                               </div>
                             ))}
                           </div>
@@ -1333,18 +1333,18 @@ export default function Dashboard() {
                 >
                   <div className="space-y-3">
                     <div className="flex items-center justify-between text-[11px]">
-                      <span className="text-white font-black uppercase">Entry Precision</span>
-                      <span className="font-mono text-emerald-500 font-black">{(stats as any).setupQualityMetrics?.precision}/5.0</span>
+                      <span className="text-blue-400 font-black uppercase">Entry Precision</span>
+                      <span className="font-mono text-green-500 font-black">{(stats as any).setupQualityMetrics?.precision}/5.0</span>
                     </div>
                     <div className="flex items-center justify-between text-[11px]">
-                      <span className="text-white font-black uppercase">Timing Quality</span>
-                      <span className="font-mono text-primary font-black">{(stats as any).setupQualityMetrics?.clarity}/5.0</span>
+                      <span className="text-blue-400 font-black uppercase">Timing Quality</span>
+                      <span className="font-mono text-blue-500 font-black">{(stats as any).setupQualityMetrics?.clarity}/5.0</span>
                     </div>
                     <div className="pt-2 border-t border-border/40">
-                      <div className="text-[10px] font-black text-white uppercase mb-1">Signal Validation</div>
+                      <div className="text-[10px] font-black text-blue-400 uppercase mb-1">Signal Validation</div>
                       <div className="flex flex-wrap gap-1">
                         {['Primary', 'Confirmation', 'Levels'].map(tag => (
-                          <div key={tag} className="px-1.5 py-0.5 rounded-sm bg-muted text-[10px] font-black uppercase text-white">{tag}</div>
+                          <div key={tag} className="px-1.5 py-0.5 rounded-sm bg-muted text-[10px] font-black uppercase text-blue-400">{tag}</div>
                         ))}
                       </div>
                     </div>
@@ -1359,12 +1359,12 @@ export default function Dashboard() {
                   <div className="space-y-3">
                     <div className="grid grid-cols-2 gap-3">
                       <div className="space-y-1">
-                        <div className="text-[10px] text-white font-black uppercase">Clarity</div>
-                        <div className="text-sm font-black text-white">{(stats as any).setupQualityMetrics?.clarity}</div>
+                        <div className="text-[10px] text-blue-400 font-black uppercase">Clarity</div>
+                        <div className="text-sm font-black text-blue-500">{(stats as any).setupQualityMetrics?.clarity}</div>
                       </div>
                       <div className="space-y-1">
-                        <div className="text-[10px] text-white font-black uppercase">Confluence</div>
-                        <div className="text-sm font-black text-white">{(stats as any).setupQualityMetrics?.confluence}</div>
+                        <div className="text-[10px] text-blue-400 font-black uppercase">Confluence</div>
+                        <div className="text-sm font-black text-blue-500">{(stats as any).setupQualityMetrics?.confluence}</div>
                       </div>
                     </div>
                   </div>
