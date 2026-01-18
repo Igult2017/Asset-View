@@ -1421,15 +1421,15 @@ export default function Dashboard() {
                       return (
                         <div key={impact} className="space-y-1.5">
                           <div className="flex justify-between text-[10px] font-black uppercase tracking-tighter">
-                            <span className="text-white font-black">{impact} Impact</span>
-                            <span className="text-white font-black">{wr}% WR | {avgR}R</span>
+                            <span className="text-blue-400 font-black">{impact} Impact</span>
+                            <span className="text-blue-500 font-black">{wr}% WR | {avgR}R</span>
                           </div>
                           <div className="h-1 bg-muted/20 rounded-full overflow-hidden">
                             <div className={cn(
                               "h-full transition-all duration-500",
                               impact === 'High' ? "bg-red-500" : 
                               impact === 'Medium' ? "bg-amber-500" : 
-                              "bg-emerald-500"
+                              "bg-blue-500"
                             )} style={{ width: `${wr}%` }} />
                           </div>
                         </div>
@@ -1446,8 +1446,8 @@ export default function Dashboard() {
                   <div className="space-y-2">
                     {Object.entries(stats.hyperGranularPerformance).slice(0, 3).map(([key, data]: [string, any]) => (
                       <div key={key} className="flex justify-between items-center p-1.5 rounded bg-primary/5 border border-primary/10">
-                        <span className="text-[10px] text-white font-black truncate max-w-[150px]">{key}</span>
-                        <span className="text-[10px] text-white font-black">
+                        <span className="text-[10px] text-blue-400 font-black truncate max-w-[150px]">{key}</span>
+                        <span className="text-[10px] text-blue-500 font-black">
                           {data.total ? Math.round((data.wins / data.total) * 100) : 0}% WR
                         </span>
                       </div>
@@ -1463,11 +1463,11 @@ export default function Dashboard() {
                   <div className="space-y-3">
                     <div className="flex items-center gap-2 px-3 py-2 rounded bg-blue-500/10 border border-blue-500/20">
                       <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-                      <span className="text-[12px] font-black text-white uppercase">Avg Discipline: {stats.avgDiscipline}%</span>
+                      <span className="text-[12px] font-black text-blue-500 uppercase">Avg Discipline: {stats.avgDiscipline}%</span>
                     </div>
                       <div className="flex justify-between text-[10px] px-1">
-                        <span className="text-white font-black">Edge per 100% Rules:</span>
-                        <span className="text-emerald-500 font-black">2.4R</span>
+                        <span className="text-blue-400 font-black">Edge per 100% Rules:</span>
+                        <span className="text-blue-500 font-black">2.4R</span>
                       </div>
                   </div>
                 </PanelSection>
@@ -1479,12 +1479,12 @@ export default function Dashboard() {
                 >
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-[10px]">
-                      <span className="text-white font-black">Fill Slippage (Avg)</span>
-                      <span className="font-mono text-emerald-500 font-black">-0.15 pips</span>
+                      <span className="text-blue-400 font-black">Fill Slippage (Avg)</span>
+                      <span className="font-mono text-green-500 font-black">-0.15 pips</span>
                     </div>
                     <div className="flex items-center justify-between text-[10px]">
-                      <span className="text-white font-black">TFS Alignment (Avg)</span>
-                      <span className="font-mono text-primary font-black">1.4R</span>
+                      <span className="text-blue-400 font-black">TFS Alignment (Avg)</span>
+                      <span className="font-mono text-blue-500 font-black">1.4R</span>
                     </div>
                   </div>
                 </PanelSection>
@@ -1501,11 +1501,11 @@ export default function Dashboard() {
                       return (
                         <div key={key} className="space-y-1 border-b border-border/30 pb-1">
                           <div className="flex justify-between font-bold">
-                            <span>{key}</span>
-                            <span className="text-emerald-500">{wr}% WR</span>
+                            <span className="text-blue-400">{key}</span>
+                            <span className="text-blue-500">{wr}% WR</span>
                           </div>
                           <div className="flex gap-1 h-1 w-full bg-muted rounded-full overflow-hidden">
-                            <div className="bg-emerald-500" style={{ width: `${wr}%` }} />
+                            <div className="bg-blue-500" style={{ width: `${wr}%` }} />
                             <div className="bg-red-400" style={{ width: `${lr}%` }} />
                           </div>
                         </div>
@@ -1526,14 +1526,14 @@ export default function Dashboard() {
                       return (
                         <div key={key} className="space-y-1 border-b border-border/30 pb-1">
                           <div className="flex justify-between font-bold truncate">
-                            <span>{key}</span>
+                            <span className="text-blue-400">{key}</span>
                           </div>
                           <div className="flex justify-between text-[8px] mb-1">
-                            <span className="text-emerald-500 font-bold">{wr}% Win</span>
+                            <span className="text-blue-500 font-bold">{wr}% Win</span>
                             <span className="text-red-400 font-bold">{lr}% Loss</span>
                           </div>
                           <div className="flex gap-1 h-1 w-full bg-muted rounded-full overflow-hidden">
-                            <div className="bg-emerald-500" style={{ width: `${wr}%` }} />
+                            <div className="bg-blue-500" style={{ width: `${wr}%` }} />
                             <div className="bg-red-400" style={{ width: `${lr}%` }} />
                           </div>
                         </div>
@@ -1624,18 +1624,18 @@ export default function Dashboard() {
                       return (
                         <div key={b} className="p-2 bg-card/30 rounded-lg border border-border/30">
                           <div className="flex justify-between items-center mb-2">
-                            <span className={cn("text-[9px] font-black uppercase", b === 'Bullish' ? 'text-emerald-500' : 'text-rose-500')}>{b}</span>
-                            <span className="text-xs font-black text-white">{perc}%</span>
+                            <span className={cn("text-[9px] font-black uppercase", b === 'Bullish' ? 'text-green-500' : 'text-rose-500')}>{b}</span>
+                            <span className="text-xs font-black text-blue-500">{perc}%</span>
                           </div>
-                          <div className="text-[8px] text-white font-bold">{bTrades.length} trades</div>
+                          <div className="text-[8px] text-blue-400 font-bold">{bTrades.length} trades</div>
                         </div>
                       );
                     })}
                     <div className="pt-2 mt-2 border-t border-border/30">
-                      <div className="text-[8px] text-white font-black mb-1">CURRENT STREAK</div>
+                      <div className="text-[8px] text-blue-400 font-black mb-1">CURRENT STREAK</div>
                       <div className="text-lg font-black">
                         {filteredTrades.length > 0 ? (
-                          <span className={filteredTrades[filteredTrades.length - 1].outcome === 'Win' ? 'text-emerald-500' : 'text-rose-500'}>
+                          <span className={filteredTrades[filteredTrades.length - 1].outcome === 'Win' ? 'text-green-500' : 'text-rose-500'}>
                             {filteredTrades[filteredTrades.length - 1].outcome}
                           </span>
                         ) : "-"}
@@ -1648,25 +1648,19 @@ export default function Dashboard() {
                   <h4 className="text-[9px] font-black text-white uppercase mb-4 tracking-tighter">Top Performers</h4>
                   <div className="space-y-4">
                     {calculateBestStrategy(stats.strategyPerformance) && (
-                      <div className="flex justify-between items-center p-3 bg-primary/5 rounded-lg border border-primary/10">
-                        <div>
-                          <div className="text-[8px] text-white font-bold uppercase font-bold">Best Strategy</div>
-                          <div className="text-xs font-black uppercase tracking-tight text-white">{calculateBestStrategy(stats.strategyPerformance)?.name}</div>
-                        </div>
-                        <div className="text-right">
-                          <div className="text-xs font-black text-emerald-500">{calculateBestStrategy(stats.strategyPerformance)?.wr}% WR</div>
-                          <div className="text-[9px] text-primary font-bold">{calculateBestStrategy(stats.strategyPerformance)?.avgR}R Avg</div>
-                        </div>
+                      <div className="p-3 bg-primary/5 rounded-lg border border-primary/10">
+                        <div className="text-[8px] text-blue-400 font-bold uppercase font-bold">Best Strategy</div>
+                        <div className="text-xs font-black uppercase tracking-tight text-blue-500">{calculateBestStrategy(stats.strategyPerformance)?.name}</div>
                       </div>
                     )}
                     <div className="grid grid-cols-2 gap-2">
                       <div className="p-3 bg-card/30 rounded-lg border border-border/30 text-center">
-                        <div className="text-[8px] text-white font-bold uppercase mb-1">Management</div>
-                        <div className="text-xl font-black text-white">{(stats as any).avgManagementQuality}/5.0</div>
+                        <div className="text-[8px] text-blue-400 font-bold uppercase mb-1">Management</div>
+                        <div className="text-xl font-black text-blue-500">{(stats as any).avgManagementQuality}/5.0</div>
                       </div>
                       <div className="p-2 bg-card/30 rounded-lg border border-border/30 text-center">
-                        <div className="text-[8px] text-white font-bold uppercase">Heat</div>
-                        <div className="text-xs font-black text-primary">LOW</div>
+                        <div className="text-[8px] text-blue-400 font-bold uppercase">Heat</div>
+                        <div className="text-xs font-black text-blue-500">LOW</div>
                       </div>
                     </div>
                   </div>
@@ -1686,10 +1680,10 @@ export default function Dashboard() {
                       const avgR = (tfTrades.reduce((a, b) => a + Number(b.rAchieved), 0) / tfTrades.length).toFixed(2);
                       return (
                         <div key={tf} className="flex items-center justify-between p-2 bg-card/30 rounded-lg border border-border/30">
-                          <span className="text-[9px] font-black uppercase text-white">{tf}</span>
+                          <span className="text-[9px] font-black uppercase text-blue-400">{tf}</span>
                           <div className="flex items-center gap-3">
-                            <span className="text-xs font-black text-primary">{perc}%</span>
-                            <span className="text-[8px] text-white font-black">{avgR}R</span>
+                            <span className="text-xs font-black text-blue-500">{perc}%</span>
+                            <span className="text-[8px] text-blue-400 font-black">{avgR}R</span>
                           </div>
                         </div>
                       );
@@ -1708,10 +1702,10 @@ export default function Dashboard() {
                       const avgR = (tfTrades.reduce((a, b) => a + Number(b.rAchieved), 0) / tfTrades.length).toFixed(2);
                       return (
                         <div key={tf} className="flex items-center justify-between p-2 bg-card/30 rounded-lg border border-border/30">
-                          <span className="text-[9px] font-black uppercase text-white">{tf}</span>
+                          <span className="text-[9px] font-black uppercase text-blue-400">{tf}</span>
                           <div className="flex items-center gap-3">
-                            <span className="text-xs font-black text-primary">{perc}%</span>
-                            <span className="text-[8px] text-white font-black">{avgR}R</span>
+                            <span className="text-xs font-black text-blue-500">{perc}%</span>
+                            <span className="text-[8px] text-blue-400 font-black">{avgR}R</span>
                           </div>
                         </div>
                       );
@@ -1730,15 +1724,15 @@ export default function Dashboard() {
                       calculateDrawdownPerMonth(filteredTrades).map((month) => (
                         <div key={month.month} className="p-3 bg-card/30 rounded-lg border border-border/30">
                           <div className="flex justify-between items-center mb-2">
-                            <span className="text-[9px] font-black uppercase text-white">{month.month}</span>
-                            <span className={cn("text-xs font-black", month.drawdown > 500 ? "text-rose-500" : month.drawdown > 200 ? "text-amber-500" : "text-emerald-500")}>
+                            <span className="text-[9px] font-black uppercase text-blue-400">{month.month}</span>
+                            <span className={cn("text-xs font-black", month.drawdown > 500 ? "text-rose-500" : month.drawdown > 200 ? "text-amber-500" : "text-green-500")}>
                               {month.drawdownPercent}% (-${month.drawdown.toLocaleString()})
                             </span>
                           </div>
-                          <div className="flex justify-between text-[8px] text-white font-black">
+                          <div className="flex justify-between text-[8px] text-blue-400 font-black">
                             <span>Cumulative: ${(month.cumulative || 0).toLocaleString()}</span>
                           </div>
-                          <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden mt-2">
+                          <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden mt-2">
                             <motion.div 
                               initial={{ width: 0 }} 
                               animate={{ width: `${Math.min(100, (month.drawdown / (Math.max(...calculateDrawdownPerMonth(filteredTrades).map(m => m.drawdown)) || 1)) * 100)}%` }} 
@@ -1761,16 +1755,16 @@ export default function Dashboard() {
                     return (
                       <div className="space-y-4">
                         <div className="p-4 bg-card/30 rounded-lg border border-border/30">
-                          <div className="text-[8px] text-white font-bold uppercase mb-2">Win Rate After Loss</div>
-                          <div className="text-3xl font-black text-primary">{recoveryData.winRate}%</div>
-                          <div className="text-[9px] text-white font-bold mt-2">
+                          <div className="text-[8px] text-blue-400 font-bold uppercase mb-2">Win Rate After Loss</div>
+                          <div className="text-3xl font-black text-blue-500">{recoveryData.winRate}%</div>
+                          <div className="text-[9px] text-blue-400 font-bold mt-2">
                             {recoveryData.winsAfterLoss} wins out of {recoveryData.totalAfterLoss} trades
                           </div>
                         </div>
                         <div className="grid grid-cols-2 gap-3">
                           <div className="p-3 bg-card/30 rounded-lg border border-border/30 text-center">
-                            <div className="text-[8px] text-white font-bold uppercase mb-1">Trades After Loss</div>
-                            <div className="text-xl font-black text-white">{recoveryData.totalAfterLoss}</div>
+                            <div className="text-[8px] text-blue-400 font-bold uppercase mb-1">Trades After Loss</div>
+                            <div className="text-xl font-black text-blue-500">{recoveryData.totalAfterLoss}</div>
                           </div>
                           <div className="p-3 bg-card/30 rounded-lg border border-border/30 text-center">
                             <div className="text-[8px] text-white font-bold uppercase mb-1">Wins</div>
