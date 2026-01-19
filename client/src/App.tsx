@@ -17,9 +17,9 @@ import TradeVault from "@/pages/trade-vault";
 function Router() {
   return (
     <Switch>
-      <Route path="/" component={Overview} />
+      <Route path="/" component={Dashboard} />
+      <Route path="/overview" component={Overview} />
       <Route path="/auditor" component={Auditor} />
-      <Route path="/analytics" component={Dashboard} />
       <Route path="/log-entry" component={LogEntryPage} />
       <Route path="/drawdown" component={DrawdownAnalysis} />
       <Route path="/trade-vault" component={TradeVault} />

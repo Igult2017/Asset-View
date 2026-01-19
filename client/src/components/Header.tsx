@@ -7,10 +7,9 @@ export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navItems = [
-    { name: 'OVERVIEW', path: '/' },
+    { name: 'ANALYTICS', path: '/' },
+    { name: 'OVERVIEW', path: '/overview' },
     { name: 'AUDITOR', path: '/auditor' },
-    { name: 'ANALYTICS', path: '/analytics' },
-    { name: 'LOG ENTRY', path: '/log-entry' },
     { name: 'DRAWDOWN', path: '/drawdown' },
     { name: 'TRADE VAULT', path: '/trade-vault' }
   ];
