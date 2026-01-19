@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/hooks/use-theme";
 import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
 import NotFound from "@/pages/not-found";
 import Dashboard from "@/pages/home";
 import Overview from "@/pages/overview";
@@ -38,11 +39,12 @@ function App() {
       </Helmet>
       <ThemeProvider defaultTheme="blue">
         <TooltipProvider>
-          <div className="min-h-screen bg-[#0a0e27]">
+          <div className="min-h-screen bg-[#0a0e27] flex flex-col">
             <Header />
-            <main>
+            <main className="flex-grow">
               <Router />
             </main>
+            <Footer />
           </div>
           <Toaster />
         </TooltipProvider>
