@@ -6,8 +6,7 @@ import React from 'react';
  */
 export function Footer() {
   return (
-    <footer className="bg-[#0a0e27] border-t border-white/10 py-4 font-['Montserrat'] relative">
-      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#3b82f6] to-transparent opacity-30" />
+    <footer className="bg-[#0a0e27] py-4 font-['Montserrat'] relative">
       <div className="flex justify-between items-center text-[#8b92b0] text-sm px-6 tracking-tighter uppercase font-black relative z-10">
         <div className="hover:text-white transition-colors">
           © 2026 FSDZONES. All rights reserved.
