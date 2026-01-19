@@ -6,12 +6,13 @@ import React from 'react';
  */
 export function Footer() {
   return (
-    <footer className="bg-[#1e293b] border-t border-gray-700 py-4 font-['Montserrat']">
-      <div className="flex justify-between items-center text-gray-500 text-sm px-6 tracking-tighter uppercase font-black">
-        <div className="border-2 border-gray-700 px-2 py-1">
+    <footer className="bg-gradient-to-br from-[#1a1f3a] via-[#111827] to-[#0f1629] border-t border-white/10 py-4 font-['Montserrat'] relative overflow-hidden">
+      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#3b82f6] to-transparent opacity-30" />
+      <div className="flex justify-between items-center text-[#8b92b0] text-sm px-6 tracking-tighter uppercase font-black relative z-10">
+        <div className="border border-white/10 px-2 py-1 hover:text-white transition-colors">
           © 2026 FSDZONES. All rights reserved.
         </div>
-        <div className="bg-gray-700 text-slate-200 px-2 py-1">
+        <div className="bg-white/5 text-blue-400 px-2 py-1 border border-white/10">
           Free Journal
         </div>
       </div>
