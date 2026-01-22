@@ -13,9 +13,6 @@ export function Footer() {
         <div className="hover:text-white transition-colors">
           © {currentYear} FSDZONES.
         </div>
-        <div className="text-blue-400">
-          Free Journal
-        </div>
       </div>
     </footer>
   );
