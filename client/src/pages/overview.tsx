@@ -85,13 +85,13 @@ export default function Overview() {
                         Probability Based on Trades
                       </div>
                       <div className="text-2xl font-bold tracking-widest">
-                        <span className="text-green-500">WIN: {winProb}%</span>
+                        <span className="text-emerald-500">WIN: {winProb}%</span>
                         <span className="text-slate-600 mx-3">|</span>
-                        <span className="text-red-500">LOSS: {lossProb}%</span>
+                        <span className="text-rose-500">LOSS: {lossProb}%</span>
                       </div>
                       <div className="mt-4 h-1 w-64 mx-auto flex overflow-hidden border border-slate-800">
-                        <div className="bg-green-600" style={{ width: `${winProb}%` }} />
-                        <div className="bg-red-600" style={{ width: `${lossProb}%` }} />
+                        <div className="bg-emerald-600" style={{ width: `${winProb}%` }} />
+                        <div className="bg-rose-600" style={{ width: `${lossProb}%` }} />
                       </div>
                     </div>
                   );
@@ -102,11 +102,11 @@ export default function Overview() {
             <Panel title="Win_Loss_Frequency">
               <div className="h-48 bg-black border-2 border-slate-800 flex items-center justify-center gap-6">
                 <div className="text-center">
-                  <div className="text-3xl text-green-500">72%</div>
+                  <div className="text-3xl text-emerald-500">72%</div>
                   <div className="text-[11px] tracking-widest text-slate-300">WINS</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl text-red-500">28%</div>
+                  <div className="text-3xl text-rose-500">28%</div>
                   <div className="text-[11px] tracking-widest text-slate-300">LOSSES</div>
                 </div>
               </div>

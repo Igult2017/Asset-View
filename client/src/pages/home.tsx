@@ -1303,11 +1303,11 @@ export default function Dashboard() {
                       return (
                         <div key={condition} className="space-y-1">
                           <div className="flex justify-between text-[10px] font-black uppercase">
-                            <span className="text-blue-400 font-black">{condition}</span>
-                            <span className="text-blue-500 font-black">{wr}% WR</span>
+                            <span className="text-emerald-400 font-black">{condition}</span>
+                            <span className="text-emerald-500 font-black">{wr}% WR</span>
                           </div>
                           <div className="h-1 bg-muted/20 rounded-full overflow-hidden">
-                            <div className="h-full bg-blue-500" style={{ width: `${wr}%` }} />
+                            <div className="h-full bg-emerald-500" style={{ width: `${wr}%` }} />
                           </div>
                         </div>
                       );
@@ -1422,14 +1422,14 @@ export default function Dashboard() {
                         <div key={impact} className="space-y-1.5">
                           <div className="flex justify-between text-[10px] font-black uppercase tracking-tighter">
                             <span className="text-blue-400 font-black">{impact} Impact</span>
-                            <span className="text-blue-500 font-black">{wr}% WR | {avgR}R</span>
+                            <span className="text-emerald-500 font-black">{wr}% WR | {avgR}R</span>
                           </div>
                           <div className="h-1 bg-muted/20 rounded-full overflow-hidden">
                             <div className={cn(
                               "h-full transition-all duration-500",
                               impact === 'High' ? "bg-red-500" : 
                               impact === 'Medium' ? "bg-amber-500" : 
-                              "bg-blue-500"
+                              "bg-emerald-500"
                             )} style={{ width: `${wr}%` }} />
                           </div>
                         </div>
@@ -1502,11 +1502,11 @@ export default function Dashboard() {
                         <div key={key} className="space-y-1 border-b border-border/30 pb-1">
                           <div className="flex justify-between font-bold">
                             <span className="text-blue-400">{key}</span>
-                            <span className="text-blue-500">{wr}% WR</span>
+                            <span className="text-emerald-500">{wr}% WR</span>
                           </div>
                           <div className="flex gap-1 h-1 w-full bg-muted rounded-full overflow-hidden">
-                            <div className="bg-blue-500" style={{ width: `${wr}%` }} />
-                            <div className="bg-red-400" style={{ width: `${lr}%` }} />
+                            <div className="bg-emerald-500" style={{ width: `${wr}%` }} />
+                            <div className="bg-rose-500" style={{ width: `${lr}%` }} />
                           </div>
                         </div>
                       );
@@ -1529,12 +1529,12 @@ export default function Dashboard() {
                             <span className="text-blue-400">{key}</span>
                           </div>
                           <div className="flex justify-between text-[8px] mb-1">
-                            <span className="text-blue-500 font-bold">{wr}% Win</span>
-                            <span className="text-red-400 font-bold">{lr}% Loss</span>
+                            <span className="text-emerald-500 font-bold">{wr}% Win</span>
+                            <span className="text-rose-500 font-bold">{lr}% Loss</span>
                           </div>
                           <div className="flex gap-1 h-1 w-full bg-muted rounded-full overflow-hidden">
-                            <div className="bg-blue-500" style={{ width: `${wr}%` }} />
-                            <div className="bg-red-400" style={{ width: `${lr}%` }} />
+                            <div className="bg-emerald-500" style={{ width: `${wr}%` }} />
+                            <div className="bg-rose-500" style={{ width: `${lr}%` }} />
                           </div>
                         </div>
                       );
