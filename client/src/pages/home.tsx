@@ -1293,7 +1293,6 @@ export default function Dashboard() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <PanelSection 
                   title="Market Regime" 
-                  description=""
                   icon={Activity}
                 >
                   <div className="space-y-3">
@@ -1328,7 +1327,6 @@ export default function Dashboard() {
 
                 <PanelSection 
                   title="Execution Precision" 
-                  description=""
                   icon={ArrowRight}
                 >
                   <div className="space-y-3">
@@ -1353,7 +1351,6 @@ export default function Dashboard() {
 
                 <PanelSection 
                   title="Clarity and Confluence" 
-                  description=""
                   icon={Sparkles}
                 >
                   <div className="space-y-3">
@@ -1372,7 +1369,6 @@ export default function Dashboard() {
 
                 <PanelSection 
                   title="Psychology & Discipline" 
-                  description=""
                   icon={Palette}
                 >
                   <div className="space-y-3">
@@ -1544,54 +1540,6 @@ export default function Dashboard() {
 
               </div>
 
-              {/* Extended Analytics Row */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <PanelSection 
-                  title="Post-Trade Optimization" 
-                  description="Learning notes and rule adjustments for strategy refinement."
-                  icon={Sparkles}
-                >
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="p-3 rounded-xl bg-emerald-500/5 border border-emerald-500/10">
-                        <div className="text-[8px] text-emerald-500 font-black uppercase mb-1">What Worked</div>
-                        <p className="text-[10px] font-black text-white italic">"Patience during London open consolidation resulted in high-quality breakout."</p>
-                      </div>
-                      <div className="p-3 rounded-xl bg-rose-500/5 border border-rose-500/10">
-                        <div className="text-[8px] text-rose-500 font-black uppercase mb-1">Rule Adjustment</div>
-                        <p className="text-[10px] font-black text-white italic">"Avoid entering before 8:30 AM EST news release to reduce slippage."</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 p-2 rounded bg-primary/5 border border-primary/10">
-                      <div className="p-1 rounded bg-primary text-primary-foreground">
-                        <History className="w-3 h-3" />
-                      </div>
-                      <div className="text-[9px] font-bold uppercase tracking-tight">85% of setups worth repeating</div>
-                    </div>
-                  </div>
-                </PanelSection>
-
-                <PanelSection 
-                  title="Edge Filters & Constraints" 
-                  description="Minimum setup criteria and blacklisted market conditions."
-                  icon={Filter}
-                >
-                  <div className="grid grid-cols-3 gap-2">
-                    <div className="p-2 rounded bg-muted/30 border border-border/50 text-center">
-                      <div className="text-[8px] text-muted-foreground uppercase">Min Score</div>
-                      <div className="text-[10px] font-black">3.5/5.0</div>
-                    </div>
-                    <div className="p-2 rounded bg-muted/30 border border-border/50 text-center col-span-2">
-                      <div className="text-[8px] text-muted-foreground uppercase text-left pl-1">Blacklisted</div>
-                      <div className="flex flex-wrap gap-1 mt-1 pl-1">
-                        {['Thin Liquidity', 'Pre-Expansion'].map(tag => (
-                          <span key={tag} className="text-[8px] font-bold text-rose-500 bg-rose-500/10 px-1 rounded-sm uppercase">{tag}</span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </PanelSection>
-              </div>
               <div className="p-1 border border-primary/20 bg-primary/5 rounded-2xl">
                 <div className="p-4 flex flex-col md:flex-row justify-between items-center gap-4">
                   <div className="flex items-center gap-3">

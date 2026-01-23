@@ -3,7 +3,8 @@ import {
   Activity, BrainCircuit, Box, Clock, Cpu, Database, Gauge,
   Scale, ShieldCheck, Target, Thermometer, Layers,
   AlertTriangle, CheckCircle2, ChevronRight, Info,
-  LineChart, MousePointer2, RefreshCcw, TrendingUp, Zap
+  LineChart, MousePointer2, RefreshCcw, TrendingUp, Zap,
+  Sparkles, Filter, History
 } from 'lucide-react';
 import { Layout } from "./home";
 
@@ -80,6 +81,58 @@ const AuditorExtras = ({ metrics, rollingExpectancy }: { metrics: any, rollingEx
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12 pt-12 border-t border-white/5">
+
+      <div className="lg:col-span-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full">
+          {/* Post-Trade Optimization */}
+          <div className="p-6 rounded-[32px] bg-slate-900/40 border border-white/10 space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-xl bg-blue-500/10 text-blue-400">
+                <Sparkles size={16} />
+              </div>
+              <h3 className="text-[12px] font-black uppercase text-white tracking-widest">Post-Trade Optimization</h3>
+            </div>
+            <div className="grid grid-cols-1 gap-4">
+              <div className="p-3 rounded-xl bg-emerald-500/5 border border-emerald-500/10">
+                <div className="text-[8px] text-emerald-500 font-black uppercase mb-1">What Worked</div>
+                <p className="text-[10px] font-black text-white italic">"Patience during London open consolidation resulted in high-quality breakout."</p>
+              </div>
+              <div className="p-3 rounded-xl bg-rose-500/5 border border-rose-500/10">
+                <div className="text-[8px] text-rose-500 font-black uppercase mb-1">Rule Adjustment</div>
+                <p className="text-[10px] font-black text-white italic">"Avoid entering before 8:30 AM EST news release to reduce slippage."</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 p-2 rounded bg-white/5 border border-white/10">
+              <History className="w-3 h-3 text-blue-400" />
+              <div className="text-[9px] font-bold uppercase tracking-tight text-slate-300">85% of setups worth repeating</div>
+            </div>
+          </div>
+
+          {/* Edge Filters & Constraints */}
+          <div className="p-6 rounded-[32px] bg-slate-900/40 border border-white/10 space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-400">
+                <Filter size={16} />
+              </div>
+              <h3 className="text-[12px] font-black uppercase text-white tracking-widest">Edge Filters & Constraints</h3>
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              <div className="p-2 rounded bg-white/5 border border-white/10 text-center">
+                <div className="text-[8px] text-slate-500 uppercase">Min Score</div>
+                <div className="text-[10px] font-black text-white">3.5/5.0</div>
+              </div>
+              <div className="p-2 rounded bg-white/5 border border-white/10 text-center col-span-2">
+                <div className="text-[8px] text-slate-500 uppercase text-left pl-1">Blacklisted</div>
+                <div className="flex flex-wrap gap-1 mt-1 pl-1">
+                  {['Thin Liquidity', 'Pre-Expansion'].map(tag => (
+                    <span key={tag} className="text-[8px] font-bold text-rose-500 bg-rose-500/10 px-1 rounded-sm uppercase">{tag}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Kill-Switch */}
       <div className="bg-slate-900/40 p-6 rounded-[32px] border border-white/10">
