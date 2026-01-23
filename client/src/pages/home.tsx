@@ -272,7 +272,7 @@ function calculateBestStrategy(strategyPerformance: Record<string, any>) {
 
 // --- Components ---
 
-function PanelSection({ title, description, children, icon: Icon }: { title: string, description: string, children?: React.ReactNode, icon: any }) {
+function PanelSection({ title, description, children, icon: Icon }: { title: string, description?: string, children?: React.ReactNode, icon: any }) {
   return (
     <Card className="p-5 space-y-4 bg-card/40 backdrop-blur-xl border-border/40 hover:border-primary/30 hover:bg-card/60 transition-all duration-500 group shadow-lg shadow-black/5 relative overflow-hidden">
       <div className="absolute top-0 left-0 w-1 h-full bg-primary/0 group-hover:bg-primary/40 transition-all duration-500" />
@@ -282,7 +282,7 @@ function PanelSection({ title, description, children, icon: Icon }: { title: str
         </div>
         <div className="space-y-1.5 min-w-0">
           <h3 className="text-[11px] font-black uppercase tracking-[0.15em] text-blue-400 group-hover:text-primary transition-colors duration-300 truncate">{title}</h3>
-          <p className="text-[12px] font-bold text-slate-200 leading-relaxed line-clamp-2 group-hover:text-white transition-colors">{description}</p>
+          {description && <p className="text-[12px] font-bold text-slate-200 leading-relaxed line-clamp-2 group-hover:text-white transition-colors">{description}</p>}
         </div>
       </div>
       {children && <div className="relative z-10">{children}</div>}
@@ -1293,7 +1293,7 @@ export default function Dashboard() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <PanelSection 
                   title="Market Regime" 
-                  description="Performance edge across different volatility and regime states."
+                  description=""
                   icon={Activity}
                 >
                   <div className="space-y-3">
@@ -1328,7 +1328,7 @@ export default function Dashboard() {
 
                 <PanelSection 
                   title="Execution Precision" 
-                  description="Deviation analysis: slippage and entry timing accuracy."
+                  description=""
                   icon={ArrowRight}
                 >
                   <div className="space-y-3">
@@ -1353,7 +1353,7 @@ export default function Dashboard() {
 
                 <PanelSection 
                   title="Clarity and Confluence" 
-                  description="High-granularity analysis of setup quality and confluence."
+                  description=""
                   icon={Sparkles}
                 >
                   <div className="space-y-3">
@@ -1372,7 +1372,7 @@ export default function Dashboard() {
 
                 <PanelSection 
                   title="Psychology & Discipline" 
-                  description="Mindset, confidence, and rule adherence analysis."
+                  description=""
                   icon={Palette}
                 >
                   <div className="space-y-3">
