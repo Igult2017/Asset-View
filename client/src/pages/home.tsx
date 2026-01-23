@@ -1191,7 +1191,7 @@ function AIAnalysisSection() {
             <Sparkles className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-sm font-black uppercase tracking-widest text-white">AI Performance Intelligence</h3>
+            <h3 className="text-sm font-black uppercase tracking-widest text-white">AI performance analysis</h3>
             <p className="text-sm font-bold text-slate-200">Neural breakdown of edge clarity and actionable growth steps.</p>
           </div>
         </div>
