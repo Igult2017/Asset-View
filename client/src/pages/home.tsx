@@ -918,9 +918,14 @@ function LogEntryModal() {
               <SelectContent><SelectItem value="High">High</SelectItem><SelectItem value="Normal">Normal</SelectItem><SelectItem value="Thin">Thin</SelectItem></SelectContent></Select></FormItem>
             )} />
             <FormField control={form.control} name="newsEnvironment" render={({ field }) => (
-              <FormItem><FormLabel className="text-[10px] font-bold uppercase">News Environment</FormLabel>
+              <FormItem><FormLabel className="text-[10px] font-bold uppercase">News Impact</FormLabel>
               <Select onValueChange={field.onChange} value={field.value || ""}><FormControl><SelectTrigger className="bg-background border-border"><SelectValue placeholder="Select" /></SelectTrigger></FormControl>
-              <SelectContent><SelectItem value="None">None</SelectItem><SelectItem value="Medium Impact">Medium Impact</SelectItem><SelectItem value="High Impact">High Impact</SelectItem></SelectContent></Select></FormItem>
+              <SelectContent>
+                <SelectItem value="None">No Impact</SelectItem>
+                <SelectItem value="Low Impact">Low Impact</SelectItem>
+                <SelectItem value="Medium Impact">Medium Impact</SelectItem>
+                <SelectItem value="High Impact">High Impact</SelectItem>
+              </SelectContent></Select></FormItem>
             )} />
           </div>
         )}
@@ -1409,7 +1414,7 @@ export default function Dashboard() {
                   icon={BarChart2}
                 >
                   <div className="space-y-3">
-                    {['High', 'Medium', 'Low', 'None'].map(impact => {
+                    {['High Impact', 'Medium Impact', 'Low Impact', 'None'].map(impact => {
                       const data = (stats as any).newsPerformance?.[impact] || { wins: 0, total: 0, rSum: 0 };
                       const wr = data.total ? Math.round((data.wins / data.total) * 100) : 0;
                       const avgR = data.total ? (data.rSum / data.total).toFixed(2) : "0.00";
@@ -1417,14 +1422,20 @@ export default function Dashboard() {
                       return (
                         <div key={impact} className="space-y-1.5">
                           <div className="flex justify-between text-[10px] font-black uppercase tracking-tighter">
-                            <span className="text-blue-400 font-black">{impact} Impact</span>
+                            <span className={cn(
+                              "font-black",
+                              impact === 'High Impact' ? "text-red-500" :
+                              impact === 'Medium Impact' ? "text-orange-500" :
+                              impact === 'Low Impact' ? "text-blue-500" :
+                              "text-white"
+                            )}>{impact}</span>
                             <span className="text-emerald-500 font-black">{wr}% WR | {avgR}R</span>
                           </div>
                           <div className="h-1 bg-muted/20 rounded-full overflow-hidden">
                             <div className={cn(
                               "h-full transition-all duration-500",
-                              impact === 'High' ? "bg-red-500" : 
-                              impact === 'Medium' ? "bg-amber-500" : 
+                              impact === 'High Impact' ? "bg-red-500" : 
+                              impact === 'Medium Impact' ? "bg-amber-500" : 
                               "bg-emerald-500"
                             )} style={{ width: `${wr}%` }} />
                           </div>
