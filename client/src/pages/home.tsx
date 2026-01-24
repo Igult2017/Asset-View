@@ -1284,9 +1284,9 @@ export default function Dashboard() {
               <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
                 <StatsCard label="Total Net Profit" value={`$${stats.net.toLocaleString()}`} variant="emerald" />
                 <StatsCard label="Global Win Rate" value={`${stats.wr}%`} variant="white" />
-                <StatsCard label="Expectancy (R)" value={`${stats.exp}R`} variant="blue" />
+                <StatsCard label="Expectancy (R)" value={`${stats.exp}R`} variant="yellow" />
                 <StatsCard label="Trade Count" value={stats.count} variant="white" />
-                <StatsCard label="Profit Factor" value={stats.pf} variant="blue" highlight />
+                <StatsCard label="Profit Factor" value={stats.pf} variant="yellow" highlight />
               </div>
 
               {/* Intelligence Panels Row 1 */}
