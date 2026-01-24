@@ -10,7 +10,7 @@ import { Footer } from "@/components/Footer";
 import NotFound from "@/pages/not-found";
 import Dashboard from "@/pages/home";
 import Overview from "@/pages/overview";
-import Auditor from "@/pages/auditor";
+import Auditor from "@/pages/auditor"; // Keeping the filename but changing the display name
 import LogEntryPage from "@/pages/log-entry";
 import DrawdownAnalysis from "@/pages/drawdown-analysis";
 import TradeVault from "@/pages/trade-vault";
@@ -20,7 +20,7 @@ function Router() {
     <Switch>
       <Route path="/" component={Dashboard} />
       <Route path="/overview" component={Overview} />
-      <Route path="/auditor" component={Auditor} />
+      <Route path="/strategy-audit" component={Auditor} />
       <Route path="/log-entry" component={LogEntryPage} />
       <Route path="/drawdown" component={DrawdownAnalysis} />
       <Route path="/trade-vault" component={TradeVault} />

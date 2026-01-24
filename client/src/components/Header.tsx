@@ -9,7 +9,7 @@ export function Header() {
   const navItems = [
     { name: 'ANALYTICS', path: '/' },
     { name: 'OVERVIEW', path: '/overview' },
-    { name: 'AUDITOR', path: '/auditor' },
+    { name: 'STRATEGY AUDIT', path: '/strategy-audit' },
     { name: 'DRAWDOWN', path: '/drawdown' },
     { name: 'TRADE VAULT', path: '/trade-vault' }
   ];

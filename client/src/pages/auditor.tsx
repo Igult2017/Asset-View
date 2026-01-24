@@ -220,7 +220,7 @@ const AuditorExtras = ({ metrics, rollingExpectancy }: { metrics: any, rollingEx
   );
 };
 
-const Auditor = () => {
+const StrategyAudit = () => {
   const [systemName] = useState('AI-Automated Audit: Quant-Neural Alpha 4.0');
 
   const [metrics] = useState({
@@ -538,4 +538,4 @@ const Auditor = () => {
   );
 };
 
-export default Auditor;
+export default StrategyAudit;
