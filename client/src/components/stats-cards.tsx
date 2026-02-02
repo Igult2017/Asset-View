@@ -46,7 +46,7 @@ const StatCard = ({ stat, index, isLoaded }: { stat: any, index: number, isLoade
         </span>
       </div>
 
-      <div className="flex items-baseline gap-1 mb-4">
+      <div className="flex items-baseline gap-1">
         <span className={`text-3xl font-bold tracking-tight ${
           stat.trend === 'positive' ? 'text-emerald-400' : stat.trend === 'negative' ? 'text-rose-400' : 'text-amber-400'
         }`}>
@@ -55,15 +55,6 @@ const StatCard = ({ stat, index, isLoaded }: { stat: any, index: number, isLoade
         {stat.unit && (
           <span className="text-zinc-600 text-sm font-medium uppercase tracking-wider">{stat.unit}</span>
         )}
-      </div>
-
-      <div className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-[11px] font-bold ${
-        stat.trend === 'positive' ? 'bg-emerald-500/10 text-emerald-500' : 
-        stat.trend === 'negative' ? 'bg-rose-500/10 text-rose-500' : 
-        'bg-amber-500/10 text-amber-500'
-      }`}>
-        <TrendIcon trend={stat.trend} />
-        {stat.trendLabel}
       </div>
     </div>
   );
