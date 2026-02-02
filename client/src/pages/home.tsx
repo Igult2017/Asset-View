@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { format } from "date-fns";
 import { Activity, Plus, BarChart2, History, TrendingUp, Filter, Palette, ChevronDown, ArrowRight, ArrowLeft, Settings, LineChart, Sparkles, Upload, ImageIcon, X, Camera, RefreshCcw, Trash2 } from "lucide-react";
 import { useLocation } from "wouter";
-import { StatsCard } from "@/components/stats-card";
+import { StatsCards } from "@/components/stats-cards";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -1271,7 +1271,15 @@ export default function Dashboard() {
   }
 
   const stats = calculateStats(trades);
+  const { net, wr, exp, count, pf } = stats;
   const filteredTrades = selectedStrat === "All" ? trades : trades.filter(t => t.strategy === selectedStrat);
+  const statsForCards = [
+    { label: 'Total Net Profit', value: `$${net.toLocaleString()}`, trend: net >= 0 ? 'positive' : 'negative', trendLabel: net >= 0 ? 'Positive Trend' : 'Negative Trend', unit: '' },
+    { label: 'Global Win Rate', value: `${wr}`, trend: wr >= 50 ? 'positive' : 'neutral', trendLabel: wr >= 50 ? 'Strong' : 'Stable', unit: '%' },
+    { label: 'Expectancy (R)', value: `${exp}`, trend: Number(exp) >= 1 ? 'positive' : 'neutral', trendLabel: Number(exp) >= 1 ? 'Strong Performance' : 'Stable', unit: 'R' },
+    { label: 'Trade Count', value: `${count}`, trend: 'positive', trendLabel: 'Active', unit: '' },
+    { label: 'Profit Factor', value: `${pf}`, trend: Number(pf) >= 1.5 ? 'positive' : 'neutral', trendLabel: Number(pf) >= 1.5 ? 'Excellent' : 'Stable', unit: '' }
+  ];
 
   return (
     <Layout>
@@ -1286,13 +1294,7 @@ export default function Dashboard() {
               className="space-y-8"
             >
               {/* Stats Grid */}
-              <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
-                <StatsCard label="Total Net Profit" value={`$${stats.net.toLocaleString()}`} variant="emerald" />
-                <StatsCard label="Global Win Rate" value={`${stats.wr}%`} variant="white" />
-                <StatsCard label="Expectancy (R)" value={`${stats.exp}R`} variant="emerald" />
-                <StatsCard label="Trade Count" value={stats.count} variant="emerald" />
-                <StatsCard label="Profit Factor" value={stats.pf} variant="emerald" highlight />
-              </div>
+              <StatsCards stats={statsForCards} />
 
               {/* Intelligence Panels Row 1 */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
