@@ -25,7 +25,7 @@ const TrendIcon = ({ trend }: { trend: 'positive' | 'negative' | 'neutral' }) =>
 const StatCard = ({ stat, index, isLoaded }: { stat: any, index: number, isLoaded: boolean }) => {
   return (
     <div
-      className={`relative group bg-[#0f0f12] border border-[#1f1f23] rounded-xl p-6 transition-all duration-300 hover:border-[#3f3f46] hover:bg-[#141418] ${
+      className={`relative group bg-card border border-border rounded-xl p-6 transition-all duration-300 hover:border-primary/30 hover:bg-card/80 ${
         isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
       }`}
       style={{ transitionDelay: `${index * 100}px` }}
@@ -36,6 +36,7 @@ const StatCard = ({ stat, index, isLoaded }: { stat: any, index: number, isLoade
           stat.trend === 'positive' ? 'bg-emerald-500' : stat.trend === 'negative' ? 'bg-rose-500' : 'bg-amber-500'
         }`}
       />
+
 
       <div className="flex items-center gap-2 mb-4">
         <span className={`w-1.5 h-1.5 rounded-full ${
